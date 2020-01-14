@@ -1,14 +1,78 @@
-struct Piece;
+struct Pawn;
+
+type Piece = Pawn;
 
 struct GameBoard {
-    squares: Vec<Option<Piece>>
+    squares: [Option<Piece>; 64]
 }
 
 fn main() {
     let board = GameBoard {
-        squares: vec![
-            Some(Piece {}),
+        squares: [
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
             None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
+            Some(Pawn {}),
         ]
     };
 }
