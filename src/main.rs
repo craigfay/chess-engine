@@ -1,9 +1,21 @@
+struct Pawn;
+
+impl Moveable for Pawn {
+    fn can_move(origin: u8, destination: u8) -> bool {
+        true
+    }
+}
+
+trait Moveable {
+    fn can_move(origin: u8, destination: u8) -> bool;
+}
+
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
-struct Pawn;
-
-type Piece = Pawn;
+enum Piece {
+    Pawn
+}
 
 struct GameBoard {
     squares: [Option<Piece>; 64]
