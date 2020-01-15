@@ -1,3 +1,4 @@
+#[derive(Copy, Clone)]
 struct Pawn;
 
 type Piece = Pawn;
@@ -6,73 +7,14 @@ struct GameBoard {
     squares: [Option<Piece>; 64]
 }
 
+impl GameBoard {
+    fn new() -> GameBoard {
+        GameBoard {
+            squares: [None; 64]
+        }
+    }
+}
+
 fn main() {
-    let board = GameBoard {
-        squares: [
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-            Some(Pawn {}),
-        ]
-    };
+    let board = GameBoard::new();
 }
