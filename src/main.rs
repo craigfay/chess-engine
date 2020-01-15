@@ -1,20 +1,24 @@
+
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
 struct Pawn;
 
 impl Moveable for Pawn {
-    fn can_move(origin: u8, destination: u8) -> bool {
+    fn can_move(origin: usize, destination: usize) -> bool {
         true
     }
 }
 
 trait Moveable {
-    fn can_move(origin: u8, destination: u8) -> bool;
+    fn can_move(origin: usize, destination: usize) -> bool;
 }
 
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
 enum Piece {
-    Pawn
+    Pawn(Pawn)
 }
 
 struct GameBoard {
@@ -26,6 +30,13 @@ impl GameBoard {
         GameBoard {
             squares: [None; 64]
         }
+    }
+    fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
+        if square < 0 || square > 63 {
+            return false;
+        }
+        self.squares[square] = Some(piece);
+        return true;
     }
 }
 
@@ -45,5 +56,7 @@ impl std::fmt::Debug for GameBoard {
 
 
 fn main() {
-    let board = GameBoard::new();
+    let mut board = GameBoard::new();
+    let pawn: Piece = Piece::Pawn(Pawn{});
+    board.place_piece(pawn, 0);
 }
