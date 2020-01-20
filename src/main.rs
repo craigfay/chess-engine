@@ -1,28 +1,8 @@
 
 #[derive(Copy)]
 #[derive(Clone)]
-#[derive(Debug)]
-struct Pawn;
-
-impl Moveable for Pawn {
-    fn can_move(origin: usize, destination: usize) -> bool {
-        true
-    }
-}
-
-trait Moveable {
-    fn can_move(origin: usize, destination: usize) -> bool;
-}
-
-#[derive(Copy)]
-#[derive(Clone)]
-#[derive(Debug)]
-enum Piece {
-    Pawn(Pawn)
-}
-
 struct GameBoard {
-    squares: [Option<Piece>; 64]
+    squares: [Option<PieceType>; 64]
 }
 
 impl GameBoard {
@@ -31,7 +11,7 @@ impl GameBoard {
             squares: [None; 64]
         }
     }
-    fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
+    fn place_piece(&mut self, piece: PieceType, square: usize) -> bool {
         if square < 0 || square > 63 {
             return false;
         }
@@ -53,10 +33,36 @@ impl std::fmt::Debug for GameBoard {
     }
 }
 
+enum ActionType {
+    Move,
+    Capture,
+}
+
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
+enum PieceType {
+    Pawn,
+}
+
+struct Move {
+    action: ActionType,
+    piece: PieceType,
+    destination: usize,
+}
+
+struct PawnRules {}
+
+impl PawnRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        true
+    }
+}
+
 
 
 fn main() {
     let mut board = GameBoard::new();
-    let pawn: Piece = Piece::Pawn(Pawn{});
+    let pawn: PieceType = PieceType::Pawn;
     board.place_piece(pawn, 0);
 }
