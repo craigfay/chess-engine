@@ -121,19 +121,19 @@ impl PawnRules {
     }
 }
 
-fn horizontal_movement(origin: usize, destination: usize) -> i32 {
+fn delta_x(origin: usize, destination: usize) -> i32 {
     ((destination as i32 % 8) - (origin as i32 % 8))
 }
 
-fn vertictal_movement(origin: usize, destination: usize) -> i32 {
+fn delta_y(origin: usize, destination: usize) -> i32 {
     ((destination as i32 / 8) - (origin as i32 / 8))
 }
 
-fn horizontal_movement_test() {
-    assert_eq!(horizontal_movement(0, 1), 1);
-    assert_eq!(horizontal_movement(0, 4), 4);
-    assert_eq!(horizontal_movement(0, 12), 4);
-    assert_eq!(horizontal_movement(12, 0), -4);
+fn delta_x_test() {
+    assert_eq!(delta_x(0, 1), 1);
+    assert_eq!(delta_x(0, 4), 4);
+    assert_eq!(delta_x(0, 12), 4);
+    assert_eq!(delta_x(12, 0), -4);
 }
 
 fn main() {
@@ -152,7 +152,7 @@ fn main() {
 
     println!("{}", result);
 
-    horizontal_movement_test();
+    delta_x_test();
 
 }
 
