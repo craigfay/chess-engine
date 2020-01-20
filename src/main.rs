@@ -84,4 +84,16 @@ fn main() {
     let mut board = GameBoard::new();
     let pawn: Piece = Piece::new(PieceType::Pawn);
     board.place_piece(pawn, 0);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Pawn,
+        origin: 0,
+        destination: 8,
+    };
+
+    let result = PawnRules::can_move(chosen_move, board);
+
+    println!("{}", result);
 }
+
