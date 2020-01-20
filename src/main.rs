@@ -74,7 +74,11 @@ struct PawnRules {}
 
 impl PawnRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        true
+        let square = board.squares[chosen_move.origin];
+        return match square {
+            Some(square) => true,
+            None => false,
+        }
     }
 }
 
@@ -88,7 +92,7 @@ fn main() {
     let chosen_move = Move {
         action: ActionType::Move,
         piece: PieceType::Pawn,
-        origin: 0,
+        origin: 1,
         destination: 8,
     };
 
