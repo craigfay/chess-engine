@@ -122,11 +122,11 @@ impl PawnRules {
 }
 
 fn delta_x(origin: usize, destination: usize) -> i32 {
-    ((destination as i32 % 8) - (origin as i32 % 8))
+    (destination as i32 % 8) - (origin as i32 % 8)
 }
 
 fn delta_y(origin: usize, destination: usize) -> i32 {
-    ((destination as i32 / 8) - (origin as i32 / 8))
+    (destination as i32 / 8) - (origin as i32 / 8)
 }
 
 fn delta_x_test() {
@@ -134,6 +134,13 @@ fn delta_x_test() {
     assert_eq!(delta_x(0, 4), 4);
     assert_eq!(delta_x(0, 12), 4);
     assert_eq!(delta_x(12, 0), -4);
+}
+
+fn delta_y_test() {
+    assert_eq!(delta_y(0, 1), 0);
+    assert_eq!(delta_y(0, 56), 7);
+    assert_eq!(delta_y(0, 12), 1);
+    assert_eq!(delta_y(63, 0), -7);
 }
 
 fn main() {
@@ -153,6 +160,7 @@ fn main() {
     println!("{}", result);
 
     delta_x_test();
+    delta_y_test();
 
 }
 
