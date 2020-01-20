@@ -165,6 +165,23 @@ fn pawn_movement_sideways_test() {
         origin: 16,
         destination: 17,
     };
+
+    assert_eq!(false, GameRules::can_move(chosen_move, board));
+}
+
+
+fn pawn_movement_too_far_test() {
+    let mut board = GameBoard::new();
+    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    board.place_piece(pawn, 0);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Pawn,
+        origin: 18,
+        destination: 34,
+    };
+
     assert_eq!(false, GameRules::can_move(chosen_move, board));
 }
 
