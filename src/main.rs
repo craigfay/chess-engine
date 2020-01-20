@@ -12,7 +12,7 @@ impl GameBoard {
         }
     }
     fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
-        if square < 0 || square > 63 {
+        if square > 63 {
             return false;
         }
         self.squares[square] = Some(piece);
@@ -93,7 +93,6 @@ impl GameRules {
 
         match chosen_move.piece {
             PieceType:: Pawn => PawnRules::can_move(chosen_move, board),
-            _ => false
         }
     }
 }
@@ -227,5 +226,6 @@ fn main() {
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();
     pawn_movement_normal_test();
+    pawn_movement_wrong_origin_test();
 }
 
