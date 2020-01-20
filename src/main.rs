@@ -109,10 +109,10 @@ impl PawnRules {
             return false
         }
 
-        return match piece.color {
+        match piece.color {
             // White Pieces can only move upwards
             Color::White => {
-                return match delta_y(chosen_move.origin, chosen_move.destination) {
+                match delta_y(chosen_move.origin, chosen_move.destination) {
                     1 => true,
                     2 => piece.has_moved == false,
                     _ => false,
