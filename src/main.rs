@@ -104,19 +104,29 @@ impl PawnRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
         let piece = board.squares[chosen_move.origin].unwrap();
 
+        // Pawns can only move vertically
+        if 0 < delta_x(chosen_move.origin, chosen_move.destination) {
+            return false
+        }
+
         return match piece.color {
-
+            // White Pieces can only move upwards
             Color::White => {
-                if chosen_move.destination == chosen_move.origin + 16 {
-                    return true
+                return match delta_y(chosen_move.origin, chosen_move.destination) {
+                    1 => true,
+                    2 => piece.has_moved == false,
+                    _ => false,
                 }
-                else if false == piece.has_moved && chosen_move.destination == chosen_move.origin + 16 {
-                    return true
-                }
-                return false
             },
+            // Black pieces can only move downwards
+            Color::Black => {
+                return match delta_y(chosen_move.origin, chosen_move.destination) {
+                    -1 => true,
+                    -2 => piece.has_moved == false,
+                    _ => false,
+                }
+            }
 
-            Color::Black => false,
         }
     }
 }
@@ -143,24 +153,26 @@ fn delta_y_test() {
     assert_eq!(delta_y(63, 0), -7);
 }
 
-fn main() {
+fn pawn_movement_sideways_test() {
     let mut board = GameBoard::new();
-    let pawn: Piece = Piece::new(Color::White, PieceType::Pawn);
+    let pawn = Piece::new(Color::White, PieceType::Pawn);
     board.place_piece(pawn, 0);
 
     let chosen_move = Move {
+
         action: ActionType::Move,
         piece: PieceType::Pawn,
-        origin: 0,
-        destination: 8,
+        origin: 16,
+        destination: 17,
     };
+    assert_eq!(false, GameRules::can_move(chosen_move, board));
+}
 
-    let result = GameRules::can_move(chosen_move, board);
 
-    println!("{}", result);
 
+fn main() {
     delta_x_test();
     delta_y_test();
-
+    pawn_movement_sideways_test();
 }
 
