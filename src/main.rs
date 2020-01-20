@@ -105,11 +105,35 @@ impl PawnRules {
         let piece = board.squares[chosen_move.origin].unwrap();
 
         return match piece.color {
-            Color::White => true,
+
+            Color::White => {
+                if chosen_move.destination == chosen_move.origin + 16 {
+                    return true
+                }
+                else if false == piece.has_moved && chosen_move.destination == chosen_move.origin + 16 {
+                    return true
+                }
+                return false
+            },
+
             Color::Black => false,
         }
     }
+}
 
+fn horizontal_movement(origin: usize, destination: usize) -> i32 {
+    ((destination as i32 % 8) - (origin as i32 % 8))
+}
+
+fn vertictal_movement(origin: usize, destination: usize) -> i32 {
+    ((destination as i32 / 8) - (origin as i32 / 8))
+}
+
+fn horizontal_movement_test() {
+    assert_eq!(horizontal_movement(0, 1), 1);
+    assert_eq!(horizontal_movement(0, 4), 4);
+    assert_eq!(horizontal_movement(0, 12), 4);
+    assert_eq!(horizontal_movement(12, 0), -4);
 }
 
 fn main() {
@@ -120,12 +144,15 @@ fn main() {
     let chosen_move = Move {
         action: ActionType::Move,
         piece: PieceType::Pawn,
-        origin: 1,
+        origin: 0,
         destination: 8,
     };
 
     let result = GameRules::can_move(chosen_move, board);
 
     println!("{}", result);
+
+    horizontal_movement_test();
+
 }
 
