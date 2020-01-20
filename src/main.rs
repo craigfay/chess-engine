@@ -153,6 +153,7 @@ fn delta_y_test() {
     assert_eq!(delta_y(63, 0), -7);
 }
 
+// Pawns should not be able to move sideways
 fn pawn_movement_sideways_test() {
     let mut board = GameBoard::new();
     let pawn = Piece::new(Color::White, PieceType::Pawn);
@@ -170,6 +171,7 @@ fn pawn_movement_sideways_test() {
 }
 
 
+// Pawns should not be able to move more than two squares vertically
 fn pawn_movement_too_far_test() {
     let mut board = GameBoard::new();
     let pawn = Piece::new(Color::White, PieceType::Pawn);
@@ -185,6 +187,7 @@ fn pawn_movement_too_far_test() {
     assert_eq!(false, GameRules::can_move(chosen_move, board));
 }
 
+// White pawns should be able to move 1 square up
 fn pawn_movement_normal_test() {
     let mut board = GameBoard::new();
     let pawn = Piece::new(Color::White, PieceType::Pawn);
@@ -200,6 +203,22 @@ fn pawn_movement_normal_test() {
     assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
+
+// Pawns should not be able to move from an origin square that has no pawn
+fn pawn_movement_wrong_origin_test() {
+    let mut board = GameBoard::new();
+    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    board.place_piece(pawn, 4);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Pawn,
+        origin: 22,
+        destination: 30,
+    };
+
+    assert_eq!(false, GameRules::can_move(chosen_move, board));
+}
 
 
 fn main() {
