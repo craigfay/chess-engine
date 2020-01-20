@@ -70,16 +70,23 @@ impl Piece {
     }
 }
 
+struct GameRules {}
+
+impl GameRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        let square = board.squares[chosen_move.origin];
+        let square_has_piece = match square {
+            Some(square) => true,
+            None => false,
+        };
+        square_has_piece
+    }
+}
+
 struct PawnRules {}
 
 impl PawnRules {
-    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let square = board.squares[chosen_move.origin];
-        return match square {
-            Some(square) => true,
-            None => false,
-        }
-    }
+
 }
 
 
@@ -96,7 +103,7 @@ fn main() {
         destination: 8,
     };
 
-    let result = PawnRules::can_move(chosen_move, board);
+    let result = GameRules::can_move(chosen_move, board);
 
     println!("{}", result);
 }
