@@ -52,18 +52,28 @@ struct Move {
     destination: usize,
 }
 
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
+enum Color {
+    Black,
+    White,
+}
+
 
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
 struct Piece {
+    color: Color,
     name: PieceType,
     has_moved: bool,
 }
 
 impl Piece {
-    fn new(name: PieceType) -> Piece {
+    fn new(color: Color, name: PieceType) -> Piece {
         Piece {
+            color,
             name,
             has_moved: false,
         }
@@ -74,26 +84,37 @@ struct GameRules {}
 
 impl GameRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let square = board.squares[chosen_move.origin];
-        let square_has_piece = match square {
-            Some(square) => true,
-            None => false,
-        };
-        square_has_piece
+        let maybe_piece = board.squares[chosen_move.origin];
+
+        // If there is no piece present at the chosen origin
+        if maybe_piece.is_none() {
+            return false
+        }
+
+        match chosen_move.piece {
+            PieceType:: Pawn => PawnRules::can_move(chosen_move, board),
+            _ => false
+        }
     }
 }
 
 struct PawnRules {}
 
 impl PawnRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        let piece = board.squares[chosen_move.origin].unwrap();
+
+        return match piece.color {
+            Color::White => true,
+            Color::Black => false,
+        }
+    }
 
 }
 
-
-
 fn main() {
     let mut board = GameBoard::new();
-    let pawn: Piece = Piece::new(PieceType::Pawn);
+    let pawn: Piece = Piece::new(Color::White, PieceType::Pawn);
     board.place_piece(pawn, 0);
 
     let chosen_move = Move {
