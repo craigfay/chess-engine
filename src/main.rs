@@ -156,7 +156,7 @@ fn delta_y_test() {
 fn pawn_movement_sideways_test() {
     let mut board = GameBoard::new();
     let pawn = Piece::new(Color::White, PieceType::Pawn);
-    board.place_piece(pawn, 0);
+    board.place_piece(pawn, 16);
 
     let chosen_move = Move {
 
@@ -173,16 +173,31 @@ fn pawn_movement_sideways_test() {
 fn pawn_movement_too_far_test() {
     let mut board = GameBoard::new();
     let pawn = Piece::new(Color::White, PieceType::Pawn);
-    board.place_piece(pawn, 0);
+    board.place_piece(pawn, 18);
 
     let chosen_move = Move {
         action: ActionType::Move,
         piece: PieceType::Pawn,
         origin: 18,
-        destination: 34,
+        destination: 42,
     };
 
     assert_eq!(false, GameRules::can_move(chosen_move, board));
+}
+
+fn pawn_movement_normal_test() {
+    let mut board = GameBoard::new();
+    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    board.place_piece(pawn, 22);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Pawn,
+        origin: 22,
+        destination: 30,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
 
@@ -191,5 +206,7 @@ fn main() {
     delta_x_test();
     delta_y_test();
     pawn_movement_sideways_test();
+    pawn_movement_too_far_test();
+    pawn_movement_normal_test();
 }
 
