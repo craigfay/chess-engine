@@ -2,7 +2,7 @@
 #[derive(Copy)]
 #[derive(Clone)]
 struct GameBoard {
-    squares: [Option<PieceType>; 64]
+    squares: [Option<Piece>; 64]
 }
 
 impl GameBoard {
@@ -11,7 +11,7 @@ impl GameBoard {
             squares: [None; 64]
         }
     }
-    fn place_piece(&mut self, piece: PieceType, square: usize) -> bool {
+    fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
         if square < 0 || square > 63 {
             return false;
         }
@@ -48,7 +48,26 @@ enum PieceType {
 struct Move {
     action: ActionType,
     piece: PieceType,
+    origin: usize,
     destination: usize,
+}
+
+
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
+struct Piece {
+    name: PieceType,
+    has_moved: bool,
+}
+
+impl Piece {
+    fn new(name: PieceType) -> Piece {
+        Piece {
+            name,
+            has_moved: false,
+        }
+    }
 }
 
 struct PawnRules {}
@@ -63,6 +82,6 @@ impl PawnRules {
 
 fn main() {
     let mut board = GameBoard::new();
-    let pawn: PieceType = PieceType::Pawn;
+    let pawn: Piece = Piece::new(PieceType::Pawn);
     board.place_piece(pawn, 0);
 }
