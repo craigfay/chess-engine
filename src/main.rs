@@ -120,7 +120,7 @@ impl PawnRules {
             },
             // Black pieces can only move downwards
             Color::Black => {
-                return match delta_y(chosen_move.origin, chosen_move.destination) {
+                match delta_y(chosen_move.origin, chosen_move.destination) {
                     -1 => true,
                     -2 => piece.has_moved == false,
                     _ => false,
