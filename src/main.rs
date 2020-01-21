@@ -1,142 +1,20 @@
+mod chess;
+mod entities;
 
-#[derive(Copy)]
-#[derive(Clone)]
-struct GameBoard {
-    squares: [Option<Piece>; 64]
-}
+use chess::{
+    GameRules,
+    delta_x,
+    delta_y,
+};
 
-impl GameBoard {
-    fn new() -> GameBoard {
-        GameBoard {
-            squares: [None; 64]
-        }
-    }
-    fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
-        if square > 63 {
-            return false;
-        }
-        self.squares[square] = Some(piece);
-        return true;
-    }
-}
-
-impl std::fmt::Debug for GameBoard {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = "".to_string();
-
-        for i in 0..self.squares.len() {
-            let square_str = format!("\n{:?}", self.squares[i]);
-            output.push_str(&square_str);
-        }
-
-        write!(f, "{}", output)
-    }
-}
-
-enum ActionType {
+use entities::{
+    GameBoard,
+    Piece,
+    PieceType,
+    ActionType,
+    Color,
     Move,
-    Capture,
-}
-
-#[derive(Copy)]
-#[derive(Clone)]
-#[derive(Debug)]
-enum PieceType {
-    Pawn,
-}
-
-struct Move {
-    action: ActionType,
-    piece: PieceType,
-    origin: usize,
-    destination: usize,
-}
-
-#[derive(Copy)]
-#[derive(Clone)]
-#[derive(Debug)]
-enum Color {
-    Black,
-    White,
-}
-
-
-#[derive(Copy)]
-#[derive(Clone)]
-#[derive(Debug)]
-struct Piece {
-    color: Color,
-    name: PieceType,
-    has_moved: bool,
-}
-
-impl Piece {
-    fn new(color: Color, name: PieceType) -> Piece {
-        Piece {
-            color,
-            name,
-            has_moved: false,
-        }
-    }
-}
-
-struct GameRules {}
-
-impl GameRules {
-    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let maybe_piece = board.squares[chosen_move.origin];
-
-        // If there is no piece present at the chosen origin
-        if maybe_piece.is_none() {
-            return false
-        }
-
-        match chosen_move.piece {
-            PieceType:: Pawn => PawnRules::can_move(chosen_move, board),
-        }
-    }
-}
-
-struct PawnRules {}
-
-impl PawnRules {
-    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let piece = board.squares[chosen_move.origin].unwrap();
-
-        // Pawns can only move vertically
-        if 0 < delta_x(chosen_move.origin, chosen_move.destination) {
-            return false
-        }
-
-        match piece.color {
-            // White Pieces can only move upwards
-            Color::White => {
-                match delta_y(chosen_move.origin, chosen_move.destination) {
-                    1 => true,
-                    2 => piece.has_moved == false,
-                    _ => false,
-                }
-            },
-            // Black pieces can only move downwards
-            Color::Black => {
-                match delta_y(chosen_move.origin, chosen_move.destination) {
-                    -1 => true,
-                    -2 => piece.has_moved == false,
-                    _ => false,
-                }
-            }
-
-        }
-    }
-}
-
-fn delta_x(origin: usize, destination: usize) -> i32 {
-    (destination as i32 % 8) - (origin as i32 % 8)
-}
-
-fn delta_y(origin: usize, destination: usize) -> i32 {
-    (destination as i32 / 8) - (origin as i32 / 8)
-}
+};
 
 fn delta_x_test() {
     assert_eq!(delta_x(0, 1), 1);
