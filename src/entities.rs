@@ -60,7 +60,6 @@ pub enum Color {
     White,
 }
 
-
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]

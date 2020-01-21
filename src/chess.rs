@@ -1,8 +1,6 @@
 
 use crate::entities::{
     GameBoard,
-    Piece,
-    ActionType,
     PieceType,
     Move,
     Color,
