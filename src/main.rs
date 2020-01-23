@@ -95,6 +95,39 @@ fn pawn_movement_wrong_origin_test() {
 }
 
 
+// Rooks should be able to travel horizontally
+fn rook_movement_horizontal_test() {
+    let mut board = GameBoard::new();
+    let rook = Piece::new(Color::White, PieceType::Rook);
+    board.place_piece(rook, 35);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Pawn,
+        origin: 35,
+        destination: 30,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
+// Rooks should be able to travel vertically
+fn rook_movement_vertical_test() {
+    let mut board = GameBoard::new();
+    let rook = Piece::new(Color::White, PieceType::Rook);
+    board.place_piece(rook, 35);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Pawn,
+        origin: 35,
+        destination: 4,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
+
 fn main() {
     position_delta_test();
     pawn_movement_sideways_test();

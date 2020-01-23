@@ -43,6 +43,7 @@ pub enum ActionType {
 #[derive(Debug)]
 pub enum PieceType {
     Pawn,
+    Rook,
 }
 
 pub struct Move {

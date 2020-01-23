@@ -30,6 +30,7 @@ impl GameRules {
 
         match chosen_move.piece {
             PieceType:: Pawn => PawnRules::can_move(chosen_move, board),
+            PieceType:: Rook => RookRules::can_move(chosen_move, board),
         }
     }
 }
@@ -86,6 +87,41 @@ impl Moveable for PawnRules {
                 }
             }
 
+        }
+    }
+}
+
+
+pub struct RookRules {}
+
+impl Moveable for RookRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        let piece = board.squares[chosen_move.origin].unwrap();
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        // Return false if the path is obstructed
+        for x in chosen_move.origin..chosen_move.origin + (delta_x as usize) {
+            println!("{}", x);
+            if board.squares[x].is_some() {
+                return false;
+            }
+        }
+
+        match (delta_x, delta_y) {
+            (0, _) => true,
+            (_, 0) => true,
+            _ => false,
+        }
+    }
+
+    fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
+        let piece = board.squares[chosen_move.origin].unwrap();
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        match (delta_x, delta_y) {
+            (0, _) => true,
+            (_, 0) => true,
+            _ => false,
         }
     }
 }
