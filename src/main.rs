@@ -3,8 +3,7 @@ mod entities;
 
 use chess::{
     GameRules,
-    delta_x,
-    delta_y,
+    position_delta,
 };
 
 use entities::{
@@ -16,18 +15,16 @@ use entities::{
     Move,
 };
 
-fn delta_x_test() {
-    assert_eq!(delta_x(0, 1), 1);
-    assert_eq!(delta_x(0, 4), 4);
-    assert_eq!(delta_x(0, 12), 4);
-    assert_eq!(delta_x(12, 0), -4);
-}
+fn position_delta_test() {
+    assert_eq!(position_delta(0, 1), (1, 0));
+    assert_eq!(position_delta(0, 4), (4, 0));
+    assert_eq!(position_delta(0, 12), (4, 1));
+    assert_eq!(position_delta(12, 0), (-4, -1));
 
-fn delta_y_test() {
-    assert_eq!(delta_y(0, 1), 0);
-    assert_eq!(delta_y(0, 56), 7);
-    assert_eq!(delta_y(0, 12), 1);
-    assert_eq!(delta_y(63, 0), -7);
+    assert_eq!(position_delta(0, 1), (1, 0));
+    assert_eq!(position_delta(0, 56), (0, 7));
+    assert_eq!(position_delta(0, 12), (4, 1));
+    assert_eq!(position_delta(63, 0), (-7, -7));
 }
 
 // Pawns should not be able to move sideways
@@ -99,8 +96,7 @@ fn pawn_movement_wrong_origin_test() {
 
 
 fn main() {
-    delta_x_test();
-    delta_y_test();
+    position_delta_test();
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();
     pawn_movement_normal_test();
