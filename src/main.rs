@@ -143,7 +143,7 @@ fn rook_movement_horizontal_obstruction_test() {
         destination: 36,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, GameRules::can_move(chosen_move, board));
 }
 
 
@@ -155,5 +155,6 @@ fn main() {
     pawn_movement_wrong_origin_test();
     rook_movement_horizontal_test();
     rook_movement_vertical_test();
+    rook_movement_horizontal_obstruction_test();
 }
 
