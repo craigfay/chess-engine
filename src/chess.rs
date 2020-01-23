@@ -100,9 +100,14 @@ impl Moveable for RookRules {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
         // Return false if the path is obstructed
-        for x in chosen_move.origin..chosen_move.origin + (delta_x as usize) {
-            println!("{}", x);
-            if board.squares[x].is_some() {
+        for x in 1..delta_x.abs() {
+            let square = if delta_x > 0 {
+                chosen_move.origin + x as usize
+            } else {
+                chosen_move.origin - x as usize
+            };
+
+            if board.squares[square].is_some() {
                 return false;
             }
         }

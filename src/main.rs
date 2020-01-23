@@ -103,9 +103,9 @@ fn rook_movement_horizontal_test() {
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Pawn,
+        piece: PieceType::Rook,
         origin: 35,
-        destination: 30,
+        destination: 32,
     };
 
     assert_eq!(true, GameRules::can_move(chosen_move, board));
@@ -119,9 +119,28 @@ fn rook_movement_vertical_test() {
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Pawn,
+        piece: PieceType::Rook,
         origin: 35,
         destination: 4,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
+
+// Rooks should not be able to travel horizontally through other pieces
+fn rook_movement_horizontal_obstruction_test() {
+    let mut board = GameBoard::new();
+    let rook = Piece::new(Color::White, PieceType::Rook);
+    let pawn = Piece::new(Color::Black, PieceType::Pawn);
+    board.place_piece(rook, 32);
+    board.place_piece(pawn, 33);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Rook,
+        origin: 32,
+        destination: 36,
     };
 
     assert_eq!(true, GameRules::can_move(chosen_move, board));
@@ -134,5 +153,6 @@ fn main() {
     pawn_movement_too_far_test();
     pawn_movement_normal_test();
     pawn_movement_wrong_origin_test();
+    rook_movement_horizontal_test();
 }
 
