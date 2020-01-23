@@ -91,6 +91,26 @@ impl Moveable for PawnRules {
     }
 }
 
+fn x_delta_is_obstructed(origin: usize, delta_x: i32, board: GameBoard) -> bool {
+    for x in 1..delta_x.abs() {
+        let index = if delta_x > 0 { origin + x as usize } else { origin - x as usize };
+        if board.squares[index].is_some() {
+            return true
+        }
+    }
+    false
+}
+
+fn y_delta_is_obstructed(origin: usize, delta_y: i32, board: GameBoard) -> bool {
+    for x in 1..delta_y.abs() {
+        let index = if delta_x > 0 { origin + x * 8 as usize } else { origin - x * 8 as usize };
+        if board.squares[index].is_some() {
+            return true
+        }
+    }
+    false
+}
+
 
 pub struct RookRules {}
 
@@ -100,16 +120,8 @@ impl Moveable for RookRules {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
         // Return false if the path is obstructed
-        for x in 1..delta_x.abs() {
-            let square = if delta_x > 0 {
-                chosen_move.origin + x as usize
-            } else {
-                chosen_move.origin - x as usize
-            };
-
-            if board.squares[square].is_some() {
-                return false;
-            }
+        if x_delta_is_obstructed(chosen_move.origin, delta_x, board) {
+            return false;
         }
 
         match (delta_x, delta_y) {
