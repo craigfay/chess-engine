@@ -6,6 +6,11 @@ use crate::entities::{
     Color,
 };
 
+trait Moveable {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool;
+    fn can_capture(chosen_move: Move, board: GameBoard) -> bool;
+}
+
 pub struct GameRules {}
 
 impl GameRules {
@@ -31,8 +36,8 @@ impl GameRules {
 
 pub struct PawnRules {}
 
-impl PawnRules {
-    pub fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+impl Moveable for PawnRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
         let piece = board.squares[chosen_move.origin].unwrap();
 
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
@@ -57,10 +62,8 @@ impl PawnRules {
 
         }
     }
-}
 
-impl PawnRules {
-    pub fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
+    fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
         let piece = board.squares[chosen_move.origin].unwrap();
 
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
