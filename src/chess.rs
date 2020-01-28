@@ -170,18 +170,19 @@ pub struct BishopRules {}
 
 impl Moveable for BishopRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let low = min(chosen_move.origin, chosen_move.destination);
-        let hi = max(chosen_move.origin, chosen_move.destination);
-
-        if (hi - low) % 9 != 0 && (hi - low) % 7 != 0 { return false }
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+        if delta_x.abs() != delta_y.abs() {
+            return false;
+        }
         return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
-        let low = min(chosen_move.origin, chosen_move.destination);
-        let hi = max(chosen_move.origin, chosen_move.destination);
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+        if delta_x.abs() != delta_y.abs() {
+            return false;
+        }
 
-        if (hi - low) % 9 != 0 && (hi - low) % 7 != 0 { return false }
         return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 }
