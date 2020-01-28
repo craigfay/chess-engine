@@ -44,6 +44,7 @@ pub enum ActionType {
 pub enum PieceType {
     Pawn,
     Rook,
+    Bishop,
 }
 
 pub struct Move {

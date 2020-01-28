@@ -33,6 +33,7 @@ impl GameRules {
         match chosen_move.piece {
             PieceType:: Pawn => PawnRules::can_move(chosen_move, board),
             PieceType:: Rook => RookRules::can_move(chosen_move, board),
+            PieceType:: Bishop => BishopRules::can_move(chosen_move, board),
         }
     }
 }
@@ -121,6 +122,7 @@ fn diagonal_is_obstructed(origin: usize, destination: usize, board: GameBoard) -
     let low = min(origin, destination);
     let hi = max(origin, destination);
 
+
     // The difference between two diagonal squares will divide by 7 or 9
     for n in [7,9].iter() {
         if (hi - low) % n == 0 {
@@ -171,16 +173,16 @@ impl Moveable for BishopRules {
         let low = min(chosen_move.origin, chosen_move.destination);
         let hi = max(chosen_move.origin, chosen_move.destination);
 
-        if (hi - low) % 9 != 0 && (hi - low)  & 7 != 0 { return false }
-        return diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        if (hi - low) % 9 != 0 && (hi - low) % 7 != 0 { return false }
+        return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
         let low = min(chosen_move.origin, chosen_move.destination);
         let hi = max(chosen_move.origin, chosen_move.destination);
 
-        if (hi - low) % 9 != 0 && (hi - low)  & 7 != 0 { return false }
-        return diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        if (hi - low) % 9 != 0 && (hi - low) % 7 != 0 { return false }
+        return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 }
 
