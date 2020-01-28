@@ -6,6 +6,8 @@ use crate::entities::{
     Color,
 };
 
+use std::cmp::{min, max};
+
 trait Moveable {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool;
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool;
@@ -115,14 +117,11 @@ fn y_delta_is_obstructed(origin: usize, delta_y: i32, board: GameBoard) -> bool 
     false
 }
 
-
 pub struct RookRules {}
 
 impl Moveable for RookRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let piece = board.squares[chosen_move.origin].unwrap();
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
-
         // Return false if the path is obstructed
         if x_delta_is_obstructed(chosen_move.origin, delta_x, board) {
             return false;
@@ -136,8 +135,11 @@ impl Moveable for RookRules {
     }
 
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
-        let piece = board.squares[chosen_move.origin].unwrap();
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+        // Return false if the path is obstructed
+        if x_delta_is_obstructed(chosen_move.origin, delta_x, board) {
+            return false;
+        }
 
         match (delta_x, delta_y) {
             (0, _) => true,
@@ -151,22 +153,43 @@ pub struct BishopRules {}
 
 impl Moveable for BishopRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
-        let piece = board.squares[chosen_move.origin].unwrap();
-        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+        let low = min(chosen_move.origin, chosen_move.destination);
+        let hi = max(chosen_move.origin, chosen_move.destination);
 
-        let distance = (chosen_move.origin as i32  - chosen_move.destination as i32).abs();
-        return distance % 9 == 0 || distance % 7 == 0
+
+        if (hi - low) % 9 == 0 {
+            for i in (low..hi).step_by(9) {
+                if board.squares[i].is_some() { return false } 
+            }
+            return true
+        }
+        if (hi - low) % 7 == 0 {
+            for i in (low..hi).step_by(7) {
+                if board.squares[i].is_some() { return false } 
+            }
+            return true
+        }
+        return false;
     }
 
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
-        let piece = board.squares[chosen_move.origin].unwrap();
-        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+        let low = min(chosen_move.origin, chosen_move.destination);
+        let hi = max(chosen_move.origin, chosen_move.destination);
 
-        match (delta_x, delta_y) {
-            (0, _) => true,
-            (_, 0) => true,
-            _ => false,
+
+        if (hi - low) % 9 == 0 {
+            for i in (low..hi).step_by(9) {
+                if board.squares[i].is_some() { return false } 
+            }
+            return true
         }
+        if (hi - low) % 7 == 0 {
+            for i in (low..hi).step_by(7) {
+                if board.squares[i].is_some() { return false } 
+            }
+            return true
+        }
+        return false;
     }
 }
 
