@@ -103,7 +103,11 @@ fn x_delta_is_obstructed(origin: usize, delta_x: i32, board: GameBoard) -> bool 
 
 fn y_delta_is_obstructed(origin: usize, delta_y: i32, board: GameBoard) -> bool {
     for x in 1..delta_y.abs() {
-        let index = if delta_x > 0 { origin + x * 8 as usize } else { origin - x * 8 as usize };
+        let index = if delta_y > 0 {
+            origin + x as usize * 8
+        } else {
+            origin - x as usize * 8
+        };
         if board.squares[index].is_some() {
             return true
         }
@@ -142,6 +146,31 @@ impl Moveable for RookRules {
         }
     }
 }
+
+pub struct BishopRules {}
+
+impl Moveable for BishopRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        let piece = board.squares[chosen_move.origin].unwrap();
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        let distance = (chosen_move.origin as i32  - chosen_move.destination as i32).abs();
+        return distance % 9 == 0 || distance % 7 == 0
+    }
+
+    fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
+        let piece = board.squares[chosen_move.origin].unwrap();
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        match (delta_x, delta_y) {
+            (0, _) => true,
+            (_, 0) => true,
+            _ => false,
+        }
+    }
+}
+
+
 
 // Determine the horizontal distance between two squares
 pub fn position_delta(origin: usize, destination: usize) -> (i32, i32) {
