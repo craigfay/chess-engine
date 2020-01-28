@@ -117,6 +117,21 @@ fn y_delta_is_obstructed(origin: usize, delta_y: i32, board: GameBoard) -> bool 
     false
 }
 
+fn diagonal_is_obstructed(origin: usize, destination: usize, board: GameBoard) -> bool {
+    let low = min(origin, destination);
+    let hi = max(origin, destination);
+
+    // The difference between two diagonal squares will divide by 7 or 9
+    for n in [7,9].iter() {
+        if (hi - low) % n == 0 {
+            for i in (low..hi).step_by(*n) {
+                if board.squares[i].is_some() { return true } 
+            }
+        }
+    }
+    return false;
+}
+
 pub struct RookRules {}
 
 impl Moveable for RookRules {
@@ -156,40 +171,16 @@ impl Moveable for BishopRules {
         let low = min(chosen_move.origin, chosen_move.destination);
         let hi = max(chosen_move.origin, chosen_move.destination);
 
-
-        if (hi - low) % 9 == 0 {
-            for i in (low..hi).step_by(9) {
-                if board.squares[i].is_some() { return false } 
-            }
-            return true
-        }
-        if (hi - low) % 7 == 0 {
-            for i in (low..hi).step_by(7) {
-                if board.squares[i].is_some() { return false } 
-            }
-            return true
-        }
-        return false;
+        if (hi - low) % 9 != 0 && (hi - low)  & 7 != 0 { return false }
+        return diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
         let low = min(chosen_move.origin, chosen_move.destination);
         let hi = max(chosen_move.origin, chosen_move.destination);
 
-
-        if (hi - low) % 9 == 0 {
-            for i in (low..hi).step_by(9) {
-                if board.squares[i].is_some() { return false } 
-            }
-            return true
-        }
-        if (hi - low) % 7 == 0 {
-            for i in (low..hi).step_by(7) {
-                if board.squares[i].is_some() { return false } 
-            }
-            return true
-        }
-        return false;
+        if (hi - low) % 9 != 0 && (hi - low)  & 7 != 0 { return false }
+        return diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 }
 
