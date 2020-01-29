@@ -163,7 +163,7 @@ fn bishop_movement_diagonal_up_left_test() {
 }
 
 
-// Bishops should be able to travel diagonally up-left
+// Bishops should be able to travel diagonally up-right
 fn bishop_movement_diagonal_up_right_test() {
     let mut board = GameBoard::new();
     let bishop = Piece::new(Color::White, PieceType::Bishop);
@@ -179,7 +179,7 @@ fn bishop_movement_diagonal_up_right_test() {
     assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
-// Bishops should be able to travel diagonally up-left
+// Bishops should be able to travel diagonally down-left
 fn bishop_movement_diagonal_down_left_test() {
     let mut board = GameBoard::new();
     let bishop = Piece::new(Color::White, PieceType::Bishop);
@@ -190,6 +190,23 @@ fn bishop_movement_diagonal_down_left_test() {
         piece: PieceType::Bishop,
         origin: 27,
         destination: 9,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
+
+// Bishops should be able to travel diagonally down-right
+fn bishop_movement_diagonal_down_right_test() {
+    let mut board = GameBoard::new();
+    let bishop = Piece::new(Color::White, PieceType::Bishop);
+    board.place_piece(bishop, 56);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: PieceType::Bishop,
+        origin: 56,
+        destination: 42,
     };
 
     assert_eq!(true, GameRules::can_move(chosen_move, board));
@@ -208,5 +225,6 @@ fn main() {
     bishop_movement_diagonal_up_left_test();
     bishop_movement_diagonal_up_right_test();
     bishop_movement_diagonal_down_left_test();
+    bishop_movement_diagonal_down_right_test();
 }
 
