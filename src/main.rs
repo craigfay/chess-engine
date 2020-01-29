@@ -9,9 +9,13 @@ use chess::{
 use entities::{
     GameBoard,
     Piece,
-    PieceType,
+    PieceType::{
+        Pawn,
+        Rook,
+        Bishop,
+    },
     ActionType,
-    Color,
+    Color::{White, Black},
     Move,
 };
 
@@ -30,13 +34,13 @@ fn position_delta_test() {
 // Pawns should not be able to move sideways
 fn pawn_movement_sideways_test() {
     let mut board = GameBoard::new();
-    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    let pawn = Piece::new(White, Pawn);
     board.place_piece(pawn, 16);
 
     let chosen_move = Move {
 
         action: ActionType::Move,
-        piece: PieceType::Pawn,
+        piece: Pawn,
         origin: 16,
         destination: 17,
     };
@@ -48,12 +52,12 @@ fn pawn_movement_sideways_test() {
 // Pawns should not be able to move more than two squares vertically
 fn pawn_movement_too_far_test() {
     let mut board = GameBoard::new();
-    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    let pawn = Piece::new(White, Pawn);
     board.place_piece(pawn, 18);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Pawn,
+        piece: Pawn,
         origin: 18,
         destination: 42,
     };
@@ -64,12 +68,12 @@ fn pawn_movement_too_far_test() {
 // White pawns should be able to move 1 square up
 fn pawn_movement_normal_test() {
     let mut board = GameBoard::new();
-    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    let pawn = Piece::new(White, Pawn);
     board.place_piece(pawn, 22);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Pawn,
+        piece: Pawn,
         origin: 22,
         destination: 30,
     };
@@ -81,12 +85,12 @@ fn pawn_movement_normal_test() {
 // Pawns should not be able to move from an origin square that has no pawn
 fn pawn_movement_wrong_origin_test() {
     let mut board = GameBoard::new();
-    let pawn = Piece::new(Color::White, PieceType::Pawn);
+    let pawn = Piece::new(White, Pawn);
     board.place_piece(pawn, 4);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Pawn,
+        piece: Pawn,
         origin: 22,
         destination: 30,
     };
@@ -98,12 +102,12 @@ fn pawn_movement_wrong_origin_test() {
 // Rooks should be able to travel horizontally
 fn rook_movement_horizontal_test() {
     let mut board = GameBoard::new();
-    let rook = Piece::new(Color::White, PieceType::Rook);
+    let rook = Piece::new(White, Rook);
     board.place_piece(rook, 35);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Rook,
+        piece: Rook,
         origin: 35,
         destination: 32,
     };
@@ -114,12 +118,12 @@ fn rook_movement_horizontal_test() {
 // Rooks should be able to travel vertically
 fn rook_movement_vertical_test() {
     let mut board = GameBoard::new();
-    let rook = Piece::new(Color::White, PieceType::Rook);
+    let rook = Piece::new(White, Rook);
     board.place_piece(rook, 35);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Rook,
+        piece: Rook,
         origin: 35,
         destination: 3,
     };
@@ -131,14 +135,14 @@ fn rook_movement_vertical_test() {
 // Rooks should not be able to travel horizontally through other pieces
 fn rook_movement_horizontal_obstruction_test() {
     let mut board = GameBoard::new();
-    let rook = Piece::new(Color::White, PieceType::Rook);
-    let pawn = Piece::new(Color::Black, PieceType::Pawn);
+    let rook = Piece::new(White, Rook);
+    let pawn = Piece::new(Black, Pawn);
     board.place_piece(rook, 32);
     board.place_piece(pawn, 33);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Rook,
+        piece: Rook,
         origin: 32,
         destination: 36,
     };
@@ -149,12 +153,12 @@ fn rook_movement_horizontal_obstruction_test() {
 // Bishops should be able to travel diagonally up-left
 fn bishop_movement_diagonal_up_left_test() {
     let mut board = GameBoard::new();
-    let bishop = Piece::new(Color::White, PieceType::Bishop);
+    let bishop = Piece::new(White, Bishop);
     board.place_piece(bishop, 22);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Bishop,
+        piece: Bishop,
         origin: 22,
         destination: 36,
     };
@@ -166,12 +170,12 @@ fn bishop_movement_diagonal_up_left_test() {
 // Bishops should be able to travel diagonally up-right
 fn bishop_movement_diagonal_up_right_test() {
     let mut board = GameBoard::new();
-    let bishop = Piece::new(Color::White, PieceType::Bishop);
+    let bishop = Piece::new(White, Bishop);
     board.place_piece(bishop, 0);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Bishop,
+        piece: Bishop,
         origin: 0,
         destination: 36,
     };
@@ -182,12 +186,12 @@ fn bishop_movement_diagonal_up_right_test() {
 // Bishops should be able to travel diagonally down-left
 fn bishop_movement_diagonal_down_left_test() {
     let mut board = GameBoard::new();
-    let bishop = Piece::new(Color::White, PieceType::Bishop);
+    let bishop = Piece::new(White, Bishop);
     board.place_piece(bishop, 27);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Bishop,
+        piece: Bishop,
         origin: 27,
         destination: 9,
     };
@@ -199,12 +203,12 @@ fn bishop_movement_diagonal_down_left_test() {
 // Bishops should be able to travel diagonally down-right
 fn bishop_movement_diagonal_down_right_test() {
     let mut board = GameBoard::new();
-    let bishop = Piece::new(Color::White, PieceType::Bishop);
+    let bishop = Piece::new(White, Bishop);
     board.place_piece(bishop, 56);
 
     let chosen_move = Move {
         action: ActionType::Move,
-        piece: PieceType::Bishop,
+        piece: Bishop,
         origin: 56,
         destination: 42,
     };
