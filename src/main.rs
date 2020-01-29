@@ -221,13 +221,30 @@ fn bishop_movement_diagonal_down_right_test() {
 fn bishop_movement_diagonal_right_edge_test() {
     let mut board = GameBoard::new();
     let bishop = Piece::new(White, Bishop);
-    board.place_piece(bishop, 22);
+    board.place_piece(bishop, 23);
 
     let chosen_move = Move {
         action: ActionType::Move,
         piece: Bishop,
-        origin: 22,
-        destination: 40,
+        origin: 23,
+        destination: 41,
+    };
+
+    assert_eq!(false, GameRules::can_move(chosen_move, board));
+}
+
+
+// Bishops shouldn't be able to wrap around the left edge of the board
+fn bishop_movement_diagonal_left_edge_test() {
+    let mut board = GameBoard::new();
+    let bishop = Piece::new(White, Bishop);
+    board.place_piece(bishop, 24);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: Bishop,
+        origin: 24,
+        destination: 17,
     };
 
     assert_eq!(false, GameRules::can_move(chosen_move, board));
@@ -248,5 +265,6 @@ fn main() {
     bishop_movement_diagonal_down_left_test();
     bishop_movement_diagonal_down_right_test();
     bishop_movement_diagonal_right_edge_test();
+    bishop_movement_diagonal_left_edge_test();
 }
 
