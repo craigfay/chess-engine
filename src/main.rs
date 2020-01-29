@@ -217,6 +217,23 @@ fn bishop_movement_diagonal_down_right_test() {
 }
 
 
+// Bishops shouldn't be able to wrap around the right edge of the board
+fn bishop_movement_diagonal_right_edge_test() {
+    let mut board = GameBoard::new();
+    let bishop = Piece::new(White, Bishop);
+    board.place_piece(bishop, 22);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: Bishop,
+        origin: 22,
+        destination: 40,
+    };
+
+    assert_eq!(false, GameRules::can_move(chosen_move, board));
+}
+
+
 fn main() {
     position_delta_test();
     pawn_movement_sideways_test();
@@ -230,5 +247,6 @@ fn main() {
     bishop_movement_diagonal_up_right_test();
     bishop_movement_diagonal_down_left_test();
     bishop_movement_diagonal_down_right_test();
+    bishop_movement_diagonal_right_edge_test();
 }
 
