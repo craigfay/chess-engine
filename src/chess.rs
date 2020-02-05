@@ -122,7 +122,6 @@ fn diagonal_is_obstructed(origin: usize, destination: usize, board: GameBoard) -
     let low = min(origin, destination);
     let hi = max(origin, destination);
 
-
     // The difference between two diagonal squares will divide by 7 or 9
     for n in [7,9].iter() {
         if (hi - low) % n == 0 {
@@ -182,7 +181,6 @@ impl Moveable for BishopRules {
         if delta_x.abs() != delta_y.abs() {
             return false;
         }
-
         return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
     }
 }

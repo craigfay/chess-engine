@@ -244,7 +244,7 @@ fn bishop_movement_diagonal_left_edge_test() {
         action: ActionType::Move,
         piece: Bishop,
         origin: 24,
-        destination: 17,
+        destination: 15
     };
 
     assert_eq!(false, GameRules::can_move(chosen_move, board));
