@@ -199,15 +199,9 @@ impl Moveable for KnightRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
-        return match (delta_x, delta_y) {
+        return match (delta_x.abs(), delta_y.abs()) {
             (1, 2) => true,
             (2, 1) => true,
-            (1, -2) => true,
-            (2, -1) => true,
-            (-1, 2) => true,
-            (-2, 1) => true,
-            (-1, -2) => true,
-            (-2, -1) => true,
             (_, _) => false,
         }
 
