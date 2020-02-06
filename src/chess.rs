@@ -101,7 +101,7 @@ impl Moveable for PawnRules {
     }
 }
 
-fn horizontal_is_obstructed(origin: usize, delta_x: i32, board: GameBoard) -> bool {
+fn horizontal_path_is_obstructed(origin: usize, delta_x: i32, board: GameBoard) -> bool {
     for x in 1..delta_x.abs() {
         let index = if delta_x > 0 { origin + x as usize } else { origin - x as usize };
         if board.squares[index].is_some() {
@@ -111,7 +111,7 @@ fn horizontal_is_obstructed(origin: usize, delta_x: i32, board: GameBoard) -> bo
     false
 }
 
-fn vertical_is_obstructed(origin: usize, delta_y: i32, board: GameBoard) -> bool {
+fn vertical_path_is_obstructed(origin: usize, delta_y: i32, board: GameBoard) -> bool {
     for x in 1..delta_y.abs() {
         let index = if delta_y > 0 {
             origin + x as usize * 8
@@ -146,7 +146,7 @@ impl Moveable for RookRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
         // Return false if the path is obstructed
-        if horizontal_is_obstructed(chosen_move.origin, delta_x, board) {
+        if horizontal_path_is_obstructed(chosen_move.origin, delta_x, board) {
             return false;
         }
 
@@ -160,7 +160,7 @@ impl Moveable for RookRules {
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
         // Return false if the path is obstructed
-        if horizontal_is_obstructed(chosen_move.origin, delta_x, board) {
+        if horizontal_path_is_obstructed(chosen_move.origin, delta_x, board) {
             return false;
         }
 
@@ -217,7 +217,6 @@ impl Moveable for KnightRules {
         }
     }
 }
-
 
 // Determine the horizontal distance between two squares
 pub fn position_delta(origin: usize, destination: usize) -> (i32, i32) {
