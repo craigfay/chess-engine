@@ -360,7 +360,20 @@ fn knight_movement_two_down_one_left_test() {
     assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
+fn knight_movement_one_down_two_left_test() {
+    let mut board = GameBoard::new();
+    let knight = Piece::new(Black, Knight);
+    board.place_piece(knight, 28);
 
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: Knight,
+        origin: 28,
+        destination: 18,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
 
 
 fn square_as_algebraic_test() {
@@ -391,6 +404,7 @@ fn main() {
     knight_movement_two_down_one_right_test();
     knight_movement_one_down_two_right_test();
     knight_movement_two_down_one_left_test();
+    knight_movement_one_down_two_left_test();
     square_as_algebraic_test(); 
 }
 
