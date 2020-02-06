@@ -4,6 +4,7 @@ mod entities;
 use chess::{
     GameRules,
     position_delta,
+    square_as_algebraic,
 };
 
 use entities::{
@@ -250,6 +251,11 @@ fn bishop_movement_diagonal_left_edge_test() {
     assert_eq!(false, GameRules::can_move(chosen_move, board));
 }
 
+fn square_as_algebraic_test() {
+    assert_eq!("A1", square_as_algebraic(0));
+    assert_eq!("B1", square_as_algebraic(1));
+    assert_eq!("A2", square_as_algebraic(8));
+}
 
 fn main() {
     position_delta_test();
@@ -266,5 +272,6 @@ fn main() {
     bishop_movement_diagonal_down_right_test();
     bishop_movement_diagonal_right_edge_test();
     bishop_movement_diagonal_left_edge_test();
+    square_as_algebraic_test(); 
 }
 
