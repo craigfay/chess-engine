@@ -45,6 +45,7 @@ pub enum PieceType {
     Pawn,
     Rook,
     Bishop,
+    Knight,
 }
 
 pub struct Move {

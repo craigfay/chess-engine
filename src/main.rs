@@ -14,6 +14,7 @@ use entities::{
         Pawn,
         Rook,
         Bishop,
+        Knight,
     },
     ActionType,
     Color::{White, Black},
@@ -251,6 +252,22 @@ fn bishop_movement_diagonal_left_edge_test() {
     assert_eq!(false, GameRules::can_move(chosen_move, board));
 }
 
+
+fn knight_movement_two_up_one_right_test() {
+    let mut board = GameBoard::new();
+    let knight = Piece::new(Black, Knight);
+    board.place_piece(knight, 28);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: Knight,
+        origin: 28,
+        destination: 45,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
 fn square_as_algebraic_test() {
     assert_eq!("A1", square_as_algebraic(0));
     assert_eq!("B1", square_as_algebraic(1));
@@ -272,6 +289,7 @@ fn main() {
     bishop_movement_diagonal_down_right_test();
     bishop_movement_diagonal_right_edge_test();
     bishop_movement_diagonal_left_edge_test();
+    knight_movement_two_up_one_right_test();
     square_as_algebraic_test(); 
 }
 

@@ -40,6 +40,7 @@ impl GameRules {
             PieceType:: Pawn => PawnRules::can_move(chosen_move, board),
             PieceType:: Rook => RookRules::can_move(chosen_move, board),
             PieceType:: Bishop => BishopRules::can_move(chosen_move, board),
+            PieceType:: Knight => KnightRules::can_move(chosen_move, board),
         }
     }
 }
@@ -191,6 +192,37 @@ impl Moveable for BishopRules {
     }
 }
 
+
+pub struct KnightRules {}
+
+impl Moveable for KnightRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        return match (delta_x, delta_y) {
+            (1, 2) => true,
+            (2, 1) => true,
+            (1, -2) => true,
+            (2, -1) => true,
+            (-1, 2) => true,
+            (-2, 1) => true,
+            (-1, -2) => true,
+            (-2, -1) => true,
+            (_, _) => false,
+        }
+
+    }
+
+    fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        return match (delta_x.abs(), delta_y.abs()) {
+            (1, 2) => true,
+            (2, 1) => true,
+            (_, _) => false,
+        }
+    }
+}
 
 
 // Determine the horizontal distance between two squares
