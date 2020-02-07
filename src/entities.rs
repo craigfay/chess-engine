@@ -35,14 +35,14 @@ impl GameBoard {
 }
 
 pub struct Placement {
-    piece_type: PieceType,
     color: Color,
+    piece_type: PieceType,
     square: usize,
 }
 
 impl Placement {
-    pub  fn new(piece_type: PieceType, color: Color, square: usize) -> Placement {
-        Placement { piece_type, color, square }
+    pub  fn new(color: Color, piece_type: PieceType, square: usize) -> Placement {
+        Placement { color, piece_type, square }
     }
 }
     
