@@ -9,6 +9,7 @@ use chess::{
 
 use entities::{
     GameBoard,
+    Placement,
     Piece,
     PieceType::{
         Pawn,
@@ -20,6 +21,13 @@ use entities::{
     Color::{White, Black},
     Move,
 };
+
+fn gameboard_with_placements_test() {
+    let board = GameBoard::with_placements(vec![
+        Placement::new(Pawn, Black, 8),
+        Placement::new(Pawn, Black, 8),
+    ]);
+}
 
 fn position_delta_test() {
     assert_eq!(position_delta(0, 1), (1, 0));
@@ -383,6 +391,7 @@ fn square_as_algebraic_test() {
 }
 
 fn main() {
+    gameboard_with_placements_test();
     position_delta_test();
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();

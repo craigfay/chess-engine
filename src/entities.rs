@@ -18,7 +18,30 @@ impl GameBoard {
         self.squares[square] = Some(piece);
         return true;
     }
+    pub fn with_placements(placements: Vec<Placement>) -> GameBoard {
+        let mut board = GameBoard {
+            squares: [None; 64]
+        };
+        for placement in placements.iter() {
+            let piece = Piece::new(placement.color, placement.piece_type);
+            board.place_piece(piece, placement.square);
+        }
+        board
+    }
 }
+
+pub struct Placement {
+    piece_type: PieceType,
+    color: Color,
+    square: usize,
+}
+
+impl Placement {
+    pub fn new(piece_type: PieceType, color: Color, square: usize) -> Placement {
+        Placement { piece_type, color, square }
+    }
+}
+    
 
 impl std::fmt::Debug for GameBoard {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
