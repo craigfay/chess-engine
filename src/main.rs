@@ -25,7 +25,7 @@ use entities::{
 fn gameboard_with_placements_test() {
     let board = GameBoard::with_placements(vec![
         Placement::new(Pawn, Black, 8),
-        Placement::new(Pawn, Black, 8),
+        Placement::new(Pawn, Black, 9),
     ]);
 }
 

@@ -15,6 +15,10 @@ impl GameBoard {
         if square > 63 {
             return false;
         }
+        if (self.squares[square]).is_some() {
+            // Maybe panic here instead
+            return false;
+        }
         self.squares[square] = Some(piece);
         return true;
     }
@@ -37,7 +41,7 @@ pub struct Placement {
 }
 
 impl Placement {
-    pub fn new(piece_type: PieceType, color: Color, square: usize) -> Placement {
+    pub  fn new(piece_type: PieceType, color: Color, square: usize) -> Placement {
         Placement { piece_type, color, square }
     }
 }
