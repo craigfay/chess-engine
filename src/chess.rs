@@ -9,7 +9,7 @@ use crate::entities::{
 use std::cmp::{min, max};
 
 pub fn square_as_algebraic(square: usize) -> String {
-    let rank = (square as u8 % 8 + 65) as char;
+    let rank = (square as u8 % 8 + 97) as char;
     let file = (square / 8) + 1;
     String::from(format!("{}{}", rank, file))
 }

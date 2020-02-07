@@ -385,9 +385,9 @@ fn knight_movement_one_down_two_left_test() {
 
 
 fn square_as_algebraic_test() {
-    assert_eq!("A1", square_as_algebraic(0));
-    assert_eq!("B1", square_as_algebraic(1));
-    assert_eq!("A2", square_as_algebraic(8));
+    assert_eq!("a1", square_as_algebraic(0));
+    assert_eq!("b1", square_as_algebraic(1));
+    assert_eq!("a2", square_as_algebraic(8));
 }
 
 fn main() {
