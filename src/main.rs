@@ -195,9 +195,9 @@ fn bishop_movement_diagonal_up_right_test() {
 
 // Bishops should be able to travel diagonally down-left
 fn bishop_movement_diagonal_down_left_test() {
-    let mut board = GameBoard::new();
-    let bishop = Piece::new(White, Bishop);
-    board.place_piece(bishop, 27);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Bishop, 27),
+    ]);
 
     let chosen_move = Move {
         action: ActionType::Move,
