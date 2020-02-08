@@ -43,12 +43,11 @@ fn position_delta_test() {
 
 // Pawns should not be able to move sideways
 fn pawn_movement_sideways_test() {
-    let mut board = GameBoard::new();
-    let pawn = Piece::new(White, Pawn);
-    board.place_piece(pawn, 16);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Pawn, 16),
+    ]);
 
     let chosen_move = Move {
-
         action: ActionType::Move,
         piece: Pawn,
         origin: 16,
