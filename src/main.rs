@@ -229,9 +229,9 @@ fn bishop_movement_diagonal_down_right_test() {
 
 // Bishops shouldn't be able to wrap around the right edge of the board
 fn bishop_movement_diagonal_right_edge_test() {
-    let mut board = GameBoard::new();
-    let bishop = Piece::new(White, Bishop);
-    board.place_piece(bishop, 23);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Bishop, 23),
+    ]);
 
     let chosen_move = Move {
         action: ActionType::Move,
