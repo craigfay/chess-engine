@@ -60,9 +60,10 @@ fn pawn_movement_sideways_test() {
 
 // Pawns should not be able to move more than two squares vertically
 fn pawn_movement_too_far_test() {
-    let mut board = GameBoard::new();
-    let pawn = Piece::new(White, Pawn);
-    board.place_piece(pawn, 18);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Pawn, 18),
+    ]);
+
 
     let chosen_move = Move {
         action: ActionType::Move,
