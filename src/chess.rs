@@ -41,6 +41,7 @@ impl GameRules {
             PieceType:: Rook => RookRules::can_move(chosen_move, board),
             PieceType:: Bishop => BishopRules::can_move(chosen_move, board),
             PieceType:: Knight => KnightRules::can_move(chosen_move, board),
+            PieceType:: Queen => QueenRules::can_move(chosen_move, board),
         }
     }
 }
@@ -217,6 +218,33 @@ impl Moveable for KnightRules {
         }
     }
 }
+
+pub struct QueenRules {}
+
+impl Moveable for QueenRules {
+    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        // Diagonal
+        if delta_x.abs() == delta_y.abs() {
+            return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        }
+
+        return false;
+    }
+
+    fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
+        let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
+
+        // Diagonal
+        if delta_x.abs() == delta_y.abs() {
+            return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        }
+
+        return false;
+    }
+}
+
 
 // Determine the horizontal distance between two squares
 pub fn position_delta(origin: usize, destination: usize) -> (i32, i32) {

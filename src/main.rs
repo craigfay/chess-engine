@@ -16,6 +16,7 @@ use entities::{
         Rook,
         Bishop,
         Knight,
+        Queen,
     },
     ActionType,
     Color::{White, Black},
@@ -383,6 +384,24 @@ fn knight_movement_one_down_two_left_test() {
     assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
+// Queens should be able to move diagonally
+fn queen_movement_diagonal_test() {
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Queen, 24),
+    ]);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: Queen,
+        origin: 24,
+        destination: 42,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
+
+
 
 fn square_as_algebraic_test() {
     assert_eq!("a1", square_as_algebraic(0));
@@ -414,6 +433,7 @@ fn main() {
     knight_movement_one_down_two_right_test();
     knight_movement_two_down_one_left_test();
     knight_movement_one_down_two_left_test();
+    queen_movement_diagonal_test();
     square_as_algebraic_test(); 
 }
 

@@ -73,6 +73,7 @@ pub enum PieceType {
     Rook,
     Bishop,
     Knight,
+    Queen,
 }
 
 pub struct Move {
