@@ -77,9 +77,10 @@ fn pawn_movement_too_far_test() {
 
 // White pawns should be able to move 1 square up
 fn pawn_movement_normal_test() {
-    let mut board = GameBoard::new();
-    let pawn = Piece::new(White, Pawn);
-    board.place_piece(pawn, 22);
+
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Pawn, 22),
+    ]);
 
     let chosen_move = Move {
         action: ActionType::Move,
@@ -94,6 +95,10 @@ fn pawn_movement_normal_test() {
 
 // Pawns should not be able to move from an origin square that has no pawn
 fn pawn_movement_wrong_origin_test() {
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Pawn, 4),
+    ]);
+
     let mut board = GameBoard::new();
     let pawn = Piece::new(White, Pawn);
     board.place_piece(pawn, 4);
