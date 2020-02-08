@@ -145,11 +145,10 @@ fn rook_movement_vertical_test() {
 
 // Rooks should not be able to travel horizontally through other pieces
 fn rook_movement_horizontal_obstruction_test() {
-    let mut board = GameBoard::new();
-    let rook = Piece::new(White, Rook);
-    let pawn = Piece::new(Black, Pawn);
-    board.place_piece(rook, 32);
-    board.place_piece(pawn, 33);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Rook, 32),
+        Placement::new(Black, Pawn, 33),
+    ]);
 
     let chosen_move = Move {
         action: ActionType::Move,
