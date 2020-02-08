@@ -225,23 +225,24 @@ impl Moveable for QueenRules {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
-        // Diagonal
-        if delta_x.abs() == delta_y.abs() {
-            return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        return match (delta_x.abs(), delta_y.abs()) {
+            (0, _) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
+            (_, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
+            (x, y) => x == y && !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board),
+            _ => false,
         }
 
-        return false;
     }
 
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
-        // Diagonal
-        if delta_x.abs() == delta_y.abs() {
-            return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        return match (delta_x.abs(), delta_y.abs()) {
+            (0, _) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
+            (_, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
+            (x, y) => x == y && !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board),
+            _ => false,
         }
-
-        return false;
     }
 }
 
