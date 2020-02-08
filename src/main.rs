@@ -99,10 +99,6 @@ fn pawn_movement_wrong_origin_test() {
         Placement::new(White, Pawn, 4),
     ]);
 
-    let mut board = GameBoard::new();
-    let pawn = Piece::new(White, Pawn);
-    board.place_piece(pawn, 4);
-
     let chosen_move = Move {
         action: ActionType::Move,
         piece: Pawn,
@@ -113,12 +109,12 @@ fn pawn_movement_wrong_origin_test() {
     assert_eq!(false, GameRules::can_move(chosen_move, board));
 }
 
-
 // Rooks should be able to travel horizontally
 fn rook_movement_horizontal_test() {
-    let mut board = GameBoard::new();
-    let rook = Piece::new(White, Rook);
-    board.place_piece(rook, 35);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(White, Rook, 35),
+    ]);
+
 
     let chosen_move = Move {
         action: ActionType::Move,
