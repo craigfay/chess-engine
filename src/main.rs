@@ -262,9 +262,9 @@ fn bishop_movement_diagonal_left_edge_test() {
 
 
 fn knight_movement_two_up_one_right_test() {
-    let mut board = GameBoard::new();
-    let knight = Piece::new(Black, Knight);
-    board.place_piece(knight, 28);
+    let mut board = GameBoard::with_placements(vec![
+        Placement::new(Black, Knight, 28),
+    ]);
 
     let chosen_move = Move {
         action: ActionType::Move,
