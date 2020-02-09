@@ -1,11 +1,10 @@
 mod chess;
 mod entities;
+mod notation;
 
 use chess::{
     GameRules,
     position_delta,
-    index_as_algebraic,
-    algebraic_as_index,
 };
 
 use entities::{
@@ -22,6 +21,10 @@ use entities::{
     ActionType,
     Color::{White, Black},
     Move,
+};
+
+use notation::{
+    algebraic,
 };
 
 fn gameboard_with_placements_test() {
@@ -404,10 +407,10 @@ fn queen_movement_diagonal_test() {
 
 
 
-fn index_as_algebraic_test() {
-    assert_eq!("a1", index_as_algebraic(0));
-    assert_eq!("b1", index_as_algebraic(1));
-    assert_eq!("a2", index_as_algebraic(8));
+fn algebraic_notation_to_index_test() {
+    assert_eq!(algebraic("a1"), Some(0));
+    assert_eq!(algebraic("b1"), Some(1));
+    assert_eq!(algebraic("a2"), Some(8));
 }
 
 fn main() {
@@ -435,6 +438,6 @@ fn main() {
     knight_movement_two_down_one_left_test();
     knight_movement_one_down_two_left_test();
     queen_movement_diagonal_test();
-    index_as_algebraic_test(); 
+    algebraic_notation_to_index_test(); 
 }
 
