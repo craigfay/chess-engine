@@ -8,16 +8,37 @@ use crate::entities::{
 
 use std::cmp::{min, max};
 
-pub fn square_as_algebraic(square: usize) -> String {
+pub fn index_as_algebraic(square: usize) -> String {
     let rank = (square as u8 % 8 + 97) as char;
     let file = (square / 8) + 1;
     String::from(format!("{}{}", rank, file))
+}
+
+pub fn algebraic_as_index(s: &str) -> Option<usize> {
+    let mut chars = s.chars();
+    let file = chars.next();
+    let rank = chars.next();
+    let end = chars.next();
+
+    if !rank.is_some() { return None }
+    if !file.is_some() { return None }
+    if end.is_some() { return None }
+
+    if !file.unwrap().is_alphabetic() { return None }
+    if !rank.unwrap().is_numeric() { return None }
+
+    let file = file.unwrap() as usize - 97;
+    let rank = (rank.unwrap().to_digit(10).unwrap() as usize - 1) * 8;
+
+    Some(file + rank)
+
 }
 
 trait Moveable {
     fn can_move(chosen_move: Move, board: GameBoard) -> bool;
     fn can_capture(chosen_move: Move, board: GameBoard) -> bool;
 }
+
 
 pub struct GameRules {}
 
