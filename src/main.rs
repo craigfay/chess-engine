@@ -1,3 +1,5 @@
+use std::time::{Duration, Instant};
+
 mod chess;
 mod entities;
 mod notation;
@@ -23,9 +25,8 @@ use entities::{
     Move,
 };
 
-use notation::{
-    algebraic,
-};
+use notation::algebraic;
+
 
 fn gameboard_with_placements_test() {
     let board = GameBoard::with_placements(vec![
