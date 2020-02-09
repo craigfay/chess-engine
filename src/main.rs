@@ -404,13 +404,17 @@ fn queen_movement_diagonal_test() {
     assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
-
-
-
 fn algebraic_notation_to_index_test() {
-    assert_eq!(algebraic("a1"), Some(0));
-    assert_eq!(algebraic("b1"), Some(1));
-    assert_eq!(algebraic("a2"), Some(8));
+    let ranks = ["1","2","3","4","5","6","7","8"];
+    let files = ["a","b","c","d","e","f","g","h"];
+
+    for (r, rank) in ranks.iter().enumerate() {
+        for (f, file) in files.iter().enumerate() {
+            let square = format!("{}{}", file, rank);
+            let index = r * 8 + f;
+            assert_eq!(algebraic(&square), Some(index));
+        }
+    }
 }
 
 fn main() {
