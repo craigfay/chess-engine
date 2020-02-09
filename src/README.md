@@ -6,5 +6,4 @@
 * Abstract identical can_move() and can_capture() implementations.
 * Abstract horizontal/diagonal movement
 * Maybe rename GameBoard as State
-* Introduce algebraic notation as an abstraction.
 
