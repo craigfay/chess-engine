@@ -193,7 +193,7 @@ impl Moveable for BishopRules {
 pub struct KnightRules {}
 
 impl Moveable for KnightRules {
-    fn can_move(chosen_move: Move, board: GameBoard) -> bool {
+    fn can_move(chosen_move: Move, _board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
         return match (delta_x.abs(), delta_y.abs()) {
@@ -204,7 +204,7 @@ impl Moveable for KnightRules {
 
     }
 
-    fn can_capture(chosen_move: Move, board: GameBoard) -> bool {
+    fn can_capture(chosen_move: Move, _board: GameBoard) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
         return match (delta_x.abs(), delta_y.abs()) {
@@ -225,7 +225,6 @@ impl Moveable for QueenRules {
             (0, _) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
             (_, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
             (x, y) => x == y && !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board),
-            _ => false,
         }
 
     }
@@ -237,7 +236,6 @@ impl Moveable for QueenRules {
             (0, _) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
             (_, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
             (x, y) => x == y && !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board),
-            _ => false,
         }
     }
 }
