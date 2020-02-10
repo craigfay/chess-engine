@@ -74,6 +74,7 @@ pub enum PieceType {
     Bishop,
     Knight,
     Queen,
+    King,
 }
 
 pub struct Move {

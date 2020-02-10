@@ -19,6 +19,7 @@ use entities::{
         Bishop,
         Knight,
         Queen,
+        King,
     },
     ActionType,
     Color::{White, Black},
@@ -405,6 +406,22 @@ fn queen_movement_diagonal_test() {
     assert_eq!(true, GameRules::can_move(chosen_move, board));
 }
 
+// Kings should be able to move one square diagonally
+fn king_movement_diagonal_test() {
+    let board = GameBoard::with_placements(vec![
+        Placement::new(Black, King, 24),
+    ]);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: King,
+        origin: 24,
+        destination: 33,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
 fn algebraic_notation_to_index_test() {
     let ranks = ["1","2","3","4","5","6","7","8"];
     let files = ["a","b","c","d","e","f","g","h"];
@@ -443,6 +460,7 @@ fn main() {
     knight_movement_two_down_one_left_test();
     knight_movement_one_down_two_left_test();
     queen_movement_diagonal_test();
+    king_movement_diagonal_test();
     algebraic_notation_to_index_test(); 
 }
 
