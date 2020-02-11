@@ -455,6 +455,23 @@ fn king_movement_horizontal_test() {
 }
 
 
+// Kings should be able to move one square vertically
+fn king_movement_vertical_test() {
+    let board = GameBoard::with_placements(vec![
+        Placement::new(Black, King, 28),
+    ]);
+
+    let chosen_move = Move {
+        action: ActionType::Move,
+        piece: King,
+        origin: 28,
+        destination: 20,
+    };
+
+    assert_eq!(true, GameRules::can_move(chosen_move, board));
+}
+
+
 // Kings should be able to move one square diagonally
 fn king_movement_diagonal_test() {
     let board = GameBoard::with_placements(vec![
@@ -512,6 +529,7 @@ fn main() {
     queen_movement_vertical_test();
     queen_movement_diagonal_test();
     king_movement_horizontal_test();
+    king_movement_vertical_test();
     king_movement_diagonal_test();
     algebraic_notation_to_index_test(); 
 }
