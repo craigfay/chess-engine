@@ -1,11 +1,11 @@
 use std::time::{Duration, Instant};
 
-mod chess;
+mod rules;
 mod entities;
 mod notation;
 
-use chess::{
-    GameRules,
+use rules::{
+    is_legal,
     position_delta,
 };
 
@@ -61,7 +61,7 @@ fn pawn_movement_sideways_test() {
         destination: 17,
     };
 
-    assert_eq!(false, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, board));
 }
 
 
@@ -79,7 +79,7 @@ fn pawn_movement_too_far_test() {
         destination: 42,
     };
 
-    assert_eq!(false, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, board));
 }
 
 // White pawns should be able to move 1 square up
@@ -96,7 +96,7 @@ fn pawn_movement_normal_test() {
         destination: 30,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -113,7 +113,7 @@ fn pawn_movement_wrong_origin_test() {
         destination: 30,
     };
 
-    assert_eq!(false, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, board));
 }
 
 // Rooks should be able to travel horizontally
@@ -130,7 +130,7 @@ fn rook_movement_horizontal_test() {
         destination: 32,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 // Rooks should be able to travel vertically
@@ -146,7 +146,7 @@ fn rook_movement_vertical_test() {
         destination: 3,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -164,7 +164,7 @@ fn rook_movement_horizontal_obstruction_test() {
         destination: 36,
     };
 
-    assert_eq!(false, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, board));
 }
 
 // Bishops should be able to travel diagonally up-left
@@ -180,7 +180,7 @@ fn bishop_movement_diagonal_up_left_test() {
         destination: 36,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -197,7 +197,7 @@ fn bishop_movement_diagonal_up_right_test() {
         destination: 36,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 // Bishops should be able to travel diagonally down-left
@@ -213,7 +213,7 @@ fn bishop_movement_diagonal_down_left_test() {
         destination: 9,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -230,7 +230,7 @@ fn bishop_movement_diagonal_down_right_test() {
         destination: 42,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -247,7 +247,7 @@ fn bishop_movement_diagonal_right_edge_test() {
         destination: 41,
     };
 
-    assert_eq!(false, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, board));
 }
 
 
@@ -264,7 +264,7 @@ fn bishop_movement_diagonal_left_edge_test() {
         destination: 15
     };
 
-    assert_eq!(false, GameRules::can_move(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, board));
 }
 
 
@@ -280,7 +280,7 @@ fn knight_movement_two_up_one_right_test() {
         destination: 45,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -296,7 +296,7 @@ fn knight_movement_one_up_two_right_test() {
         destination: 38,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 fn knight_movement_two_up_one_left_test() {
@@ -311,7 +311,7 @@ fn knight_movement_two_up_one_left_test() {
         destination: 43,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -327,7 +327,7 @@ fn knight_movement_one_up_two_left_test() {
         destination: 34,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 fn knight_movement_two_down_one_right_test() {
@@ -342,7 +342,7 @@ fn knight_movement_two_down_one_right_test() {
         destination: 13,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 fn knight_movement_one_down_two_right_test() {
@@ -357,7 +357,7 @@ fn knight_movement_one_down_two_right_test() {
         destination: 22,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 fn knight_movement_two_down_one_left_test() {
@@ -372,7 +372,7 @@ fn knight_movement_two_down_one_left_test() {
         destination: 11,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 fn knight_movement_one_down_two_left_test() {
@@ -387,7 +387,7 @@ fn knight_movement_one_down_two_left_test() {
         destination: 18,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 // Queens should be able to move horizontally
@@ -403,7 +403,7 @@ fn queen_movement_horizontal_test() {
         destination: 30,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 // Queens should be able to move horizontally
@@ -419,7 +419,7 @@ fn queen_movement_vertical_test() {
         destination: 48,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 // Queens should be able to move diagonally
@@ -435,7 +435,7 @@ fn queen_movement_diagonal_test() {
         destination: 42,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 // Kings should be able to move one square horizontally
@@ -451,7 +451,7 @@ fn king_movement_horizontal_test() {
         destination: 27,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -468,7 +468,7 @@ fn king_movement_vertical_test() {
         destination: 20,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 
@@ -485,7 +485,7 @@ fn king_movement_diagonal_test() {
         destination: 33,
     };
 
-    assert_eq!(true, GameRules::can_move(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, board));
 }
 
 fn algebraic_notation_to_index_test() {
