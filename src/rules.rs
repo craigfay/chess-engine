@@ -11,20 +11,20 @@ use crate::notation::{algebraic};
 use std::cmp::{min, max};
 
 trait Moveable {
-    fn is_legal(chosen_move: Move, board: GameState) -> bool;
+    fn is_legal(chosen_move: Move, state: GameState) -> bool;
 }
 
-pub fn is_legal(chosen_move: Move, board: GameState) -> bool {
-    GameRules::is_legal(chosen_move, board)
+pub fn is_legal(chosen_move: Move, state: GameState) -> bool {
+    GameRules::is_legal(chosen_move, state)
 }
 
 
 pub struct GameRules {}
 
 impl GameRules {
-    pub fn is_legal(chosen_move: Move, board: GameState) -> bool {
-        let maybe_piece = board.squares[chosen_move.origin];
-        let destination = board.squares[chosen_move.destination];
+    pub fn is_legal(chosen_move: Move, state: GameState) -> bool {
+        let maybe_piece = state.squares[chosen_move.origin];
+        let destination = state.squares[chosen_move.destination];
 
         // If there is no piece present at the chosen origin
         if maybe_piece.is_none() {
@@ -37,12 +37,12 @@ impl GameRules {
         }
 
         match chosen_move.piece {
-            PieceType:: Pawn => PawnRules::is_legal(chosen_move, board),
-            PieceType:: Rook => RookRules::is_legal(chosen_move, board),
-            PieceType:: Bishop => BishopRules::is_legal(chosen_move, board),
-            PieceType:: Knight => KnightRules::is_legal(chosen_move, board),
-            PieceType:: Queen => QueenRules::is_legal(chosen_move, board),
-            PieceType:: King => KingRules::is_legal(chosen_move, board),
+            PieceType:: Pawn => PawnRules::is_legal(chosen_move, state),
+            PieceType:: Rook => RookRules::is_legal(chosen_move, state),
+            PieceType:: Bishop => BishopRules::is_legal(chosen_move, state),
+            PieceType:: Knight => KnightRules::is_legal(chosen_move, state),
+            PieceType:: Queen => QueenRules::is_legal(chosen_move, state),
+            PieceType:: King => KingRules::is_legal(chosen_move, state),
         }
     }
 }
@@ -50,12 +50,12 @@ impl GameRules {
 pub struct PawnRules {}
 
 impl Moveable for PawnRules {
-    fn is_legal(chosen_move: Move, board: GameState) -> bool {
-        let piece = board.squares[chosen_move.origin].unwrap();
+    fn is_legal(chosen_move: Move, state: GameState) -> bool {
+        let piece = state.squares[chosen_move.origin].unwrap();
 
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
-        let destination_is_enemy_piece = match board.squares[chosen_move.destination] {
+        let destination_is_enemy_piece = match state.squares[chosen_move.destination] {
             Some(other_piece) => other_piece.color != piece.color,
             None => false,
         };
@@ -89,31 +89,31 @@ impl Moveable for PawnRules {
     }
 }
 
-fn horizontal_path_is_obstructed(origin: usize, delta_x: i32, board: GameState) -> bool {
+fn horizontal_path_is_obstructed(origin: usize, delta_x: i32, state: GameState) -> bool {
     for x in 1..delta_x.abs() {
         let index = if delta_x > 0 { origin + x as usize } else { origin - x as usize };
-        if board.squares[index].is_some() {
+        if state.squares[index].is_some() {
             return true
         }
     }
     false
 }
 
-fn vertical_path_is_obstructed(origin: usize, delta_y: i32, board: GameState) -> bool {
+fn vertical_path_is_obstructed(origin: usize, delta_y: i32, state: GameState) -> bool {
     for x in 1..delta_y.abs() {
         let index = if delta_y > 0 {
             origin + x as usize * 8
         } else {
             origin - x as usize * 8
         };
-        if board.squares[index].is_some() {
+        if state.squares[index].is_some() {
             return true
         }
     }
     false
 }
 
-fn diagonal_is_obstructed(origin: usize, destination: usize, board: GameState) -> bool {
+fn diagonal_is_obstructed(origin: usize, destination: usize, state: GameState) -> bool {
     let low = min(origin, destination);
     let hi = max(origin, destination);
 
@@ -121,7 +121,7 @@ fn diagonal_is_obstructed(origin: usize, destination: usize, board: GameState) -
     for n in [7,9].iter() {
         if (hi - low) % n == 0 {
             for i in (low..hi).step_by(*n) {
-                if board.squares[i].is_some() { return true } 
+                if state.squares[i].is_some() { return true } 
             }
         }
     }
@@ -131,10 +131,10 @@ fn diagonal_is_obstructed(origin: usize, destination: usize, board: GameState) -
 pub struct RookRules {}
 
 impl Moveable for RookRules {
-    fn is_legal(chosen_move: Move, board: GameState) -> bool {
+    fn is_legal(chosen_move: Move, state: GameState) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
         // Return false if the path is obstructed
-        if horizontal_path_is_obstructed(chosen_move.origin, delta_x, board) {
+        if horizontal_path_is_obstructed(chosen_move.origin, delta_x, state) {
             return false;
         }
 
@@ -149,12 +149,12 @@ impl Moveable for RookRules {
 pub struct BishopRules {}
 
 impl Moveable for BishopRules {
-    fn is_legal(chosen_move: Move, board: GameState) -> bool {
+    fn is_legal(chosen_move: Move, state: GameState) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
         if delta_x.abs() != delta_y.abs() {
             return false;
         }
-        return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board);
+        return false == diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, state);
     }
 }
 
@@ -177,13 +177,13 @@ impl Moveable for KnightRules {
 pub struct QueenRules {}
 
 impl Moveable for QueenRules {
-    fn is_legal(chosen_move: Move, board: GameState) -> bool {
+    fn is_legal(chosen_move: Move, state: GameState) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
         return match (delta_x.abs(), delta_y.abs()) {
-            (0, _) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
-            (_, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
-            (x, y) => x == y && !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board),
+            (0, _) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, state),
+            (_, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, state),
+            (x, y) => x == y && !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, state),
         }
 
     }
@@ -192,13 +192,13 @@ impl Moveable for QueenRules {
 pub struct KingRules {}
 
 impl Moveable for KingRules {
-    fn is_legal(chosen_move: Move, board: GameState) -> bool {
+    fn is_legal(chosen_move: Move, state: GameState) -> bool {
         let (delta_x, delta_y)  = position_delta(chosen_move.origin, chosen_move.destination);
 
         return match (delta_x.abs(), delta_y.abs()) {
-            (0, 1) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
-            (1, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, board),
-            (1, 1) => !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, board),
+            (0, 1) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, state),
+            (1, 0) => !horizontal_path_is_obstructed(chosen_move.origin, delta_x, state),
+            (1, 1) => !diagonal_is_obstructed(chosen_move.origin, chosen_move.origin, state),
             _ => false,
         }
     }
