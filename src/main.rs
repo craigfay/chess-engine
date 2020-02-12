@@ -30,7 +30,7 @@ use notation::algebraic;
 
 
 fn gameboard_with_placements_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 8),
         Placement::new(Black, Pawn, 9),
     ]);
@@ -50,7 +50,7 @@ fn position_delta_test() {
 
 // Pawns should not be able to move sideways
 fn pawn_movement_sideways_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 16),
     ]);
 
@@ -61,13 +61,13 @@ fn pawn_movement_sideways_test() {
         destination: 17,
     };
 
-    assert_eq!(false, is_legal(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, state));
 }
 
 
 // Pawns should not be able to move more than two squares vertically
 fn pawn_movement_too_far_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 18),
     ]);
 
@@ -79,13 +79,13 @@ fn pawn_movement_too_far_test() {
         destination: 42,
     };
 
-    assert_eq!(false, is_legal(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, state));
 }
 
 // White pawns should be able to move 1 square up
 fn pawn_movement_normal_test() {
 
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 22),
     ]);
 
@@ -96,13 +96,13 @@ fn pawn_movement_normal_test() {
         destination: 30,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 // Pawns should not be able to move from an origin square that has no pawn
 fn pawn_movement_wrong_origin_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 4),
     ]);
 
@@ -113,12 +113,12 @@ fn pawn_movement_wrong_origin_test() {
         destination: 30,
     };
 
-    assert_eq!(false, is_legal(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, state));
 }
 
 // Rooks should be able to travel horizontally
 fn rook_movement_horizontal_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
 
@@ -130,12 +130,12 @@ fn rook_movement_horizontal_test() {
         destination: 32,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 // Rooks should be able to travel vertically
 fn rook_movement_vertical_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
 
@@ -146,13 +146,13 @@ fn rook_movement_vertical_test() {
         destination: 3,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 // Rooks should not be able to travel horizontally through other pieces
 fn rook_movement_horizontal_obstruction_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 32),
         Placement::new(Black, Pawn, 33),
     ]);
@@ -164,12 +164,12 @@ fn rook_movement_horizontal_obstruction_test() {
         destination: 36,
     };
 
-    assert_eq!(false, is_legal(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, state));
 }
 
 // Bishops should be able to travel diagonally up-left
 fn bishop_movement_diagonal_up_left_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 22),
     ]);
 
@@ -180,13 +180,13 @@ fn bishop_movement_diagonal_up_left_test() {
         destination: 36,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 // Bishops should be able to travel diagonally up-right
 fn bishop_movement_diagonal_up_right_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 0),
     ]);
 
@@ -197,12 +197,12 @@ fn bishop_movement_diagonal_up_right_test() {
         destination: 36,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 // Bishops should be able to travel diagonally down-left
 fn bishop_movement_diagonal_down_left_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 27),
     ]);
 
@@ -213,13 +213,13 @@ fn bishop_movement_diagonal_down_left_test() {
         destination: 9,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 // Bishops should be able to travel diagonally down-right
 fn bishop_movement_diagonal_down_right_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 56),
     ]);
 
@@ -230,13 +230,13 @@ fn bishop_movement_diagonal_down_right_test() {
         destination: 42,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
-// Bishops shouldn't be able to wrap around the right edge of the board
+// Bishops shouldn't be able to wrap around the right edge of the state
 fn bishop_movement_diagonal_right_edge_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 23),
     ]);
 
@@ -247,13 +247,13 @@ fn bishop_movement_diagonal_right_edge_test() {
         destination: 41,
     };
 
-    assert_eq!(false, is_legal(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, state));
 }
 
 
-// Bishops shouldn't be able to wrap around the left edge of the board
+// Bishops shouldn't be able to wrap around the left edge of the state
 fn bishop_movement_diagonal_left_edge_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 24),
     ]);
 
@@ -264,12 +264,12 @@ fn bishop_movement_diagonal_left_edge_test() {
         destination: 15
     };
 
-    assert_eq!(false, is_legal(chosen_move, board));
+    assert_eq!(false, is_legal(chosen_move, state));
 }
 
 
 fn knight_movement_two_up_one_right_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -280,12 +280,12 @@ fn knight_movement_two_up_one_right_test() {
         destination: 45,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 fn knight_movement_one_up_two_right_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -296,11 +296,11 @@ fn knight_movement_one_up_two_right_test() {
         destination: 38,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 fn knight_movement_two_up_one_left_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -311,12 +311,12 @@ fn knight_movement_two_up_one_left_test() {
         destination: 43,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 fn knight_movement_one_up_two_left_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -327,11 +327,11 @@ fn knight_movement_one_up_two_left_test() {
         destination: 34,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 fn knight_movement_two_down_one_right_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -342,11 +342,11 @@ fn knight_movement_two_down_one_right_test() {
         destination: 13,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 fn knight_movement_one_down_two_right_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -357,11 +357,11 @@ fn knight_movement_one_down_two_right_test() {
         destination: 22,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 fn knight_movement_two_down_one_left_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -372,11 +372,11 @@ fn knight_movement_two_down_one_left_test() {
         destination: 11,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 fn knight_movement_one_down_two_left_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
 
@@ -387,12 +387,12 @@ fn knight_movement_one_down_two_left_test() {
         destination: 18,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 // Queens should be able to move horizontally
 fn queen_movement_horizontal_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
 
@@ -403,12 +403,12 @@ fn queen_movement_horizontal_test() {
         destination: 30,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 // Queens should be able to move horizontally
 fn queen_movement_vertical_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
 
@@ -419,12 +419,12 @@ fn queen_movement_vertical_test() {
         destination: 48,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 // Queens should be able to move diagonally
 fn queen_movement_diagonal_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Queen, 24),
     ]);
 
@@ -435,12 +435,12 @@ fn queen_movement_diagonal_test() {
         destination: 42,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 // Kings should be able to move one square horizontally
 fn king_movement_horizontal_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
 
@@ -451,13 +451,13 @@ fn king_movement_horizontal_test() {
         destination: 27,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 // Kings should be able to move one square vertically
 fn king_movement_vertical_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
 
@@ -468,13 +468,13 @@ fn king_movement_vertical_test() {
         destination: 20,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 
 // Kings should be able to move one square diagonally
 fn king_movement_diagonal_test() {
-    let board = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, King, 24),
     ]);
 
@@ -485,7 +485,7 @@ fn king_movement_diagonal_test() {
         destination: 33,
     };
 
-    assert_eq!(true, is_legal(chosen_move, board));
+    assert_eq!(true, is_legal(chosen_move, state));
 }
 
 fn algebraic_notation_to_index_test() {
