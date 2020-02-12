@@ -87,6 +87,7 @@ pub struct Move {
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
+#[derive(PartialEq)]
 pub enum Color {
     Black,
     White,
