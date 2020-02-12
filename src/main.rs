@@ -21,7 +21,6 @@ use entities::{
         Queen,
         King,
     },
-    ActionType,
     Color::{White, Black},
     Move,
 };
@@ -55,7 +54,6 @@ fn pawn_movement_sideways_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Pawn,
         origin: 16,
         destination: 17,
@@ -73,7 +71,6 @@ fn pawn_movement_too_far_test() {
 
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Pawn,
         origin: 18,
         destination: 42,
@@ -90,7 +87,6 @@ fn pawn_movement_normal_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Pawn,
         origin: 22,
         destination: 30,
@@ -107,7 +103,6 @@ fn pawn_movement_wrong_origin_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Pawn,
         origin: 22,
         destination: 30,
@@ -124,7 +119,6 @@ fn rook_movement_horizontal_test() {
 
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Rook,
         origin: 35,
         destination: 32,
@@ -140,7 +134,6 @@ fn rook_movement_vertical_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Rook,
         origin: 35,
         destination: 3,
@@ -158,7 +151,6 @@ fn rook_movement_horizontal_obstruction_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Rook,
         origin: 32,
         destination: 36,
@@ -174,7 +166,6 @@ fn bishop_movement_diagonal_up_left_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Bishop,
         origin: 22,
         destination: 36,
@@ -191,7 +182,6 @@ fn bishop_movement_diagonal_up_right_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Bishop,
         origin: 0,
         destination: 36,
@@ -207,7 +197,6 @@ fn bishop_movement_diagonal_down_left_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Bishop,
         origin: 27,
         destination: 9,
@@ -224,7 +213,6 @@ fn bishop_movement_diagonal_down_right_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Bishop,
         origin: 56,
         destination: 42,
@@ -241,7 +229,6 @@ fn bishop_movement_diagonal_right_edge_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Bishop,
         origin: 23,
         destination: 41,
@@ -258,7 +245,6 @@ fn bishop_movement_diagonal_left_edge_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Bishop,
         origin: 24,
         destination: 15
@@ -274,7 +260,6 @@ fn knight_movement_two_up_one_right_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 45,
@@ -290,7 +275,6 @@ fn knight_movement_one_up_two_right_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 38,
@@ -305,7 +289,6 @@ fn knight_movement_two_up_one_left_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 43,
@@ -321,7 +304,6 @@ fn knight_movement_one_up_two_left_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 34,
@@ -336,7 +318,6 @@ fn knight_movement_two_down_one_right_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 13,
@@ -351,7 +332,6 @@ fn knight_movement_one_down_two_right_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 22,
@@ -366,7 +346,6 @@ fn knight_movement_two_down_one_left_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 11,
@@ -381,7 +360,6 @@ fn knight_movement_one_down_two_left_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Knight,
         origin: 28,
         destination: 18,
@@ -397,7 +375,6 @@ fn queen_movement_horizontal_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Queen,
         origin: 24,
         destination: 30,
@@ -413,7 +390,6 @@ fn queen_movement_vertical_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Queen,
         origin: 24,
         destination: 48,
@@ -429,7 +405,6 @@ fn queen_movement_diagonal_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: Queen,
         origin: 24,
         destination: 42,
@@ -445,7 +420,6 @@ fn king_movement_horizontal_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: King,
         origin: 28,
         destination: 27,
@@ -462,7 +436,6 @@ fn king_movement_vertical_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: King,
         origin: 28,
         destination: 20,
@@ -479,7 +452,6 @@ fn king_movement_diagonal_test() {
     ]);
 
     let chosen_move = Move {
-        action: ActionType::Move,
         piece: King,
         origin: 24,
         destination: 33,

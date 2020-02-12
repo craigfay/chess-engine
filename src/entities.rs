@@ -60,11 +60,6 @@ impl std::fmt::Debug for GameState {
     }
 }
 
-pub enum ActionType {
-    Move,
-    Capture,
-}
-
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
@@ -78,7 +73,6 @@ pub enum PieceType {
 }
 
 pub struct Move {
-    pub action: ActionType,
     pub piece: PieceType,
     pub origin: usize,
     pub destination: usize,
