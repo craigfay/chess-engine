@@ -1,13 +1,13 @@
 
 #[derive(Copy)]
 #[derive(Clone)]
-pub struct GameBoard {
+pub struct GameState {
     pub squares: [Option<Piece>; 64]
 }
 
-impl GameBoard {
-    pub fn new() -> GameBoard {
-        GameBoard {
+impl GameState {
+    pub fn new() -> GameState {
+        GameState {
             squares: [None; 64]
         }
     }
@@ -22,8 +22,8 @@ impl GameBoard {
         self.squares[square] = Some(piece);
         return true;
     }
-    pub fn with_placements(placements: Vec<Placement>) -> GameBoard {
-        let mut board = GameBoard {
+    pub fn with_placements(placements: Vec<Placement>) -> GameState {
+        let mut board = GameState {
             squares: [None; 64]
         };
         for placement in placements.iter() {
@@ -47,7 +47,7 @@ impl Placement {
 }
     
 
-impl std::fmt::Debug for GameBoard {
+impl std::fmt::Debug for GameState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "".to_string();
 
