@@ -10,9 +10,7 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
         destination: 1 as usize,
     };
 
-    static ranks: [char; 8] = ['1','2','3','4','5','6','7','8'];
-    static files: [char; 8] = ['a','b','c','d','e','f','g','h'];
-    static pieces: [char; 5] = ['B','N','R','Q','K'];
+    static PIECES: [char; 5] = ['B','N','R','Q','K'];
 
     let chars: Vec<char> = s.chars().collect();
 
@@ -37,14 +35,14 @@ pub fn index(square: usize) -> String {
 
 // Get index notation from algebraic
 pub fn algebraic(s: &str) -> Option<usize> {
-    static ranks: [char; 8] = ['1','2','3','4','5','6','7','8'];
-    static files: [char; 8] = ['a','b','c','d','e','f','g','h'];
+    static RANKS: [char; 8] = ['1','2','3','4','5','6','7','8'];
+    static FILES: [char; 8] = ['a','b','c','d','e','f','g','h'];
 
     let chars: Vec<char> = s.chars().collect();
 
     match chars.as_slice() {
         [file, rank] => {
-            if files.contains(file) && ranks.contains(rank) {
+            if FILES.contains(file) && RANKS.contains(rank) {
                 let file = *file as usize - 97;
                 let rank = (rank.to_digit(10).unwrap() as usize - 1) * 8;
                 return Some(file + rank)
