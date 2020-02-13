@@ -476,7 +476,38 @@ fn algebraic_notation_to_index_test() {
 fn algebraic_moves_test() {
     let mut state = GameState::with_placements(vec![]);
 
+    // white pawn one move forward
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 8),
+    ]);
+
+    state.to_move = White;
+    let action = algebraic_move("a3", state);
+    let expected_action = Some(Move {
+        piece: Pawn,
+        origin: 8,
+        destination: 16,
+    });
+    assert_eq!(action, expected_action);
+
+    // black pawn one move forward
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 48),
+    ]);
+    state.to_move = Black;
+    let action = algebraic_move("a6", state);
+    let expected_action = Some(Move {
+        piece: Pawn,
+        origin: 48,
+        destination: 40,
+    });
+    assert_eq!(action, expected_action);
+
     // white pawn two moves forward
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 8),
+    ]);
+    state.to_move = White;
     let action = algebraic_move("a4", state);
     let expected_action = Some(Move {
         piece: Pawn,
@@ -486,6 +517,9 @@ fn algebraic_moves_test() {
     assert_eq!(action, expected_action);
 
     // black pawn two moves forward
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 48),
+    ]);
     state.to_move = Black;
     let action = algebraic_move("a5", state);
     let expected_action = Some(Move {
@@ -494,7 +528,6 @@ fn algebraic_moves_test() {
         destination: 32,
     });
     assert_eq!(action, expected_action);
-
 }
 
 fn main() {
