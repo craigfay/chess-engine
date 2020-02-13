@@ -545,6 +545,26 @@ fn algebraic_moves_white_pawn_rank_2_test() {
     assert_eq!(action, None);
 }
 
+fn algebraic_moves_black_pawn_rank_7_test() {
+    // it should be impossible for black pawns to move to rank 7
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 40),
+    ]);
+    state.to_move = Black;
+    let action = algebraic_move("a7", state);
+    assert_eq!(action, None);
+}
+
+fn algebraic_moves_black_pawn_rank_8_test() {
+    // it should be impossible for black pawns to move to rank 8
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 48),
+    ]);
+    state.to_move = Black;
+    let action = algebraic_move("a8", state);
+    assert_eq!(action, None);
+}
+
 
 
 fn main() {
@@ -584,5 +604,6 @@ fn main() {
     algebraic_moves_black_pawn_two_forward_test(); 
     algebraic_moves_white_pawn_rank_1_test(); 
     algebraic_moves_white_pawn_rank_2_test(); 
+    algebraic_moves_black_pawn_rank_7_test(); 
+    algebraic_moves_black_pawn_rank_8_test(); 
 }
-
