@@ -473,7 +473,7 @@ fn algebraic_notation_to_index_test() {
     }
 }
 
-fn algebraic_moves_test() {
+fn algebraic_moves_white_pawn_one_forward_test() {
     let mut state = GameState::with_placements(vec![]);
 
     // white pawn one move forward
@@ -489,7 +489,9 @@ fn algebraic_moves_test() {
         destination: 16,
     });
     assert_eq!(action, expected_action);
+}
 
+fn algebraic_moves_black_pawn_one_forward_test() {
     // black pawn one move forward
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 48),
@@ -502,7 +504,9 @@ fn algebraic_moves_test() {
         destination: 40,
     });
     assert_eq!(action, expected_action);
+}
 
+fn algebraic_moves_white_pawn_two_forward_test() {
     // white pawn two moves forward
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
@@ -515,7 +519,9 @@ fn algebraic_moves_test() {
         destination: 24,
     });
     assert_eq!(action, expected_action);
+}
 
+fn algebraic_moves_black_pawn_two_forward_test() {
     // black pawn two moves forward
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 48),
@@ -561,6 +567,9 @@ fn main() {
     king_movement_vertical_test();
     king_movement_diagonal_test();
     algebraic_notation_to_index_test(); 
-    algebraic_moves_test(); 
+    algebraic_moves_white_pawn_one_forward_test(); 
+    algebraic_moves_black_pawn_one_forward_test(); 
+    algebraic_moves_white_pawn_two_forward_test(); 
+    algebraic_moves_black_pawn_two_forward_test(); 
 }
 
