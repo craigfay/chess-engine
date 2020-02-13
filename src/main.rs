@@ -25,7 +25,7 @@ use entities::{
     Move,
 };
 
-use notation::algebraic;
+use notation::{algebraic, algebraic_move};
 
 
 fn gameboard_with_placements_test() {
@@ -473,6 +473,13 @@ fn algebraic_notation_to_index_test() {
     }
 }
 
+fn algebraic_moves_test() {
+    let state = GameState::with_placements(vec![]);
+
+    let action = algebraic_move("e1", state);
+    assert!(action.is_some());
+}
+
 fn main() {
     gameboard_with_placements_test();
     position_delta_test();
@@ -504,5 +511,6 @@ fn main() {
     king_movement_vertical_test();
     king_movement_diagonal_test();
     algebraic_notation_to_index_test(); 
+    algebraic_moves_test(); 
 }
 
