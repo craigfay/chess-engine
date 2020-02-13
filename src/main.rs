@@ -474,14 +474,9 @@ fn algebraic_notation_to_index_test() {
 }
 
 fn algebraic_moves_white_pawn_one_forward_test() {
-    let mut state = GameState::with_placements(vec![]);
-
-    // white pawn one move forward
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
     ]);
-
-    state.to_move = White;
     let action = algebraic_move("a3", state);
     let expected_action = Some(Move {
         piece: Pawn,
@@ -492,7 +487,6 @@ fn algebraic_moves_white_pawn_one_forward_test() {
 }
 
 fn algebraic_moves_black_pawn_one_forward_test() {
-    // black pawn one move forward
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 48),
     ]);
@@ -507,11 +501,9 @@ fn algebraic_moves_black_pawn_one_forward_test() {
 }
 
 fn algebraic_moves_white_pawn_two_forward_test() {
-    // white pawn two moves forward
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
     ]);
-    state.to_move = White;
     let action = algebraic_move("a4", state);
     let expected_action = Some(Move {
         piece: Pawn,
@@ -522,7 +514,6 @@ fn algebraic_moves_white_pawn_two_forward_test() {
 }
 
 fn algebraic_moves_black_pawn_two_forward_test() {
-    // black pawn two moves forward
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 48),
     ]);
@@ -535,6 +526,26 @@ fn algebraic_moves_black_pawn_two_forward_test() {
     });
     assert_eq!(action, expected_action);
 }
+
+fn algebraic_moves_white_pawn_rank_1_test() {
+    // it should be impossible for white pawns to move to rank 1
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 8),
+    ]);
+    let action = algebraic_move("a1", state);
+    assert_eq!(action, None);
+}
+
+fn algebraic_moves_white_pawn_rank_2_test() {
+    // it should be impossible for white pawns to move to rank 2
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 16),
+    ]);
+    let action = algebraic_move("a2", state);
+    assert_eq!(action, None);
+}
+
+
 
 fn main() {
     gameboard_with_placements_test();
@@ -571,5 +582,7 @@ fn main() {
     algebraic_moves_black_pawn_one_forward_test(); 
     algebraic_moves_white_pawn_two_forward_test(); 
     algebraic_moves_black_pawn_two_forward_test(); 
+    algebraic_moves_white_pawn_rank_1_test(); 
+    algebraic_moves_white_pawn_rank_2_test(); 
 }
 
