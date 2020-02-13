@@ -66,6 +66,7 @@ impl std::fmt::Debug for GameState {
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
+#[derive(PartialEq)]
 pub enum PieceType {
     Pawn,
     Rook,
@@ -75,6 +76,9 @@ pub enum PieceType {
     King,
 }
 
+
+#[derive(Debug)]
+#[derive(PartialEq)]
 pub struct Move {
     pub piece: PieceType,
     pub origin: usize,

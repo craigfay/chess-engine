@@ -476,8 +476,15 @@ fn algebraic_notation_to_index_test() {
 fn algebraic_moves_test() {
     let state = GameState::with_placements(vec![]);
 
-    let action = algebraic_move("e4", state);
-    assert!(action.is_some());
+    let action = algebraic_move("a4", state);
+    let expected_action = Some(Move {
+        piece: Pawn,
+        origin: 8,
+        destination: 24,
+    });
+
+    assert_eq!(action, expected_action);
+
 }
 
 fn main() {
