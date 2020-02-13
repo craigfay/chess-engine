@@ -474,15 +474,25 @@ fn algebraic_notation_to_index_test() {
 }
 
 fn algebraic_moves_test() {
-    let state = GameState::with_placements(vec![]);
+    let mut state = GameState::with_placements(vec![]);
 
+    // white pawn two moves forward
     let action = algebraic_move("a4", state);
     let expected_action = Some(Move {
         piece: Pawn,
         origin: 8,
         destination: 24,
     });
+    assert_eq!(action, expected_action);
 
+    // black pawn two moves forward
+    state.to_move = Black;
+    let action = algebraic_move("a5", state);
+    let expected_action = Some(Move {
+        piece: Pawn,
+        origin: 48,
+        destination: 32,
+    });
     assert_eq!(action, expected_action);
 
 }
