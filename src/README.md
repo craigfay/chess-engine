@@ -7,5 +7,6 @@
 * Replace Piece/Color enum's with chars.
 * Allow state transitions
 * Use tuple constructors for Actions
-
+* Consolidate static variables
+* Comment/Rename `algebraic_move()`
 
