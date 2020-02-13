@@ -68,30 +68,24 @@ fn pawn_movement_too_far_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 18),
     ]);
-
-
     let chosen_move = Move {
         piece: Pawn,
         origin: 18,
         destination: 42,
     };
-
     assert_eq!(false, is_legal(chosen_move, state));
 }
 
 // White pawns should be able to move 1 square up
 fn pawn_movement_normal_test() {
-
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 22),
     ]);
-
     let chosen_move = Move {
         piece: Pawn,
         origin: 22,
         destination: 30,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -101,13 +95,11 @@ fn pawn_movement_wrong_origin_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 4),
     ]);
-
     let chosen_move = Move {
         piece: Pawn,
         origin: 22,
         destination: 30,
     };
-
     assert_eq!(false, is_legal(chosen_move, state));
 }
 
@@ -116,14 +108,11 @@ fn rook_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
-
-
     let chosen_move = Move {
         piece: Rook,
         origin: 35,
         destination: 32,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -132,13 +121,11 @@ fn rook_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
-
     let chosen_move = Move {
         piece: Rook,
         origin: 35,
         destination: 3,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -149,13 +136,11 @@ fn rook_movement_horizontal_obstruction_test() {
         Placement::new(White, Rook, 32),
         Placement::new(Black, Pawn, 33),
     ]);
-
     let chosen_move = Move {
         piece: Rook,
         origin: 32,
         destination: 36,
     };
-
     assert_eq!(false, is_legal(chosen_move, state));
 }
 
@@ -164,13 +149,11 @@ fn bishop_movement_diagonal_up_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 22),
     ]);
-
     let chosen_move = Move {
         piece: Bishop,
         origin: 22,
         destination: 36,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -180,13 +163,11 @@ fn bishop_movement_diagonal_up_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 0),
     ]);
-
     let chosen_move = Move {
         piece: Bishop,
         origin: 0,
         destination: 36,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -195,13 +176,11 @@ fn bishop_movement_diagonal_down_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 27),
     ]);
-
     let chosen_move = Move {
         piece: Bishop,
         origin: 27,
         destination: 9,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -211,13 +190,11 @@ fn bishop_movement_diagonal_down_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 56),
     ]);
-
     let chosen_move = Move {
         piece: Bishop,
         origin: 56,
         destination: 42,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -227,13 +204,11 @@ fn bishop_movement_diagonal_right_edge_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 23),
     ]);
-
     let chosen_move = Move {
         piece: Bishop,
         origin: 23,
         destination: 41,
     };
-
     assert_eq!(false, is_legal(chosen_move, state));
 }
 
@@ -243,13 +218,11 @@ fn bishop_movement_diagonal_left_edge_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 24),
     ]);
-
     let chosen_move = Move {
         piece: Bishop,
         origin: 24,
         destination: 15
     };
-
     assert_eq!(false, is_legal(chosen_move, state));
 }
 
@@ -258,13 +231,11 @@ fn knight_movement_two_up_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 45,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -273,13 +244,11 @@ fn knight_movement_one_up_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 38,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -287,13 +256,11 @@ fn knight_movement_two_up_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 43,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -302,13 +269,11 @@ fn knight_movement_one_up_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 34,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -316,13 +281,11 @@ fn knight_movement_two_down_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 13,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -330,13 +293,11 @@ fn knight_movement_one_down_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 22,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -344,13 +305,11 @@ fn knight_movement_two_down_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 11,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -358,13 +317,11 @@ fn knight_movement_one_down_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-
     let chosen_move = Move {
         piece: Knight,
         origin: 28,
         destination: 18,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -373,13 +330,11 @@ fn queen_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
-
     let chosen_move = Move {
         piece: Queen,
         origin: 24,
         destination: 30,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -388,13 +343,11 @@ fn queen_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
-
     let chosen_move = Move {
         piece: Queen,
         origin: 24,
         destination: 48,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -403,13 +356,11 @@ fn queen_movement_diagonal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Queen, 24),
     ]);
-
     let chosen_move = Move {
         piece: Queen,
         origin: 24,
         destination: 42,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -418,29 +369,24 @@ fn king_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
-
     let chosen_move = Move {
         piece: King,
         origin: 28,
         destination: 27,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
-
 
 // Kings should be able to move one square vertically
 fn king_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
-
     let chosen_move = Move {
         piece: King,
         origin: 28,
         destination: 20,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 
@@ -450,13 +396,11 @@ fn king_movement_diagonal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 24),
     ]);
-
     let chosen_move = Move {
         piece: King,
         origin: 24,
         destination: 33,
     };
-
     assert_eq!(true, is_legal(chosen_move, state));
 }
 

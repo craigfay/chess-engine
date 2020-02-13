@@ -13,7 +13,7 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
         destination: 1 as usize,
     };
 
-    static PIECES: [char; 5] = ['B','N','R','Q','K'];
+    // static PIECES: [char; 5] = ['B','N','R','Q','K'];
 
     let chars: Vec<char> = s.chars().collect();
 
