@@ -509,8 +509,6 @@ fn algebraic_moves_black_pawn_rank_8_test() {
     assert_eq!(action, None);
 }
 
-
-
 fn main() {
     gameboard_with_placements_test();
     position_delta_test();

@@ -3,7 +3,6 @@
 
 # TODO 
 * Rename Move type as Action
-* Abstract identical can_move() and can_capture() implementations.
 * Abstract horizontal/diagonal movement
-* Maybe rename GameBoard as State
+* Replace Piece/Color enum's with chars.
 
