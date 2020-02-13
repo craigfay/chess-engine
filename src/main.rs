@@ -476,7 +476,7 @@ fn algebraic_notation_to_index_test() {
 fn algebraic_moves_test() {
     let state = GameState::with_placements(vec![]);
 
-    let action = algebraic_move("e1", state);
+    let action = algebraic_move("e4", state);
     assert!(action.is_some());
 }
 

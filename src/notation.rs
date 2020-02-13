@@ -1,12 +1,15 @@
 use crate::entities::{
     Move,
     GameState,
-    PieceType,
+    PieceType::{
+        Pawn
+    },
+    Color::{White,Black},
 };
 
 pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
     
-    let dummy_move = Move { piece: PieceType::Pawn, origin: 0 as usize,
+    let dummy_move = Move { piece: Pawn, origin: 0 as usize,
         destination: 1 as usize,
     };
 
@@ -16,16 +19,49 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
 
     match chars.as_slice() {
         [file, rank] => {
-            match algebraic(s) {
-                None => None,
-                Some(index) => {
-                    Some(dummy_move)
+            let idx = algebraic(s);
+            if false == idx.is_some() { return None }
+            let idx = idx.unwrap() as usize;
+            if state.to_move == White {
+                if idx < 16 { return None }
+                if state.squares[idx - 8].is_some() {
+                    return Some(Move {
+                        origin: idx - 8,
+                        destination: idx,
+                        piece: Pawn,
+                    })
+                }
+                else {
+                    return  Some(Move {
+                        origin: idx - 16,
+                        destination: idx,
+                        piece: Pawn,
+                    })
+                }
+            }
+            else {
+                if idx >= 48 { return None }
+                if state.squares[idx + 8].is_some() {
+                    return Some(Move {
+                        origin: idx + 8,
+                        destination: idx,
+                        piece: Pawn,
+                    })
+                }
+                else {
+                    return  Some(Move {
+                        origin: idx + 16,
+                        destination: idx,
+                        piece: Pawn,
+                    })
                 }
             }
         },
         _ => None,
     }
 }
+
+
 
 // Get algebraic notation from index
 pub fn index(square: usize) -> String {
