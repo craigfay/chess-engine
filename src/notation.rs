@@ -16,12 +16,13 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
 
     match chars.as_slice() {
         [file, rank] => {
-            if algebraic(s).is_some() {
-                return Some(dummy_move);
+            match algebraic(s) {
+                None => None,
+                Some(index) => {
+                    Some(dummy_move)
+                }
             }
-            None
         },
-
         _ => None,
     }
 }

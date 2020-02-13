@@ -2,13 +2,15 @@
 #[derive(Copy)]
 #[derive(Clone)]
 pub struct GameState {
-    pub squares: [Option<Piece>; 64]
+    pub squares: [Option<Piece>; 64],
+    pub to_move: Color,
 }
 
 impl GameState {
     pub fn new() -> GameState {
         GameState {
-            squares: [None; 64]
+            squares: [None; 64],
+            to_move: Color::White,
         }
     }
     pub fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
@@ -24,7 +26,8 @@ impl GameState {
     }
     pub fn with_placements(placements: Vec<Placement>) -> GameState {
         let mut board = GameState {
-            squares: [None; 64]
+            squares: [None; 64],
+            to_move: Color::White,
         };
         for placement in placements.iter() {
             let piece = Piece::new(placement.color, placement.piece_type);
