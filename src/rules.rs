@@ -18,6 +18,27 @@ pub fn is_legal(chosen_move: &Move, state: GameState) -> bool {
     GameRules::is_legal(&chosen_move, state)
 }
 
+pub fn legal_moves(state: GameState) -> Vec<Move> {
+    let mut results = vec![];
+
+    for origin in 0..64 {
+        if state.squares[origin].is_some() {
+            let piece = state.squares[origin].unwrap();
+            if piece.color == state.to_move {
+                for destination in 0..64 {
+                    let action = Move { origin, destination, piece: piece.name };;
+                    if is_legal(&action, state) {
+                        results.push(action);
+                    }
+                }
+            }
+
+        }
+    }
+    results
+}
+
+
 pub struct GameRules {}
 
 impl GameRules {
