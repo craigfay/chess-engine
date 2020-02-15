@@ -10,4 +10,5 @@
 * Consolidate static variables
 * Comment/Rename `algebraic_move()`
 * Provide bit vector representation of game state
+* Rename `GameState::new()` as `GameState::empty()`
 
