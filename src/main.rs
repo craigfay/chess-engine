@@ -6,6 +6,7 @@ mod notation;
 
 use rules::{
     is_legal,
+    legal_moves,
     position_delta,
 };
 
@@ -68,6 +69,14 @@ fn gameboard_with_placements_test() {
     ]);
 }
 
+fn legal_moves_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 8),
+        Placement::new(White, Pawn, 9),
+    ]);
+    assert_eq!(4, legal_moves(&state).len());
+}
+
 
 fn position_delta_test() {
     assert_eq!(position_delta(0, 1), (1, 0));
@@ -93,7 +102,7 @@ fn pawn_movement_sideways_test() {
         destination: 17,
     };
 
-    assert_eq!(false, is_legal(&chosen_move, state));
+    assert_eq!(false, is_legal(&chosen_move, &state));
 }
 
 
@@ -107,7 +116,7 @@ fn pawn_movement_too_far_test() {
         origin: 18,
         destination: 42,
     };
-    assert_eq!(false, is_legal(&chosen_move, state));
+    assert_eq!(false, is_legal(&chosen_move, &state));
 }
 
 // White pawns should be able to move 1 square up
@@ -120,7 +129,7 @@ fn pawn_movement_normal_test() {
         origin: 22,
         destination: 30,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -134,7 +143,7 @@ fn pawn_movement_wrong_origin_test() {
         origin: 22,
         destination: 30,
     };
-    assert_eq!(false, is_legal(&chosen_move, state));
+    assert_eq!(false, is_legal(&chosen_move, &state));
 }
 
 // Rooks should be able to travel horizontally
@@ -147,7 +156,7 @@ fn rook_movement_horizontal_test() {
         origin: 35,
         destination: 32,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Rooks should be able to travel vertically
@@ -160,7 +169,7 @@ fn rook_movement_vertical_test() {
         origin: 35,
         destination: 3,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -175,7 +184,7 @@ fn rook_movement_horizontal_obstruction_test() {
         origin: 32,
         destination: 36,
     };
-    assert_eq!(false, is_legal(&chosen_move, state));
+    assert_eq!(false, is_legal(&chosen_move, &state));
 }
 
 // Bishops should be able to travel diagonally up-left
@@ -188,7 +197,7 @@ fn bishop_movement_diagonal_up_left_test() {
         origin: 22,
         destination: 36,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -202,7 +211,7 @@ fn bishop_movement_diagonal_up_right_test() {
         origin: 0,
         destination: 36,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Bishops should be able to travel diagonally down-left
@@ -215,7 +224,7 @@ fn bishop_movement_diagonal_down_left_test() {
         origin: 27,
         destination: 9,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -229,7 +238,7 @@ fn bishop_movement_diagonal_down_right_test() {
         origin: 56,
         destination: 42,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -243,7 +252,7 @@ fn bishop_movement_diagonal_right_edge_test() {
         origin: 23,
         destination: 41,
     };
-    assert_eq!(false, is_legal(&chosen_move, state));
+    assert_eq!(false, is_legal(&chosen_move, &state));
 }
 
 
@@ -257,7 +266,7 @@ fn bishop_movement_diagonal_left_edge_test() {
         origin: 24,
         destination: 15
     };
-    assert_eq!(false, is_legal(&chosen_move, state));
+    assert_eq!(false, is_legal(&chosen_move, &state));
 }
 
 
@@ -270,7 +279,7 @@ fn knight_movement_two_up_one_right_test() {
         origin: 28,
         destination: 45,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -283,7 +292,7 @@ fn knight_movement_one_up_two_right_test() {
         origin: 28,
         destination: 38,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 fn knight_movement_two_up_one_left_test() {
@@ -295,7 +304,7 @@ fn knight_movement_two_up_one_left_test() {
         origin: 28,
         destination: 43,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -308,7 +317,7 @@ fn knight_movement_one_up_two_left_test() {
         origin: 28,
         destination: 34,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 fn knight_movement_two_down_one_right_test() {
@@ -320,7 +329,7 @@ fn knight_movement_two_down_one_right_test() {
         origin: 28,
         destination: 13,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 fn knight_movement_one_down_two_right_test() {
@@ -332,7 +341,7 @@ fn knight_movement_one_down_two_right_test() {
         origin: 28,
         destination: 22,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 fn knight_movement_two_down_one_left_test() {
@@ -344,7 +353,7 @@ fn knight_movement_two_down_one_left_test() {
         origin: 28,
         destination: 11,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 fn knight_movement_one_down_two_left_test() {
@@ -356,7 +365,7 @@ fn knight_movement_one_down_two_left_test() {
         origin: 28,
         destination: 18,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Queens should be able to move horizontally
@@ -369,7 +378,7 @@ fn queen_movement_horizontal_test() {
         origin: 24,
         destination: 30,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Queens should be able to move horizontally
@@ -382,7 +391,7 @@ fn queen_movement_vertical_test() {
         origin: 24,
         destination: 48,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Queens should be able to move diagonally
@@ -395,7 +404,7 @@ fn queen_movement_diagonal_test() {
         origin: 24,
         destination: 42,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Kings should be able to move one square horizontally
@@ -408,7 +417,7 @@ fn king_movement_horizontal_test() {
         origin: 28,
         destination: 27,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 // Kings should be able to move one square vertically
@@ -421,7 +430,7 @@ fn king_movement_vertical_test() {
         origin: 28,
         destination: 20,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 
@@ -435,7 +444,7 @@ fn king_movement_diagonal_test() {
         origin: 24,
         destination: 33,
     };
-    assert_eq!(true, is_legal(&chosen_move, state));
+    assert_eq!(true, is_legal(&chosen_move, &state));
 }
 
 fn algebraic_notation_to_index_test() {
@@ -545,6 +554,7 @@ fn algebraic_moves_black_pawn_rank_8_test() {
 
 fn main() {
     gameboard_with_placements_test();
+    legal_moves_test();
     position_delta_test();
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();
