@@ -28,7 +28,6 @@ use entities::{
 
 use notation::{algebraic, algebraic_move};
 
-
 fn gameboard_with_placements_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 0),
@@ -67,6 +66,14 @@ fn gameboard_with_placements_test() {
         Placement::new(Black, Knight, 62),
         Placement::new(Black, Rook, 63),
     ]);
+}
+
+fn new_gamestate_test() {
+    let state = GameState::new();
+
+    let piece = state.squares[0].unwrap();
+    assert_eq!(piece.color, White);
+    assert_eq!(piece.name, Rook);
 }
 
 fn legal_moves_test() {
@@ -554,6 +561,7 @@ fn algebraic_moves_black_pawn_rank_8_test() {
 
 fn main() {
     gameboard_with_placements_test();
+    new_gamestate_test();
     legal_moves_test();
     position_delta_test();
     pawn_movement_sideways_test();

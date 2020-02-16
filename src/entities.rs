@@ -74,6 +74,7 @@ impl GameState {
             Placement::new(Color::Black, PieceType::Rook, 63),
         ])
     }
+    
 }
 
 pub struct Placement {
