@@ -1,7 +1,7 @@
 use crate::entities::{
     Move,
     GameState,
-    PieceNames::{
+    PieceName::{
         Pawn
     },
     Color::{White,Black},

@@ -1,7 +1,7 @@
 
 use crate::entities::{
     GameState,
-    PieceNames,
+    PieceName,
     Move,
     Color,
 };
@@ -57,12 +57,12 @@ impl GameRules {
         }
 
         match chosen_move.piece {
-            PieceNames:: Pawn => PawnRules::is_legal(chosen_move, state),
-            PieceNames:: Rook => RookRules::is_legal(chosen_move, state),
-            PieceNames:: Bishop => BishopRules::is_legal(chosen_move, state),
-            PieceNames:: Knight => KnightRules::is_legal(chosen_move, state),
-            PieceNames:: Queen => QueenRules::is_legal(chosen_move, state),
-            PieceNames:: King => KingRules::is_legal(chosen_move, state),
+            PieceName:: Pawn => PawnRules::is_legal(chosen_move, state),
+            PieceName:: Rook => RookRules::is_legal(chosen_move, state),
+            PieceName:: Bishop => BishopRules::is_legal(chosen_move, state),
+            PieceName:: Knight => KnightRules::is_legal(chosen_move, state),
+            PieceName:: Queen => QueenRules::is_legal(chosen_move, state),
+            PieceName:: King => KingRules::is_legal(chosen_move, state),
         }
     }
 }
