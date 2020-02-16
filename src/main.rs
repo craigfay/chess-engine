@@ -72,8 +72,24 @@ fn new_gamestate_test() {
     let state = GameState::new();
 
     let piece = state.squares[0].unwrap();
-    assert_eq!(piece.color, White);
-    assert_eq!(piece.name, Rook);
+    assert!(piece.color == White && piece.name == Rook);
+    let piece = state.squares[1].unwrap();
+    assert!(piece.color == White && piece.name == Knight);
+    let piece = state.squares[2].unwrap();
+    assert!(piece.color == White && piece.name == Bishop);
+    let piece = state.squares[3].unwrap();
+    assert!(piece.color == White && piece.name == Queen);
+    let piece = state.squares[4].unwrap();
+    assert!(piece.color == White && piece.name == King);
+    let piece = state.squares[5].unwrap();
+    assert!(piece.color == White && piece.name == Bishop);
+    let piece = state.squares[6].unwrap();
+    assert!(piece.color == White && piece.name == Knight);
+    let piece = state.squares[7].unwrap();
+    assert!(piece.color == White && piece.name == Rook);
+
+
+
 }
 
 fn legal_moves_test() {
