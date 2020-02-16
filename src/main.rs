@@ -71,6 +71,11 @@ fn gameboard_with_placements_test() {
 fn new_gamestate_test() {
     let state = GameState::new();
 
+    for idx in 8..16 {
+        let piece = state.squares[idx].unwrap();
+        assert!(piece.color == White && piece.name == Pawn);
+    }
+
     let piece = state.squares[0].unwrap();
     assert!(piece.color == White && piece.name == Rook);
     let piece = state.squares[1].unwrap();
@@ -87,11 +92,6 @@ fn new_gamestate_test() {
     assert!(piece.color == White && piece.name == Knight);
     let piece = state.squares[7].unwrap();
     assert!(piece.color == White && piece.name == Rook);
-
-    for idx in 8..16 {
-        let piece = state.squares[idx].unwrap();
-        assert!(piece.color == White && piece.name == Pawn);
-    }
 
     for idx in 48..55 {
         let piece = state.squares[idx].unwrap();
@@ -114,6 +114,10 @@ fn new_gamestate_test() {
     assert!(piece.color == Black && piece.name == Knight);
     let piece = state.squares[63].unwrap();
     assert!(piece.color == Black && piece.name == Rook);
+
+    for idx in 17..47 {
+        assert!(state.squares[idx].is_none());
+    }
 }
 
 fn legal_moves_test() {
