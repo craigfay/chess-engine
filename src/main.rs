@@ -14,7 +14,7 @@ use entities::{
     GameState,
     Placement,
     Piece,
-    PieceType::{
+    PieceNames::{
         Pawn,
         Rook,
         Bishop,

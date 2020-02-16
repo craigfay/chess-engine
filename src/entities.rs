@@ -37,54 +37,53 @@ impl GameState {
     }
     pub fn new() -> GameState {
         GameState::with_placements(vec![
-            Placement::new(Color::White, PieceType::Rook, 0),
-            Placement::new(Color::White, PieceType::Knight, 1),
-            Placement::new(Color::White, PieceType::Bishop, 2),
-            Placement::new(Color::White, PieceType::Queen, 3),
-            Placement::new(Color::White, PieceType::King, 4),
-            Placement::new(Color::White, PieceType::Bishop, 5),
-            Placement::new(Color::White, PieceType::Knight, 6),
-            Placement::new(Color::White, PieceType::Rook, 7),
+            Placement::new(Color::White, PieceNames::Rook, 0),
+            Placement::new(Color::White, PieceNames::Knight, 1),
+            Placement::new(Color::White, PieceNames::Bishop, 2),
+            Placement::new(Color::White, PieceNames::Queen, 3),
+            Placement::new(Color::White, PieceNames::King, 4),
+            Placement::new(Color::White, PieceNames::Bishop, 5),
+            Placement::new(Color::White, PieceNames::Knight, 6),
+            Placement::new(Color::White, PieceNames::Rook, 7),
     
-            Placement::new(Color::White, PieceType::Pawn, 8),
-            Placement::new(Color::White, PieceType::Pawn, 9),
-            Placement::new(Color::White, PieceType::Pawn, 10),
-            Placement::new(Color::White, PieceType::Pawn, 11),
-            Placement::new(Color::White, PieceType::Pawn, 12),
-            Placement::new(Color::White, PieceType::Pawn, 13),
-            Placement::new(Color::White, PieceType::Pawn, 14),
-            Placement::new(Color::White, PieceType::Pawn, 15),
+            Placement::new(Color::White, PieceNames::Pawn, 8),
+            Placement::new(Color::White, PieceNames::Pawn, 9),
+            Placement::new(Color::White, PieceNames::Pawn, 10),
+            Placement::new(Color::White, PieceNames::Pawn, 11),
+            Placement::new(Color::White, PieceNames::Pawn, 12),
+            Placement::new(Color::White, PieceNames::Pawn, 13),
+            Placement::new(Color::White, PieceNames::Pawn, 14),
+            Placement::new(Color::White, PieceNames::Pawn, 15),
     
-            Placement::new(Color::Black, PieceType::Pawn, 48),
-            Placement::new(Color::Black, PieceType::Pawn, 49),
-            Placement::new(Color::Black, PieceType::Pawn, 50),
-            Placement::new(Color::Black, PieceType::Pawn, 51),
-            Placement::new(Color::Black, PieceType::Pawn, 52),
-            Placement::new(Color::Black, PieceType::Pawn, 53),
-            Placement::new(Color::Black, PieceType::Pawn, 54),
-            Placement::new(Color::Black, PieceType::Pawn, 55),
+            Placement::new(Color::Black, PieceNames::Pawn, 48),
+            Placement::new(Color::Black, PieceNames::Pawn, 49),
+            Placement::new(Color::Black, PieceNames::Pawn, 50),
+            Placement::new(Color::Black, PieceNames::Pawn, 51),
+            Placement::new(Color::Black, PieceNames::Pawn, 52),
+            Placement::new(Color::Black, PieceNames::Pawn, 53),
+            Placement::new(Color::Black, PieceNames::Pawn, 54),
+            Placement::new(Color::Black, PieceNames::Pawn, 55),
     
-            Placement::new(Color::Black, PieceType::Rook, 56),
-            Placement::new(Color::Black, PieceType::Knight, 57),
-            Placement::new(Color::Black, PieceType::Bishop, 58),
-            Placement::new(Color::Black, PieceType::Queen, 59),
-            Placement::new(Color::Black, PieceType::King, 60),
-            Placement::new(Color::Black, PieceType::Bishop, 61),
-            Placement::new(Color::Black, PieceType::Knight, 62),
-            Placement::new(Color::Black, PieceType::Rook, 63),
+            Placement::new(Color::Black, PieceNames::Rook, 56),
+            Placement::new(Color::Black, PieceNames::Knight, 57),
+            Placement::new(Color::Black, PieceNames::Bishop, 58),
+            Placement::new(Color::Black, PieceNames::Queen, 59),
+            Placement::new(Color::Black, PieceNames::King, 60),
+            Placement::new(Color::Black, PieceNames::Bishop, 61),
+            Placement::new(Color::Black, PieceNames::Knight, 62),
+            Placement::new(Color::Black, PieceNames::Rook, 63),
         ])
     }
-    
 }
 
 pub struct Placement {
     color: Color,
-    piece_type: PieceType,
+    piece_type: PieceNames,
     square: usize,
 }
 
 impl Placement {
-    pub  fn new(color: Color, piece_type: PieceType, square: usize) -> Placement {
+    pub  fn new(color: Color, piece_type: PieceNames, square: usize) -> Placement {
         Placement { color, piece_type, square }
     }
 }
@@ -107,7 +106,7 @@ impl std::fmt::Debug for GameState {
 #[derive(Clone)]
 #[derive(Debug)]
 #[derive(PartialEq)]
-pub enum PieceType {
+pub enum PieceNames {
     Pawn,
     Rook,
     Bishop,
@@ -116,11 +115,10 @@ pub enum PieceType {
     King,
 }
 
-
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Move {
-    pub piece: PieceType,
+    pub piece: PieceNames,
     pub origin: usize,
     pub destination: usize,
 }
@@ -139,12 +137,12 @@ pub enum Color {
 #[derive(Debug)]
 pub struct Piece {
     pub color: Color,
-    pub name: PieceType,
+    pub name: PieceNames,
     pub has_moved: bool,
 }
 
 impl Piece {
-    pub fn new(color: Color, name: PieceType) -> Piece {
+    pub fn new(color: Color, name: PieceNames) -> Piece {
         Piece {
             color,
             name,
