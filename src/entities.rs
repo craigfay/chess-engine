@@ -30,7 +30,7 @@ impl GameState {
             to_move: Color::White,
         };
         for placement in placements.iter() {
-            let piece = Piece::new(placement.color, placement.piece_type);
+            let piece = Piece::new(placement.color, placement.piece);
             board.place_piece(piece, placement.square);
         }
         board
@@ -76,15 +76,16 @@ impl GameState {
     }
 }
 
+#[derive(Debug)]
 pub struct Placement {
-    color: Color,
-    piece_type: PieceName,
-    square: usize,
+    pub color: Color,
+    pub piece: PieceName,
+    pub square: usize,
 }
 
 impl Placement {
-    pub  fn new(color: Color, piece_type: PieceName, square: usize) -> Placement {
-        Placement { color, piece_type, square }
+    pub  fn new(color: Color, piece: PieceName, square: usize) -> Placement {
+        Placement { color, piece, square }
     }
 }
     
