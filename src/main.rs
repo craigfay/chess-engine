@@ -88,12 +88,32 @@ fn new_gamestate_test() {
     let piece = state.squares[7].unwrap();
     assert!(piece.color == White && piece.name == Rook);
 
-    for idx in 8..17 {
+    for idx in 8..16 {
         let piece = state.squares[idx].unwrap();
         assert!(piece.color == White && piece.name == Pawn);
     }
 
+    for idx in 48..55 {
+        let piece = state.squares[idx].unwrap();
+        assert!(piece.color == Black && piece.name == Pawn);
+    }
 
+    let piece = state.squares[56].unwrap();
+    assert!(piece.color == Black && piece.name == Rook);
+    let piece = state.squares[57].unwrap();
+    assert!(piece.color == Black && piece.name == Knight);
+    let piece = state.squares[58].unwrap();
+    assert!(piece.color == Black && piece.name == Bishop);
+    let piece = state.squares[59].unwrap();
+    assert!(piece.color == Black && piece.name == Queen);
+    let piece = state.squares[60].unwrap();
+    assert!(piece.color == Black && piece.name == King);
+    let piece = state.squares[61].unwrap();
+    assert!(piece.color == Black && piece.name == Bishop);
+    let piece = state.squares[62].unwrap();
+    assert!(piece.color == Black && piece.name == Knight);
+    let piece = state.squares[63].unwrap();
+    assert!(piece.color == Black && piece.name == Rook);
 }
 
 fn legal_moves_test() {
