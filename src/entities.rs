@@ -7,7 +7,7 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn new() -> GameState {
+    pub fn empty() -> GameState {
         GameState {
             squares: [None; 64],
             to_move: Color::White,
@@ -35,7 +35,7 @@ impl GameState {
         }
         board
     }
-    pub fn new_game() -> GameState {
+    pub fn new() -> GameState {
         GameState::with_placements(vec![
             Placement::new(Color::White, PieceType::Rook, 0),
             Placement::new(Color::White, PieceType::Knight, 1),
