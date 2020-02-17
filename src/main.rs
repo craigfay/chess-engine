@@ -8,6 +8,7 @@ use rules::{
     move_is_legal,
     legal_moves,
     position_delta,
+    apply_move,
 };
 
 use entities::{
@@ -27,9 +28,6 @@ use entities::{
 };
 
 use notation::{algebraic, algebraic_move};
-
-
-
 
 fn new_gamestate_test() {
     let state = GameState::new();
@@ -566,6 +564,15 @@ fn algebraic_moves_black_pawn_rank_8_test() {
     assert_eq!(action, None);
 }
 
+fn apply_move_test() {
+    let mut state = GameState::new();
+
+    let m = Move { origin: 11, destination: 27, piece: Pawn };
+    apply_move(&m, &mut state);
+
+    assert!(state.squares[27].is_some());
+}
+
 fn main() {
     new_gamestate_test();
     legal_moves_test();
@@ -606,4 +613,5 @@ fn main() {
     algebraic_moves_white_pawn_rank_2_test(); 
     algebraic_moves_black_pawn_rank_7_test(); 
     algebraic_moves_black_pawn_rank_8_test(); 
+    apply_move_test();
 }
