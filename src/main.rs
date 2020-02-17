@@ -28,46 +28,6 @@ use entities::{
 
 use notation::{algebraic, algebraic_move};
 
-fn gameboard_with_placements_test() {
-    let state = GameState::with_placements(vec![
-        Placement::new(White, Rook, 0),
-        Placement::new(White, Knight, 1),
-        Placement::new(White, Bishop, 2),
-        Placement::new(White, Queen, 3),
-        Placement::new(White, King, 4),
-        Placement::new(White, Bishop, 5),
-        Placement::new(White, Knight, 6),
-        Placement::new(White, Rook, 7),
-
-        Placement::new(White, Pawn, 8),
-        Placement::new(White, Pawn, 9),
-        Placement::new(White, Pawn, 10),
-        Placement::new(White, Pawn, 11),
-        Placement::new(White, Pawn, 12),
-        Placement::new(White, Pawn, 13),
-        Placement::new(White, Pawn, 14),
-        Placement::new(White, Pawn, 15),
-
-        Placement::new(Black, Pawn, 48),
-        Placement::new(Black, Pawn, 49),
-        Placement::new(Black, Pawn, 50),
-        Placement::new(Black, Pawn, 51),
-        Placement::new(Black, Pawn, 52),
-        Placement::new(Black, Pawn, 53),
-        Placement::new(Black, Pawn, 54),
-        Placement::new(Black, Pawn, 55),
-
-        Placement::new(Black, Rook, 56),
-        Placement::new(Black, Knight, 57),
-        Placement::new(Black, Bishop, 58),
-        Placement::new(Black, Queen, 59),
-        Placement::new(Black, King, 60),
-        Placement::new(Black, Bishop, 61),
-        Placement::new(Black, Knight, 62),
-        Placement::new(Black, Rook, 63),
-    ]);
-}
-
 fn new_gamestate_test() {
     let state = GameState::new();
 
@@ -604,7 +564,6 @@ fn algebraic_moves_black_pawn_rank_8_test() {
 }
 
 fn main() {
-    gameboard_with_placements_test();
     new_gamestate_test();
     legal_moves_test();
     position_delta_test();
