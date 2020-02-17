@@ -2,7 +2,6 @@
 use crate::entities::{
     GameState,
     PieceName,
-    Placement,
     Move,
     Color::{White, Black},
 };
@@ -85,20 +84,23 @@ impl Moveable for PawnRules {
             // White Pieces can only move upwards
             White => {
                 match (delta_x, delta_y) {
+                    // Normal Moves
                     (0, 1) => true,
-                    (0, 2) => piece.has_moved == false,
+                    // Two-Square Moves
+                    (0, 2) => m.origin > 7 && m.origin < 16,
                     // Captures
                     (1, 1) => destination_is_enemy_piece,
                     (-1, 1) => destination_is_enemy_piece,
-                    
                     _ => false,
                 }
             },
             // Black pieces can only move downwards
             Black => {
                 match (delta_x, delta_y) {
+                    // Normal Moves
                     (0, -1) => true,
-                    (0, -2) => piece.has_moved == false,
+                    // Two-Square Moves
+                    (0, -2) => m.origin > 47 && m.origin < 56,
                     // Captures
                     (1, -1) => destination_is_enemy_piece,
                     (-1, -1) => destination_is_enemy_piece,
@@ -230,15 +232,5 @@ pub fn position_delta(origin: usize, destination: usize) -> (i32, i32) {
     let x = (destination as i32 % 8) - (origin as i32 % 8);
     let y = (destination as i32 / 8) - (origin as i32 / 8);
     return (x, y);
-}
-
-pub fn pawn_has_moved(placement: Placement) -> bool {
-    if placement.piece != PieceName::Pawn {
-        panic!("Expected Pawn, but received {:?}", placement.piece);
-    }
-    match placement.color {
-        White => placement.square > 7 && placement.square < 16,
-        Black => placement.square > 47 && placement.square < 56,
-    }
 }
 
