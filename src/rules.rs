@@ -1,3 +1,5 @@
+// The single responsibility of this module is to determine what type of actions
+// are legal to perform on an arbitrary GameState.
 
 use crate::entities::{
     GameState,

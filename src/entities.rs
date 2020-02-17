@@ -1,3 +1,5 @@
+// The single responsibility of this module is to define data structures
+// that represent real world chess objects and game states.
 
 #[derive(Copy)]
 #[derive(Clone)]
