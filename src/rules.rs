@@ -34,8 +34,6 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
     results
 }
 
-
-
 pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     let maybe_piece = state.squares[m.origin];
     let destination = state.squares[m.destination];
@@ -51,57 +49,54 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     }
 
     match m.piece {
-        PieceName:: Pawn => PawnRules::is_legal(m, state),
-        PieceName:: Rook => RookRules::is_legal(m, state),
-        PieceName:: Bishop => BishopRules::is_legal(m, state),
-        PieceName:: Knight => KnightRules::is_legal(m, state),
-        PieceName:: Queen => QueenRules::is_legal(m, state),
-        PieceName:: King => KingRules::is_legal(m, state),
+        PieceName:: Pawn => pawn_move_is_legal(m, state),
+        PieceName:: Rook => rook_move_is_legal(m, state),
+        PieceName:: Bishop => bishop_move_is_legal(m, state),
+        PieceName:: Knight => knight_move_is_legal(m, state),
+        PieceName:: Queen => queen_move_is_legal(m, state),
+        PieceName:: King => king_move_is_legal(m, state),
     }
 }
 
-pub struct PawnRules {}
 
-impl Moveable for PawnRules {
-    fn is_legal(m: &Move, state: &GameState) -> bool {
-        let piece = state.squares[m.origin].unwrap();
+fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
+    let piece = state.squares[m.origin].unwrap();
 
-        let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
 
-        let destination_is_enemy_piece = match state.squares[m.destination] {
-            Some(other_piece) => other_piece.color != piece.color,
-            None => false,
-        };
+    let destination_is_enemy_piece = match state.squares[m.destination] {
+        Some(other_piece) => other_piece.color != piece.color,
+        None => false,
+    };
 
-        match piece.color {
-            // White Pieces can only move upwards
-            White => {
-                match (delta_x, delta_y) {
-                    // Normal Moves
-                    (0, 1) => true,
-                    // Two-Square Moves
-                    (0, 2) => m.origin > 7 && m.origin < 16,
-                    // Captures
-                    (1, 1) => destination_is_enemy_piece,
-                    (-1, 1) => destination_is_enemy_piece,
-                    _ => false,
-                }
-            },
-            // Black pieces can only move downwards
-            Black => {
-                match (delta_x, delta_y) {
-                    // Normal Moves
-                    (0, -1) => true,
-                    // Two-Square Moves
-                    (0, -2) => m.origin > 47 && m.origin < 56,
-                    // Captures
-                    (1, -1) => destination_is_enemy_piece,
-                    (-1, -1) => destination_is_enemy_piece,
-                    _ => false,
-                }
+    match piece.color {
+        // White Pieces can only move upwards
+        White => {
+            match (delta_x, delta_y) {
+                // Normal Moves
+                (0, 1) => true,
+                // Two-Square Moves
+                (0, 2) => m.origin > 7 && m.origin < 16,
+                // Captures
+                (1, 1) => destination_is_enemy_piece,
+                (-1, 1) => destination_is_enemy_piece,
+                _ => false,
             }
-
+        },
+        // Black pieces can only move downwards
+        Black => {
+            match (delta_x, delta_y) {
+                // Normal Moves
+                (0, -1) => true,
+                // Two-Square Moves
+                (0, -2) => m.origin > 47 && m.origin < 56,
+                // Captures
+                (1, -1) => destination_is_enemy_piece,
+                (-1, -1) => destination_is_enemy_piece,
+                _ => false,
+            }
         }
+
     }
 }
 
@@ -144,79 +139,59 @@ fn diagonal_is_obstructed(origin: usize, destination: usize, state: &GameState) 
     return false;
 }
 
-pub struct RookRules {}
+fn rook_move_is_legal(m: &Move, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    // Return false if the path is obstructed
+    if horizontal_path_is_obstructed(m.origin, delta_x, state) {
+        return false;
+    }
 
-impl Moveable for RookRules {
-    fn is_legal(m: &Move, state: &GameState) -> bool {
-        let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
-        // Return false if the path is obstructed
-        if horizontal_path_is_obstructed(m.origin, delta_x, state) {
-            return false;
-        }
-
-        match (delta_x, delta_y) {
-            (0, _) => true,
-            (_, 0) => true,
-            _ => false,
-        }
+    match (delta_x, delta_y) {
+        (0, _) => true,
+        (_, 0) => true,
+        _ => false,
     }
 }
 
-pub struct BishopRules {}
-
-impl Moveable for BishopRules {
-    fn is_legal(m: &Move, state: &GameState) -> bool {
-        let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
-        if delta_x.abs() != delta_y.abs() {
-            return false;
-        }
-        return false == diagonal_is_obstructed(m.origin, m.origin, state);
+fn bishop_move_is_legal(m: &Move, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    if delta_x.abs() != delta_y.abs() {
+        return false;
     }
+    return false == diagonal_is_obstructed(m.origin, m.origin, state);
 }
 
 
-pub struct KnightRules {}
+fn knight_move_is_legal(m: &Move, _state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
 
-impl Moveable for KnightRules {
-    fn is_legal(m: &Move, _state: &GameState) -> bool {
-        let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
-
-        return match (delta_x.abs(), delta_y.abs()) {
-            (1, 2) => true,
-            (2, 1) => true,
-            (_, _) => false,
-        }
-
+    return match (delta_x.abs(), delta_y.abs()) {
+        (1, 2) => true,
+        (2, 1) => true,
+        (_, _) => false,
     }
+
 }
 
-pub struct QueenRules {}
+fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
 
-impl Moveable for QueenRules {
-    fn is_legal(m: &Move, state: &GameState) -> bool {
-        let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
-
-        return match (delta_x.abs(), delta_y.abs()) {
-            (0, _) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-            (_, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-            (x, y) => x == y && !diagonal_is_obstructed(m.origin, m.origin, state),
-        }
-
+    return match (delta_x.abs(), delta_y.abs()) {
+        (0, _) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
+        (_, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
+        (x, y) => x == y && !diagonal_is_obstructed(m.origin, m.origin, state),
     }
+
 }
 
-pub struct KingRules {}
+fn king_move_is_legal(m: &Move, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
 
-impl Moveable for KingRules {
-    fn is_legal(m: &Move, state: &GameState) -> bool {
-        let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
-
-        return match (delta_x.abs(), delta_y.abs()) {
-            (0, 1) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-            (1, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-            (1, 1) => !diagonal_is_obstructed(m.origin, m.origin, state),
-            _ => false,
-        }
+    return match (delta_x.abs(), delta_y.abs()) {
+        (0, 1) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
+        (1, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
+        (1, 1) => !diagonal_is_obstructed(m.origin, m.origin, state),
+        _ => false,
     }
 }
 
