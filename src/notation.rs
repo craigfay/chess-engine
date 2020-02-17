@@ -19,39 +19,39 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
 
     match chars.as_slice() {
         [file, rank] => {
-            let idx = algebraic(s);
-            if false == idx.is_some() { return None }
-            let idx = idx.unwrap() as usize;
+            let square = algebraic(s);
+            if false == square.is_some() { return None }
+            let square = square.unwrap() as usize;
             if state.to_move == White {
-                if idx < 16 { return None }
-                if state.squares[idx - 8].is_some() {
+                if square < 16 { return None }
+                if state.squares[square - 8].is_some() {
                     return Some(Move {
-                        origin: idx - 8,
-                        destination: idx,
+                        origin: square - 8,
+                        destination: square,
                         piece: Pawn,
                     })
                 }
                 else {
                     return  Some(Move {
-                        origin: idx - 16,
-                        destination: idx,
+                        origin: square - 16,
+                        destination: square,
                         piece: Pawn,
                     })
                 }
             }
             else {
-                if idx >= 48 { return None }
-                if state.squares[idx + 8].is_some() {
+                if square >= 48 { return None }
+                if state.squares[square + 8].is_some() {
                     return Some(Move {
-                        origin: idx + 8,
-                        destination: idx,
+                        origin: square + 8,
+                        destination: square,
                         piece: Pawn,
                     })
                 }
                 else {
                     return  Some(Move {
-                        origin: idx + 16,
-                        destination: idx,
+                        origin: square + 16,
+                        destination: square,
                         piece: Pawn,
                     })
                 }
