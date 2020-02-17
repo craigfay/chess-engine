@@ -10,10 +10,6 @@ use crate::notation::{algebraic};
 
 use std::cmp::{min, max};
 
-trait Moveable {
-    fn is_legal(m: &Move, state: &GameState) -> bool;
-}
-
 pub fn apply_move(m: &Move, state: &mut GameState) {
     if false == move_is_legal(m, state) {
         panic!("Cannot apply illegal move: {:?}", m);
