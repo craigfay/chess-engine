@@ -88,7 +88,6 @@ impl Placement {
         Placement { color, piece, square }
     }
 }
-    
 
 impl std::fmt::Debug for GameState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -139,16 +138,11 @@ pub enum Color {
 pub struct Piece {
     pub color: Color,
     pub name: PieceName,
-    pub has_moved: bool,
 }
 
 impl Piece {
     pub fn new(color: Color, name: PieceName) -> Piece {
-        Piece {
-            color,
-            name,
-            has_moved: false,
-        }
+        Piece { color, name }
     }
 }
 
