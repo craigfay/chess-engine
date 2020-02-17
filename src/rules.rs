@@ -14,10 +14,6 @@ trait Moveable {
     fn is_legal(m: &Move, state: &GameState) -> bool;
 }
 
-pub fn is_legal(m: &Move, state: &GameState) -> bool {
-    GameRules::is_legal(&m, &state)
-}
-
 pub fn legal_moves(state: &GameState) -> Vec<Move> {
     let mut results = vec![];
 
@@ -26,9 +22,9 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
             let piece = state.squares[origin].unwrap();
             if piece.color == state.to_move {
                 for destination in 0..64 {
-                    let action = Move { origin, destination, piece: piece.name };;
-                    if is_legal(&action, state) {
-                        results.push(action);
+                    let m = Move { origin, destination, piece: piece.name };;
+                    if move_is_legal(&m, state) {
+                        results.push(m);
                     }
                 }
             }
@@ -39,31 +35,28 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
 }
 
 
-pub struct GameRules {}
 
-impl GameRules {
-    pub fn is_legal(m: &Move, state: &GameState) -> bool {
-        let maybe_piece = state.squares[m.origin];
-        let destination = state.squares[m.destination];
+pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
+    let maybe_piece = state.squares[m.origin];
+    let destination = state.squares[m.destination];
 
-        // If there is no piece present at the chosen origin
-        if maybe_piece.is_none() {
-            return false
-        }
-        
-        // If there is a piece present at the chosen destination
-        if false == destination.is_none() {
-            return false
-        }
+    // If there is no piece present at the chosen origin
+    if maybe_piece.is_none() {
+        return false
+    }
+    
+    // If there is a piece present at the chosen destination
+    if false == destination.is_none() {
+        return false
+    }
 
-        match m.piece {
-            PieceName:: Pawn => PawnRules::is_legal(m, state),
-            PieceName:: Rook => RookRules::is_legal(m, state),
-            PieceName:: Bishop => BishopRules::is_legal(m, state),
-            PieceName:: Knight => KnightRules::is_legal(m, state),
-            PieceName:: Queen => QueenRules::is_legal(m, state),
-            PieceName:: King => KingRules::is_legal(m, state),
-        }
+    match m.piece {
+        PieceName:: Pawn => PawnRules::is_legal(m, state),
+        PieceName:: Rook => RookRules::is_legal(m, state),
+        PieceName:: Bishop => BishopRules::is_legal(m, state),
+        PieceName:: Knight => KnightRules::is_legal(m, state),
+        PieceName:: Queen => QueenRules::is_legal(m, state),
+        PieceName:: King => KingRules::is_legal(m, state),
     }
 }
 
