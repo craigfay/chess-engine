@@ -7,6 +7,7 @@ use crate::entities::{
     Color::{White,Black},
 };
 
+// Create a move from algebraic notation
 pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
     
     let dummy_move = Move { piece: Pawn, origin: 0 as usize,
@@ -18,7 +19,9 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
     let chars: Vec<char> = s.chars().collect();
 
     match chars.as_slice() {
+        // Pawn Moves (a6, b2, h8, etc..)
         [file, rank] => {
+            // TODO: Reexamine this to make sure we're not doing more logic than is necessary
             let square = algebraic(s);
             if false == square.is_some() { return None }
             let square = square.unwrap() as usize;

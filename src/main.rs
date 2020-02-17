@@ -3,12 +3,12 @@ use std::time::{Duration, Instant};
 mod rules;
 mod entities;
 mod notation;
+mod controller;
 
 use rules::{
     move_is_legal,
     legal_moves,
     position_delta,
-    apply_move,
 };
 
 use entities::{
@@ -25,6 +25,10 @@ use entities::{
     },
     Color::{White, Black},
     Move,
+};
+
+use controller::{
+    apply_move,
 };
 
 use notation::{algebraic, algebraic_move};
