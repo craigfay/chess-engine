@@ -6,6 +6,7 @@ mod notation;
 mod controller;
 
 use rules::{
+    is_check,
     move_is_legal,
     legal_moves,
     position_delta,
@@ -577,6 +578,17 @@ fn apply_move_test() {
     assert!(state.squares[27].is_some());
 }
 
+fn is_check_test() {
+    let state = GameState::new();
+    assert!(!is_check(&state));
+
+    let state = GameState::with_placements(vec![
+        Placement::new(Black, King, 60),
+        Placement::new(White, Rook, 5),
+    ]);
+    assert!(is_check(&state));
+}
+
 fn main() {
     new_gamestate_test();
     legal_moves_test();
@@ -618,4 +630,5 @@ fn main() {
     algebraic_moves_black_pawn_rank_7_test(); 
     algebraic_moves_black_pawn_rank_8_test(); 
     apply_move_test();
+    is_check_test();
 }
