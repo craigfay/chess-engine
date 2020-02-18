@@ -12,6 +12,44 @@ use crate::notation::{algebraic};
 
 use std::cmp::{min, max};
 
+pub fn is_check(state: &GameState) -> bool {
+
+    let mut king_square: usize = 64;
+     
+    // Determine which square the king of active color is on
+    for (square, maybe_piece) in state.squares.iter().enumerate() {
+        match maybe_piece {
+            Some(piece) => {
+                if piece.color != state.to_move { continue; }
+                if piece.name != PieceName::King { continue; }
+                king_square = square;
+                break;
+            },
+            None => continue,
+        }
+    }
+
+    if king_square == 64 {
+        panic!("GameState cannot be without a king");
+    }
+
+    for (square, maybe_piece) in state.squares.iter().enumerate() {
+        match maybe_piece {
+            Some(piece) => {
+                if piece.color == state.to_move { continue; }
+                let m = Move {
+                    origin: square,
+                    destination: king_square,
+                    piece: piece.name,
+                };
+                if move_is_legal(&m, &state) { return true }
+            },
+            None => continue,
+        }
+    }
+    false
+}
+
 pub fn legal_moves(state: &GameState) -> Vec<Move> {
     let mut results = vec![];
 
