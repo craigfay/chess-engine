@@ -16,5 +16,6 @@ pub fn apply_move(m: &Move, state: &mut GameState) {
     }
 
     state.squares[m.destination] = state.squares[m.origin];
+    state.squares[m.origin] = None;
 }
 

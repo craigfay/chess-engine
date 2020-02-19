@@ -577,6 +577,7 @@ fn apply_move_test() {
     apply_move(&m, &mut state);
 
     assert!(state.squares[27].is_some());
+    assert!(!state.squares[11].is_some());
 }
 
 fn is_check_test() {
