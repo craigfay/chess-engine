@@ -12,6 +12,13 @@ use crate::notation::{algebraic};
 
 use std::cmp::{min, max};
 
+pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
+    let mut new_state = state.clone();
+    new_state.squares[m.destination] = new_state.squares[m.origin];
+    new_state.squares[m.origin] = None;
+    new_state
+}
+
 pub fn square_is_threatened(target_square: usize, state: &GameState) -> bool {
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {

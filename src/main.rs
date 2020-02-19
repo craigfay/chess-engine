@@ -6,6 +6,7 @@ mod notation;
 mod controller;
 
 use rules::{
+    state_after_move,
     square_is_threatened,
     is_check,
     move_is_legal,
@@ -598,6 +599,21 @@ fn square_is_threatened_test() {
     assert!(!square_is_threatened(36, &state));
 }
 
+fn state_after_move_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 0),
+        Placement::new(Black, Rook, 56),
+    ]);   
+    let m = Move {
+        origin: 0,
+        destination: 1,
+        piece: King,
+    };
+    let new_state = state_after_move(&m, &state);
+    assert!(new_state.squares[1].unwrap().name == King);
+    assert!(!new_state.squares[0].is_some());
+}
+
 fn main() {
     new_gamestate_test();
     legal_moves_test();
@@ -641,5 +657,6 @@ fn main() {
     apply_move_test();
     is_check_test();
     square_is_threatened_test();
+    state_after_move_test();
 }
 
