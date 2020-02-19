@@ -12,6 +12,24 @@ use crate::notation::{algebraic};
 
 use std::cmp::{min, max};
 
+pub fn square_is_threatened(target_square: usize, state: &GameState) -> bool {
+    for (square, maybe_piece) in state.squares.iter().enumerate() {
+        match maybe_piece {
+            Some(piece) => {
+                if piece.color != state.to_move { continue; }
+                let m = Move {
+                    origin: square,
+                    destination: target_square,
+                    piece: piece.name,
+                };
+                if move_is_legal(&m, &state) { return true }
+            },
+            None => continue,
+        }
+    }
+    false
+}
+
 pub fn is_check(state: &GameState) -> bool {
 
     let mut king_square: usize = 64;
@@ -33,6 +51,7 @@ pub fn is_check(state: &GameState) -> bool {
         panic!("GameState cannot be without a king");
     }
 
+    // Determine whether the inactive color is threatening king_square
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
@@ -79,11 +98,6 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
         return false
     }
     
-    // If there is a piece present at the chosen destination
-    if false == destination.is_none() {
-        return false
-    }
-
     match m.piece {
         PieceName:: Pawn => pawn_move_is_legal(m, state),
         PieceName:: Rook => rook_move_is_legal(m, state),

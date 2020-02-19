@@ -6,6 +6,7 @@ mod notation;
 mod controller;
 
 use rules::{
+    square_is_threatened,
     is_check,
     move_is_legal,
     legal_moves,
@@ -582,11 +583,18 @@ fn is_check_test() {
     let state = GameState::new();
     assert!(!is_check(&state));
 
-    let state = GameState::with_placements(vec![
-        Placement::new(Black, King, 60),
-        Placement::new(White, Rook, 5),
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, King, 56),
+        Placement::new(White, Rook, 0),
     ]);
+    state.to_move = Black;
     assert!(is_check(&state));
+}
+
+fn square_is_threatened_test() {
+    let state = GameState::new();
+    assert!(square_is_threatened(20, &state));
+    assert!(!square_is_threatened(36, &state));
 }
 
 fn main() {
@@ -631,4 +639,6 @@ fn main() {
     algebraic_moves_black_pawn_rank_8_test(); 
     apply_move_test();
     is_check_test();
+    square_is_threatened_test();
 }
+
