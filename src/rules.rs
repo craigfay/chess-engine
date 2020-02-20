@@ -24,17 +24,13 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
-                if piece.color != color {
-                    continue;
-                }
+                if piece.color != color { continue; }
                 let m = Move {
                     origin: square,
                     destination: target_square,
                     piece: piece.name,
                 };
-                if move_is_pseudo_legal(&m, &state) {
-                    return true
-                }
+                if move_is_pseudo_legal(&m, &state) { return true }
             },
             None => continue,
         }
@@ -67,22 +63,10 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
         return false
     }
 
-    // Determine whether the inactive color is threatening king_square
-    for (square, maybe_piece) in state.squares.iter().enumerate() {
-        match maybe_piece {
-            Some(piece) => {
-                if piece.color == state.to_move { continue; }
-                let m = Move {
-                    origin: square,
-                    destination: king_square,
-                    piece: piece.name,
-                };
-                if move_is_pseudo_legal(&m, &state) { return true }
-            },
-            None => continue,
-        }
-    }
-    false
+
+    // Determine whether the other color is threatening king_square
+    let attacker = if state.to_move == White { Black } else { White };
+    color_threatens_square(attacker, king_square, &state)
 }
 
 pub fn legal_moves(state: &GameState) -> Vec<Move> {
