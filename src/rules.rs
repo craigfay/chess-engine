@@ -5,6 +5,7 @@ use crate::entities::{
     GameState,
     PieceName,
     Move,
+    Color,
     Color::{White, Black},
 };
 
@@ -37,7 +38,7 @@ pub fn square_is_threatened(target_square: usize, state: &GameState) -> bool {
     false
 }
 
-pub fn is_check(state: &GameState) -> bool {
+pub fn color_is_checked(color: Color, state: &GameState) -> bool {
 
     let mut king_square: usize = 64;
      
@@ -45,7 +46,7 @@ pub fn is_check(state: &GameState) -> bool {
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
-                if piece.color != state.to_move { continue; }
+                if piece.color != color { continue; }
                 if piece.name != PieceName::King { continue; }
                 king_square = square;
                 break;
@@ -104,7 +105,7 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     if maybe_piece.is_none() {
         return false
     }
-    
+
     match m.piece {
         PieceName:: Pawn => pawn_move_is_legal(m, state),
         PieceName:: Rook => rook_move_is_legal(m, state),

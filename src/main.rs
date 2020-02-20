@@ -8,7 +8,7 @@ mod controller;
 use rules::{
     state_after_move,
     square_is_threatened,
-    is_check,
+    color_is_checked,
     move_is_legal,
     legal_moves,
     position_delta,
@@ -581,16 +581,16 @@ fn apply_move_test() {
     assert!(!state.squares[11].is_some());
 }
 
-fn is_check_test() {
+fn color_is_checked_test() {
     let state = GameState::new();
-    assert!(!is_check(&state));
+    assert!(!color_is_checked(White, &state));
 
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 56),
         Placement::new(White, Rook, 0),
     ]);
     state.to_move = Black;
-    assert!(is_check(&state));
+    assert!(color_is_checked(Black, &state));
 }
 
 fn square_is_threatened_test() {
@@ -655,7 +655,7 @@ fn main() {
     algebraic_moves_black_pawn_rank_7_test(); 
     algebraic_moves_black_pawn_rank_8_test(); 
     apply_move_test();
-    is_check_test();
+    color_is_checked_test();
     square_is_threatened_test();
     state_after_move_test();
 }
