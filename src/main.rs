@@ -90,6 +90,16 @@ fn new_gamestate_test() {
 
 fn legal_moves_test() {
     let state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(Black, King, 60),
+    ]);
+    assert_eq!(5, legal_moves(&state).len());
+}
+
+fn legal_moves_no_kings_test() {
+    // There can be legal moves even if state lacks Kings
+    //
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
         Placement::new(White, Pawn, 9),
     ]);
@@ -614,9 +624,24 @@ fn state_after_move_test() {
     assert!(!new_state.squares[0].is_some());
 }
 
+fn cannot_move_into_check_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(Black, King, 59),
+        Placement::new(Black, Pawn, 20),
+    ]);   
+    let m = Move {
+        origin: 4,
+        destination: 13,
+        piece: King,
+    };
+    assert!(!move_is_legal(&m, &state));
+}
+
 fn main() {
     new_gamestate_test();
     legal_moves_test();
+    legal_moves_no_kings_test();
     position_delta_test();
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();
@@ -658,5 +683,6 @@ fn main() {
     color_is_checked_test();
     square_is_threatened_test();
     state_after_move_test();
+    cannot_move_into_check_test();
 }
 

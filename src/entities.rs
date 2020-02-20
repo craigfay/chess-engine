@@ -96,7 +96,7 @@ impl std::fmt::Debug for GameState {
         let mut output = "".to_string();
 
         for i in 0..self.squares.len() {
-            let square_str = format!("\n{:?}", self.squares[i]);
+            let square_str = format!("\n{} {:?}", i, self.squares[i]);
             output.push_str(&square_str);
         }
 

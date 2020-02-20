@@ -40,14 +40,17 @@ pub fn square_is_threatened(target_square: usize, state: &GameState) -> bool {
 
 pub fn color_is_checked(color: Color, state: &GameState) -> bool {
 
+    // index 64 does not represent a board square.
+    // We're using it to indicate that the king square is unknown.
+    // An Option type would probably be better.
     let mut king_square: usize = 64;
      
     // Determine which square the king of active color is on
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
-                if piece.color != color { continue; }
                 if piece.name != PieceName::King { continue; }
+                if piece.color != color { continue; }
                 king_square = square;
                 break;
             },
@@ -56,7 +59,8 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
     }
 
     if king_square == 64 {
-        panic!("GameState cannot be without a king");
+        // There is no king on the board, so it can't be check
+        return false
     }
 
     // Determine whether the inactive color is threatening king_square
@@ -98,12 +102,27 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
 }
 
 pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
+    // Don't allow moves with the same origin/destination
+    if m.origin == m.destination { return false }
+
+    // Don't allow moves to/from nonexistent squares
+    if m.origin > 63 || m.destination > 63 { return false }
+
     let maybe_piece = state.squares[m.origin];
     let destination = state.squares[m.destination];
 
     // If there is no piece present at the chosen origin
     if maybe_piece.is_none() {
         return false
+    }
+
+    // Don't allow moves that leave the current player checked
+    // The function may be more efficient if this block gets moved
+    // below individual piece rules, because of how often it runs
+    // with illegal moves by legal_moves().
+    let aftermath = state_after_move(&m, &state);
+    if color_is_checked(state.to_move, &aftermath) {
+        return false;
     }
 
     match m.piece {
