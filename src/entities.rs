@@ -6,6 +6,10 @@
 pub struct GameState {
     pub squares: [Option<Piece>; 64],
     pub to_move: Color,
+    pub black_can_castle_kingside: bool,
+    pub white_can_castle_kingside: bool,
+    pub black_can_castle_queenside: bool,
+    pub white_can_castle_queenside: bool,
 }
 
 impl GameState {
@@ -13,6 +17,10 @@ impl GameState {
         GameState {
             squares: [None; 64],
             to_move: Color::White,
+            black_can_castle_kingside: false,
+            white_can_castle_kingside: false,
+            black_can_castle_queenside: false,
+            white_can_castle_queenside: false,
         }
     }
     pub fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
@@ -30,6 +38,10 @@ impl GameState {
         let mut board = GameState {
             squares: [None; 64],
             to_move: Color::White,
+            black_can_castle_kingside: false,
+            white_can_castle_kingside: false,
+            black_can_castle_queenside: false,
+            white_can_castle_queenside: false,
         };
         for placement in placements.iter() {
             let piece = Piece::new(placement.color, placement.piece);
@@ -38,7 +50,7 @@ impl GameState {
         board
     }
     pub fn new() -> GameState {
-        GameState::with_placements(vec![
+        let mut state = GameState::with_placements(vec![
             Placement::new(Color::White, PieceName::Rook, 0),
             Placement::new(Color::White, PieceName::Knight, 1),
             Placement::new(Color::White, PieceName::Bishop, 2),
@@ -74,7 +86,15 @@ impl GameState {
             Placement::new(Color::Black, PieceName::Bishop, 61),
             Placement::new(Color::Black, PieceName::Knight, 62),
             Placement::new(Color::Black, PieceName::Rook, 63),
-        ])
+        ]);
+
+        // Set castling state
+        state.black_can_castle_kingside = true;
+        state.white_can_castle_kingside = true;
+        state.black_can_castle_queenside = true;
+        state.white_can_castle_queenside = true;
+
+        state
     }
 }
 

@@ -37,6 +37,7 @@ use controller::{
 use notation::{algebraic, algebraic_move};
 
 fn new_gamestate_test() {
+    // Gamestate can be constructed to represent a normal start
     let state = GameState::new();
 
     for squares in 8..16 {
@@ -86,6 +87,11 @@ fn new_gamestate_test() {
     for squares in 17..47 {
         assert!(state.squares[squares].is_none());
     }
+
+    assert!(state.black_can_castle_kingside);
+    assert!(state.white_can_castle_kingside);
+    assert!(state.black_can_castle_queenside);
+    assert!(state.white_can_castle_queenside);
 }
 
 fn legal_moves_test() {
