@@ -167,7 +167,6 @@ fn pawn_movement_normal_test() {
     assert_eq!(true, move_is_legal(&chosen_move, &state));
 }
 
-
 // Pawns should not be able to move from an origin square that has no pawn
 fn pawn_movement_wrong_origin_test() {
     let state = GameState::with_placements(vec![
@@ -644,6 +643,22 @@ fn cannot_move_into_check_test() {
     assert!(!move_is_legal(&m, &state));
 }
 
+
+fn white_kingside_castle_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 7),
+    ]);
+    let m = Move {
+        origin: 4,
+        destination: 7,
+        piece: King,
+    };
+    assert!(!move_is_legal(&m, &state));
+}
+
+
+
 fn main() {
     new_gamestate_test();
     legal_moves_test();
@@ -690,5 +705,6 @@ fn main() {
     square_is_threatened_test();
     state_after_move_test();
     cannot_move_into_check_test();
+    white_kingside_castle_test();
 }
 

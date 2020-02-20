@@ -125,6 +125,11 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
         return false;
     }
 
+    // It may also be problematic that move_is_legal and color_is_checked
+    // call one another.
+    
+    if is_legal_castle(&m, &state) { return true }
+
     match m.piece {
         PieceName:: Pawn => pawn_move_is_legal(m, state),
         PieceName:: Rook => rook_move_is_legal(m, state),
@@ -261,9 +266,23 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 
 }
 
+fn is_legal_castle(m: &Move, state: &GameState) -> bool {
+    // If move is kingside castle
+    if state.to_move == Black && m.origin == 60 && m.origin == 63 {
+        // In-between squares must be empty
+        if state.squares[61].is_some() { return false }
+        if state.squares[62].is_some() { return false }
+        // Must not be, or travel through check
+        if square_is_threatened(60, &state) { return false }
+        if square_is_threatened(61, &state) { return false }
+        if square_is_threatened(62, &state) { return false }
+        return true
+    }
+    false
+}
+
 fn king_move_is_legal(m: &Move, state: &GameState) -> bool {
     let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
-
     return match (delta_x.abs(), delta_y.abs()) {
         (0, 1) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
         (1, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
