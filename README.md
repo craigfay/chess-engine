@@ -14,4 +14,5 @@
 * Handle castling
 * Handle promotion
 * Create a `potential_states()` as an alternative to `legal_moves()`
+* Don't count pawn forward moves as threats (bug)
 
