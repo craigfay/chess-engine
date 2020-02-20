@@ -39,11 +39,7 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
 }
 
 pub fn color_is_checked(color: Color, state: &GameState) -> bool {
-
-    // index 64 does not represent a board square.
-    // We're using it to indicate that the king square is unknown.
-    // An Option type would probably be better.
-    let mut king_square: usize = 64;
+    let mut king_square: Option<usize> = None;
      
     // Determine which square the king of active color is on
     for (square, maybe_piece) in state.squares.iter().enumerate() {
@@ -51,22 +47,20 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
             Some(piece) => {
                 if piece.name != PieceName::King { continue; }
                 if piece.color != color { continue; }
-                king_square = square;
+                king_square = Some(square);
                 break;
             },
             None => continue,
         }
     }
 
-    if king_square == 64 {
-        // There is no king on the board, so it can't be check
+    if !king_square.is_some() {
         return false
     }
 
-
     // Determine whether the other color is threatening king_square
     let attacker = if state.to_move == White { Black } else { White };
-    color_threatens_square(attacker, king_square, &state)
+    color_threatens_square(attacker, king_square.unwrap(), &state)
 }
 
 pub fn legal_moves(state: &GameState) -> Vec<Move> {
