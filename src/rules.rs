@@ -20,17 +20,21 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     new_state
 }
 
-pub fn square_is_threatened(target_square: usize, state: &GameState) -> bool {
+pub fn color_threatens_square(color: Color, target_square: usize, state: &GameState) -> bool {
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
-                if piece.color != state.to_move { continue; }
+                if piece.color != color {
+                    continue;
+                }
                 let m = Move {
                     origin: square,
                     destination: target_square,
                     piece: piece.name,
                 };
-                if move_is_legal(&m, &state) { return true }
+                if move_is_pseudo_legal(&m, &state) {
+                    return true
+                }
             },
             None => continue,
         }
@@ -73,7 +77,7 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
                     destination: king_square,
                     piece: piece.name,
                 };
-                if move_is_legal(&m, &state) { return true }
+                if move_is_pseudo_legal(&m, &state) { return true }
             },
             None => continue,
         }
@@ -130,16 +134,22 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     
     if is_legal_castle(&m, &state) { return true }
 
-    match m.piece {
+    move_is_pseudo_legal(&m, &state) 
+}
+
+// Determine whether the pieces can move in accordance
+// with a given move, regardless of threats or non-placement
+// game state
+fn move_is_pseudo_legal(m: &Move, state: &GameState) -> bool {
+     return match m.piece {
         PieceName:: Pawn => pawn_move_is_legal(m, state),
         PieceName:: Rook => rook_move_is_legal(m, state),
         PieceName:: Bishop => bishop_move_is_legal(m, state),
         PieceName:: Knight => knight_move_is_legal(m, state),
         PieceName:: Queen => queen_move_is_legal(m, state),
         PieceName:: King => king_move_is_legal(m, state),
-    }
+    }   
 }
-
 
 fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
     let piece = state.squares[m.origin].unwrap();
@@ -267,15 +277,34 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 }
 
 fn is_legal_castle(m: &Move, state: &GameState) -> bool {
-    // If move is kingside castle
-    if state.to_move == Black && m.origin == 60 && m.origin == 63 {
+    if state.to_move == White && m.origin == 4 && m.destination == 7 {
+        // Rook must be on the correct square
+        if !state.squares[7].is_some() { return false }
+        if state.squares[7].unwrap().color != White { return false }
+        if state.squares[7].unwrap().name != PieceName::Rook { return false }
+        // In-between squares must be empty
+        if state.squares[5].is_some() { return false }
+        if state.squares[6].is_some() { return false }
+        // Must not be, or travel through/into/out of check
+        if color_threatens_square(Black, 4, &state) { return false }
+        if color_threatens_square(Black, 5, &state) { return false }
+        if color_threatens_square(Black, 6, &state) { return false }
+        if color_threatens_square(Black, 7, &state) { return false }
+        return true
+    }
+    if state.to_move == Black && m.origin == 60 && m.destination == 63 {
+        // Rook must be on the correct square
+        if !state.squares[63].is_some() { return false }
+        if state.squares[63].unwrap().color != Black { return false }
+        if state.squares[63].unwrap().name != PieceName::Rook { return false }
         // In-between squares must be empty
         if state.squares[61].is_some() { return false }
         if state.squares[62].is_some() { return false }
-        // Must not be, or travel through check
-        if square_is_threatened(60, &state) { return false }
-        if square_is_threatened(61, &state) { return false }
-        if square_is_threatened(62, &state) { return false }
+        // Must not be, or travel through/into/out of check
+        if color_threatens_square(White, 60, &state) { return false }
+        if color_threatens_square(White, 61, &state) { return false }
+        if color_threatens_square(White, 62, &state) { return false }
+        if color_threatens_square(White, 63, &state) { return false }
         return true
     }
     false
