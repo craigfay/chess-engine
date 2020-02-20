@@ -10,8 +10,8 @@
 * Consolidate static variables
 * Comment/Rename `algebraic_move()`
 * Provide bit vector representation of game state
-* Use `color_is_checked()` instead of `is_check()`
 * Handle en-passant
 * Handle castling
 * Handle promotion
+* Create a `potential_states()` as an alternative to `legal_moves()`
 
