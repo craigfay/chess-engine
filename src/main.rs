@@ -613,10 +613,9 @@ fn color_threatens_square_test() {
     assert!(color_threatens_square(White, 20, &state));
     assert!(color_threatens_square(Black, 44, &state));
 
-    // Pawn moves are currently considered threats.
-    // This bug needs to be fixed to make these tests pass.
-    // assert!(!color_threatens_square(White, 28, &state));
-    // assert!(!color_threatens_square(Black, 36, &state));
+    // Forward pawn moves are not threatening
+    assert!(!color_threatens_square(White, 28, &state));
+    assert!(!color_threatens_square(Black, 36, &state));
 }
 
 fn state_after_move_test() {

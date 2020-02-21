@@ -24,13 +24,26 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
-                if piece.color != color { continue; }
+                if piece.color != color {
+                    continue;
+                }
                 let m = Move {
                     origin: square,
                     destination: target_square,
                     piece: piece.name,
                 };
-                if move_is_pseudo_legal(&m, &state) { return true }
+
+                // Not all pawn moves are threatening
+                if piece.name == PieceName::Pawn {
+                    let (delta_x, delta_y) = position_delta(m.origin, m.destination);
+                    if (delta_x.abs(),  delta_y.abs()) != (1, 1) {
+                        continue;
+                    }
+                }
+
+                if move_is_pseudo_legal(&m, &state) {
+                    return true
+                }
             },
             None => continue,
         }
