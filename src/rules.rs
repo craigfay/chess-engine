@@ -29,24 +29,28 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     if is_legal_castle(&m, &state) {
         match (m.origin, m.destination) {
             (4, 6) => {
+                new_state.white_can_castle_kingside = false;
                 new_state.squares[6] = new_state.squares[4];
                 new_state.squares[5] = new_state.squares[7];
                 new_state.squares[4] = None;
                 new_state.squares[7] = None;
             },
             (4, 2) => {
+                new_state.white_can_castle_queenside = false;
                 new_state.squares[2] = new_state.squares[4];
                 new_state.squares[3] = new_state.squares[0];
                 new_state.squares[4] = None;
                 new_state.squares[0] = None;
             },
             (60, 62) => {
+                new_state.black_can_castle_kingside = false;
                 new_state.squares[62] = new_state.squares[60];
                 new_state.squares[59] = new_state.squares[63];
                 new_state.squares[0] = None;
                 new_state.squares[0] = None;
             },
             (60, 58) => {
+                new_state.black_can_castle_queenside = false;
                 new_state.squares[58] = new_state.squares[60];
                 new_state.squares[59] = new_state.squares[56];
                 new_state.squares[0] = None;
@@ -55,9 +59,12 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
             _ => panic!("Castle is considered legal but not playable"),
         }
     }
+    else {
+        // Normal Moves
+        new_state.squares[m.destination] = new_state.squares[m.origin];
+        new_state.squares[m.origin] = None;
+    }
 
-    new_state.squares[m.destination] = new_state.squares[m.origin];
-    new_state.squares[m.origin] = None;
     new_state
 }
 

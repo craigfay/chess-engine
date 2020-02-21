@@ -705,6 +705,27 @@ fn black_queenside_castle_legality_test() {
     assert!(move_is_legal(&m, &state));
 }
 
+fn white_kingside_castle_aftermath_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 7),
+    ]);
+    state.white_can_castle_kingside = true;
+    let m = Move {
+        origin: 4,
+        destination: 6,
+        piece: King,
+    };
+    let aftermath = state_after_move(&m, &state);
+    let king = aftermath.squares[6].unwrap();
+    let rook = aftermath.squares[5].unwrap();
+    assert!(king.name == King && king.color == White);
+    assert!(rook.name == Rook && rook.color == White);
+    assert!(!aftermath.squares[4].is_some());
+    assert!(!aftermath.squares[7].is_some());
+}
+ 
+
   
 fn main() {
     // Time tests
@@ -759,6 +780,7 @@ fn main() {
     black_kingside_castle_legality_test();
     white_queenside_castle_legality_test();
     black_queenside_castle_legality_test();
+    white_kingside_castle_aftermath_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
