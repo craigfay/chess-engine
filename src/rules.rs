@@ -4,6 +4,15 @@
 use crate::entities::{
     GameState,
     PieceName,
+    PieceName::{
+        Pawn,
+        Bishop,
+        Knight,
+        Rook,
+        Queen,
+        King,
+    },
+    Piece,
     Move,
     Color,
     Color::{White, Black},
@@ -34,7 +43,7 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
                 };
 
                 // Not all pawn moves are threatening
-                if piece.name == PieceName::Pawn {
+                if piece.name == Pawn {
                     let (delta_x, delta_y) = position_delta(m.origin, m.destination);
                     if (delta_x.abs(),  delta_y.abs()) != (1, 1) {
                         continue;
@@ -58,7 +67,7 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {
             Some(piece) => {
-                if piece.name != PieceName::King { continue; }
+                if piece.name != King { continue; }
                 if piece.color != color { continue; }
                 king_square = Some(square);
                 break;
@@ -133,12 +142,12 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
 // game state
 fn move_is_pseudo_legal(m: &Move, state: &GameState) -> bool {
      return match m.piece {
-        PieceName:: Pawn => pawn_move_is_legal(m, state),
-        PieceName:: Rook => rook_move_is_legal(m, state),
-        PieceName:: Bishop => bishop_move_is_legal(m, state),
-        PieceName:: Knight => knight_move_is_legal(m, state),
-        PieceName:: Queen => queen_move_is_legal(m, state),
-        PieceName:: King => king_move_is_legal(m, state),
+        Pawn => pawn_move_is_legal(m, state),
+        Rook => rook_move_is_legal(m, state),
+        Bishop => bishop_move_is_legal(m, state),
+        Knight => knight_move_is_legal(m, state),
+        Queen => queen_move_is_legal(m, state),
+        King => king_move_is_legal(m, state),
     }   
 }
 
@@ -270,9 +279,7 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 fn is_legal_castle(m: &Move, state: &GameState) -> bool {
     if state.to_move == White && m.origin == 4 && m.destination == 7 {
         // Rook must be on the correct square
-        if !state.squares[7].is_some() { return false }
-        if state.squares[7].unwrap().color != White { return false }
-        if state.squares[7].unwrap().name != PieceName::Rook { return false }
+        if !piece_is(White, Rook, state.squares[7]) { return false }
         // In-between squares must be empty
         if state.squares[5].is_some() { return false }
         if state.squares[6].is_some() { return false }
@@ -285,9 +292,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
     }
     if state.to_move == Black && m.origin == 60 && m.destination == 63 {
         // Rook must be on the correct square
-        if !state.squares[63].is_some() { return false }
-        if state.squares[63].unwrap().color != Black { return false }
-        if state.squares[63].unwrap().name != PieceName::Rook { return false }
+        if !piece_is(Black, Rook, state.squares[63]) { return false }
         // In-between squares must be empty
         if state.squares[61].is_some() { return false }
         if state.squares[62].is_some() { return false }
@@ -299,6 +304,13 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         return true
     }
     false
+}
+
+pub fn piece_is(color: Color, name: PieceName, actual: Option<Piece>) -> bool {
+    match actual {
+        Some(piece) => piece.color == color && piece.name == name,
+        None => false
+    }
 }
 
 fn king_move_is_legal(m: &Move, state: &GameState) -> bool {
