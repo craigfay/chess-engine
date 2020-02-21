@@ -24,6 +24,38 @@ use std::cmp::{min, max};
 
 pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     let mut new_state = state.clone();
+
+    // Handle castling
+    if is_legal_castle(&m, &state) {
+        match (m.origin, m.destination) {
+            (4, 6) => {
+                new_state.squares[6] = new_state.squares[4];
+                new_state.squares[5] = new_state.squares[7];
+                new_state.squares[4] = None;
+                new_state.squares[7] = None;
+            },
+            (4, 2) => {
+                new_state.squares[2] = new_state.squares[4];
+                new_state.squares[3] = new_state.squares[0];
+                new_state.squares[4] = None;
+                new_state.squares[0] = None;
+            },
+            (60, 62) => {
+                new_state.squares[62] = new_state.squares[60];
+                new_state.squares[59] = new_state.squares[63];
+                new_state.squares[0] = None;
+                new_state.squares[0] = None;
+            },
+            (60, 58) => {
+                new_state.squares[58] = new_state.squares[60];
+                new_state.squares[59] = new_state.squares[56];
+                new_state.squares[0] = None;
+                new_state.squares[0] = None;
+            },
+            _ => panic!("Castle is considered legal but not playable"),
+        }
+    }
+
     new_state.squares[m.destination] = new_state.squares[m.origin];
     new_state.squares[m.origin] = None;
     new_state
@@ -277,7 +309,7 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 }
 
 fn is_legal_castle(m: &Move, state: &GameState) -> bool {
-    if state.to_move == White && m.origin == 4 && m.destination == 7 {
+    if state.to_move == White && m.origin == 4 && m.destination == 6 {
         if !state.white_can_castle_kingside { return false }
         // Rook must be on the correct square
         if !piece_is(White, Rook, state.squares[7]) { return false }
@@ -291,7 +323,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         if color_threatens_square(Black, 7, &state) { return false }
         return true
     }
-    if state.to_move == Black && m.origin == 60 && m.destination == 63 {
+    if state.to_move == Black && m.origin == 60 && m.destination == 62 {
         if !state.black_can_castle_kingside { return false }
         if !piece_is(Black, Rook, state.squares[63]) { return false }
         if state.squares[61].is_some() { return false }
@@ -302,7 +334,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         if color_threatens_square(White, 63, &state) { return false }
         return true
     }
-    if state.to_move == White && m.origin == 4 && m.destination == 0 {
+    if state.to_move == White && m.origin == 4 && m.destination == 2 {
         if !state.white_can_castle_queenside { return false }
         if !piece_is(White, Rook, state.squares[0]) { return false }
         if state.squares[1].is_some() { return false }
@@ -315,7 +347,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         if color_threatens_square(Black, 4, &state) { return false }
         return true
     }
-    if state.to_move == Black && m.origin == 60 && m.destination == 56 {
+    if state.to_move == Black && m.origin == 60 && m.destination == 58 {
         if !state.black_can_castle_queenside { return false }
         if !piece_is(Black, Rook, state.squares[56]) { return false }
         if state.squares[57].is_some() { return false }

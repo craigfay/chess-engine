@@ -655,7 +655,7 @@ fn white_kingside_castle_legality_test() {
     state.white_can_castle_kingside = true;
     let m = Move {
         origin: 4,
-        destination: 7,
+        destination: 6,
         piece: King,
     };
     assert!(move_is_legal(&m, &state));
@@ -670,7 +670,7 @@ fn black_kingside_castle_legality_test() {
     state.to_move = Black;
     let m = Move {
         origin: 60,
-        destination: 63,
+        destination: 62,
         piece: King,
     };
     assert!(move_is_legal(&m, &state));
@@ -684,7 +684,7 @@ fn white_queenside_castle_legality_test() {
     state.white_can_castle_queenside = true;
     let m = Move {
         origin: 4,
-        destination: 0,
+        destination: 2,
         piece: King,
     };
     assert!(move_is_legal(&m, &state));
@@ -699,12 +699,11 @@ fn black_queenside_castle_legality_test() {
     state.to_move = Black;
     let m = Move {
         origin: 60,
-        destination: 56,
+        destination: 58,
         piece: King,
     };
     assert!(move_is_legal(&m, &state));
 }
-
 
   
 fn main() {
