@@ -674,6 +674,19 @@ fn black_kingside_castle_legality_test() {
     assert!(move_is_legal(&m, &state));
 }
 
+fn white_queenside_castle_legality_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 0),
+    ]);
+    let m = Move {
+        origin: 4,
+        destination: 0,
+        piece: King,
+    };
+    assert!(move_is_legal(&m, &state));
+}
+  
 fn main() {
     new_gamestate_test();
     legal_moves_test();
@@ -722,5 +735,6 @@ fn main() {
     cannot_move_into_check_test();
     white_kingside_castle_legality_test();
     black_kingside_castle_legality_test();
+    white_queenside_castle_legality_test();
 }
 

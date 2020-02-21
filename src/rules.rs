@@ -291,16 +291,25 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         return true
     }
     if state.to_move == Black && m.origin == 60 && m.destination == 63 {
-        // Rook must be on the correct square
         if !piece_is(Black, Rook, state.squares[63]) { return false }
-        // In-between squares must be empty
         if state.squares[61].is_some() { return false }
         if state.squares[62].is_some() { return false }
-        // Must not be, or travel through/into/out of check
         if color_threatens_square(White, 60, &state) { return false }
         if color_threatens_square(White, 61, &state) { return false }
         if color_threatens_square(White, 62, &state) { return false }
         if color_threatens_square(White, 63, &state) { return false }
+        return true
+    }
+    if state.to_move == White && m.origin == 4 && m.destination == 0 {
+        if !piece_is(White, Rook, state.squares[0]) { return false }
+        if state.squares[1].is_some() { return false }
+        if state.squares[2].is_some() { return false }
+        if state.squares[3].is_some() { return false }
+        if color_threatens_square(Black, 0, &state) { return false }
+        if color_threatens_square(Black, 1, &state) { return false }
+        if color_threatens_square(Black, 2, &state) { return false }
+        if color_threatens_square(Black, 3, &state) { return false }
+        if color_threatens_square(Black, 4, &state) { return false }
         return true
     }
     false
