@@ -705,7 +705,7 @@ fn black_queenside_castle_legality_test() {
   
 fn main() {
     // Time tests
-    let time = Instant::now();
+    let timer = Instant::now();
 
     new_gamestate_test();
     legal_moves_test();
@@ -757,7 +757,7 @@ fn main() {
     white_queenside_castle_legality_test();
     black_queenside_castle_legality_test();
 
-    let duration = time.elapsed();
+    let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
 }
 
