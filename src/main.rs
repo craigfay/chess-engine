@@ -652,6 +652,7 @@ fn white_kingside_castle_legality_test() {
         Placement::new(White, King, 4),
         Placement::new(White, Rook, 7),
     ]);
+    state.white_can_castle_kingside = true;
     let m = Move {
         origin: 4,
         destination: 7,
@@ -665,6 +666,7 @@ fn black_kingside_castle_legality_test() {
         Placement::new(Black, King, 60),
         Placement::new(Black, Rook, 63),
     ]);
+    state.black_can_castle_kingside = true;
     state.to_move = Black;
     let m = Move {
         origin: 60,
@@ -679,6 +681,7 @@ fn white_queenside_castle_legality_test() {
         Placement::new(White, King, 4),
         Placement::new(White, Rook, 0),
     ]);
+    state.white_can_castle_queenside = true;
     let m = Move {
         origin: 4,
         destination: 0,
@@ -692,6 +695,7 @@ fn black_queenside_castle_legality_test() {
         Placement::new(Black, King, 60),
         Placement::new(Black, Rook, 56),
     ]);
+    state.black_can_castle_queenside = true;
     state.to_move = Black;
     let m = Move {
         origin: 60,

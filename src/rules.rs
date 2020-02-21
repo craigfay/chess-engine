@@ -278,6 +278,7 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 
 fn is_legal_castle(m: &Move, state: &GameState) -> bool {
     if state.to_move == White && m.origin == 4 && m.destination == 7 {
+        if !state.white_can_castle_kingside { return false }
         // Rook must be on the correct square
         if !piece_is(White, Rook, state.squares[7]) { return false }
         // In-between squares must be empty
@@ -291,6 +292,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         return true
     }
     if state.to_move == Black && m.origin == 60 && m.destination == 63 {
+        if !state.black_can_castle_kingside { return false }
         if !piece_is(Black, Rook, state.squares[63]) { return false }
         if state.squares[61].is_some() { return false }
         if state.squares[62].is_some() { return false }
@@ -301,6 +303,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         return true
     }
     if state.to_move == White && m.origin == 4 && m.destination == 0 {
+        if !state.white_can_castle_queenside { return false }
         if !piece_is(White, Rook, state.squares[0]) { return false }
         if state.squares[1].is_some() { return false }
         if state.squares[2].is_some() { return false }
@@ -313,6 +316,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         return true
     }
     if state.to_move == Black && m.origin == 60 && m.destination == 56 {
+        if !state.black_can_castle_queenside { return false }
         if !piece_is(Black, Rook, state.squares[56]) { return false }
         if state.squares[57].is_some() { return false }
         if state.squares[58].is_some() { return false }
