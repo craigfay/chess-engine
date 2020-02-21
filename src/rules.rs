@@ -45,16 +45,16 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
             (60, 62) => {
                 new_state.black_can_castle_kingside = false;
                 new_state.squares[62] = new_state.squares[60];
-                new_state.squares[59] = new_state.squares[63];
-                new_state.squares[0] = None;
-                new_state.squares[0] = None;
+                new_state.squares[61] = new_state.squares[63];
+                new_state.squares[60] = None;
+                new_state.squares[63] = None;
             },
             (60, 58) => {
                 new_state.black_can_castle_queenside = false;
                 new_state.squares[58] = new_state.squares[60];
                 new_state.squares[59] = new_state.squares[56];
-                new_state.squares[0] = None;
-                new_state.squares[0] = None;
+                new_state.squares[60] = None;
+                new_state.squares[56] = None;
             },
             _ => panic!("Castle is considered legal but not playable"),
         }
