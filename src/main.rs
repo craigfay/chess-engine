@@ -802,6 +802,23 @@ fn white_kingside_castle_obstruction_test() {
     assert!(!move_is_legal(&m, &state));
 }
 
+fn white_queenside_castle_obstruction_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Queen, 3),
+        Placement::new(White, Rook, 0),
+    ]);
+    state.white_can_castle_queenside = true;
+    let m = Move {
+        origin: 4,
+        destination: 2,
+        piece: King,
+    };
+    assert!(!move_is_legal(&m, &state));
+}
+
+
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -860,6 +877,7 @@ fn main() {
     black_kingside_castle_aftermath_test();
     black_queenside_castle_aftermath_test();
     white_kingside_castle_obstruction_test();
+    white_queenside_castle_obstruction_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
