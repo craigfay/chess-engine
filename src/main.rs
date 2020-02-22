@@ -939,11 +939,43 @@ fn white_queenside_castle_through_check_test() {
     assert!(!move_is_legal(&m, &state));
 }
 
-fn black_kingside_castle_check_test() {
+fn black_kingside_castle_out_of_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
         Placement::new(Black, Rook, 63),
-        Placement::new(White, Knight, 51),
+        Placement::new(White, Pawn, 51),
+    ]);
+    state.black_can_castle_kingside = true;
+    state.to_move = Black;
+    let m = Move {
+        origin: 60,
+        destination: 62,
+        piece: King,
+    };
+    assert!(!move_is_legal(&m, &state));
+}
+
+fn black_kingside_castle_into_check_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 63),
+        Placement::new(White, Bishop, 55),
+    ]);
+    state.black_can_castle_kingside = true;
+    state.to_move = Black;
+    let m = Move {
+        origin: 60,
+        destination: 62,
+        piece: King,
+    };
+    assert!(!move_is_legal(&m, &state));
+}
+
+fn black_kingside_castle_through_check_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 63),
+        Placement::new(White, Bishop, 52),
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
@@ -1056,7 +1088,9 @@ fn main() {
     white_queenside_castle_out_of_check_test();
     white_queenside_castle_into_check_test();
     white_queenside_castle_through_check_test();
-    black_kingside_castle_check_test();
+    black_kingside_castle_out_of_check_test();
+    black_kingside_castle_into_check_test();
+    black_kingside_castle_through_check_test();
     black_queenside_castle_check_test();
     pawn_threats_test();
 
