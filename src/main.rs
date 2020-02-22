@@ -895,6 +895,40 @@ fn black_kingside_castle_check_test() {
     assert!(!move_is_legal(&m, &state));
 }
 
+fn black_queenside_castle_check_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 56),
+        Placement::new(White, Pawn, 52),
+    ]);
+    state.black_can_castle_queenside = true;
+    state.to_move = Black;
+    let m = Move {
+        origin: 60,
+        destination: 58,
+        piece: King,
+    };
+    assert!(!move_is_legal(&m, &state));
+}
+
+fn pawn_threats_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 44),
+        Placement::new(White, Pawn, 36),
+    ]);
+    // Pawns do threaten immediately forward diagonal squares
+    assert!(color_threatens_square(White, 43, &state));
+    assert!(color_threatens_square(White, 45, &state));
+    assert!(color_threatens_square(Black, 35, &state));
+    assert!(color_threatens_square(Black, 37, &state));
+    // Pawns do not threaten immediately frontward
+    assert!(!color_threatens_square(White, 44, &state));
+    assert!(!color_threatens_square(Black, 36, &state));
+}
+
+
+
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -959,7 +993,8 @@ fn main() {
     white_kingside_castle_check_test();
     white_queenside_castle_check_test();
     black_kingside_castle_check_test();
-
+    black_queenside_castle_check_test();
+    pawn_threats_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);

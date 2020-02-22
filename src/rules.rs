@@ -84,9 +84,8 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
                 // Not all pawn moves are threatening
                 if piece.name == Pawn {
                     let (delta_x, delta_y) = position_delta(m.origin, m.destination);
-                    if (delta_x.abs(),  delta_y.abs()) != (1, 1) {
-                        continue;
-                    }
+                    if (delta_x.abs(),  delta_y.abs()) == (1, 1) { return true; }
+                    else { continue; }
                 }
 
                 if move_is_pseudo_legal(&m, &state) {
