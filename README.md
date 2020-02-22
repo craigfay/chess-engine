@@ -14,4 +14,6 @@
 * Handle castling
 * Handle promotion
 * Create a `potential_states()` as an alternative to `legal_moves()`
-* Comprehensively test illegal castles because of check
+* Decide between a conventions chosen_move / m
+* Move piece property to the beginning of Move constructors
+
