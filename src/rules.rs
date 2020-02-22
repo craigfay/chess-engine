@@ -27,7 +27,7 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
 
     // Handle castling
     if is_legal_castle(&m, &state) {
-        match (m.origin, m.destination) {
+        match (m.from, m.to) {
             (4, 6) => {
                 new_state.white_can_castle_kingside = false;
                 new_state.squares[6] = new_state.squares[4];
@@ -61,8 +61,8 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     }
     else {
         // Normal Moves
-        new_state.squares[m.destination] = new_state.squares[m.origin];
-        new_state.squares[m.origin] = None;
+        new_state.squares[m.to] = new_state.squares[m.from];
+        new_state.squares[m.from] = None;
     }
 
     new_state
@@ -76,14 +76,14 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
                     continue;
                 }
                 let m = Move {
-                    origin: square,
-                    destination: target_square,
+                    from: square,
+                    to: target_square,
                     piece: piece.name,
                 };
 
                 // Not all pawn moves are threatening
                 if piece.name == Pawn {
-                    let (delta_x, delta_y) = position_delta(m.origin, m.destination);
+                    let (delta_x, delta_y) = position_delta(m.from, m.to);
                     if (delta_x.abs(),  delta_y.abs()) == (1, 1) { return true; }
                     else { continue; }
                 }
@@ -126,12 +126,12 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
 pub fn legal_moves(state: &GameState) -> Vec<Move> {
     let mut results = vec![];
 
-    for origin in 0..64 {
-        if state.squares[origin].is_some() {
-            let piece = state.squares[origin].unwrap();
+    for from in 0..64 {
+        if state.squares[from].is_some() {
+            let piece = state.squares[from].unwrap();
             if piece.color == state.to_move {
-                for destination in 0..64 {
-                    let m = Move { origin, destination, piece: piece.name };;
+                for to in 0..64 {
+                    let m = Move { from, to, piece: piece.name };;
                     if move_is_legal(&m, state) {
                         results.push(m);
                     }
@@ -144,16 +144,16 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
 }
 
 pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
-    // Don't allow moves with the same origin/destination
-    if m.origin == m.destination { return false }
+    // Don't allow moves with the same from/to
+    if m.from == m.to { return false }
 
     // Don't allow moves to/from nonexistent squares
-    if m.origin > 63 || m.destination > 63 { return false }
+    if m.from > 63 || m.to > 63 { return false }
 
-    let maybe_piece = state.squares[m.origin];
-    let destination = state.squares[m.destination];
+    let maybe_piece = state.squares[m.from];
+    let to = state.squares[m.to];
 
-    // If there is no piece present at the chosen origin
+    // If there is no piece present at the chosen from
     if maybe_piece.is_none() {
         return false
     }
@@ -190,11 +190,11 @@ fn move_is_pseudo_legal(m: &Move, state: &GameState) -> bool {
 }
 
 fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let piece = state.squares[m.origin].unwrap();
+    let piece = state.squares[m.from].unwrap();
 
-    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.from, m.to);
 
-    let destination_is_enemy_piece = match state.squares[m.destination] {
+    let to_is_enemy_piece = match state.squares[m.to] {
         Some(other_piece) => other_piece.color != piece.color,
         None => false,
     };
@@ -206,10 +206,10 @@ fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
                 // Normal Moves
                 (0, 1) => true,
                 // Two-Square Moves
-                (0, 2) => m.origin > 7 && m.origin < 16,
+                (0, 2) => m.from > 7 && m.from < 16,
                 // Captures
-                (1, 1) => destination_is_enemy_piece,
-                (-1, 1) => destination_is_enemy_piece,
+                (1, 1) => to_is_enemy_piece,
+                (-1, 1) => to_is_enemy_piece,
                 _ => false,
             }
         },
@@ -219,10 +219,10 @@ fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
                 // Normal Moves
                 (0, -1) => true,
                 // Two-Square Moves
-                (0, -2) => m.origin > 47 && m.origin < 56,
+                (0, -2) => m.from > 47 && m.from < 56,
                 // Captures
-                (1, -1) => destination_is_enemy_piece,
-                (-1, -1) => destination_is_enemy_piece,
+                (1, -1) => to_is_enemy_piece,
+                (-1, -1) => to_is_enemy_piece,
                 _ => false,
             }
         }
@@ -230,9 +230,9 @@ fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
     }
 }
 
-fn horizontal_path_is_obstructed(origin: usize, delta_x: i32, state: &GameState) -> bool {
+fn horizontal_path_is_obstructed(from: usize, delta_x: i32, state: &GameState) -> bool {
     for x in 1..delta_x.abs() {
-        let index = if delta_x > 0 { origin + x as usize } else { origin - x as usize };
+        let index = if delta_x > 0 { from + x as usize } else { from - x as usize };
         if state.squares[index].is_some() {
             return true
         }
@@ -240,12 +240,12 @@ fn horizontal_path_is_obstructed(origin: usize, delta_x: i32, state: &GameState)
     false
 }
 
-fn vertical_path_is_obstructed(origin: usize, delta_y: i32, state: &GameState) -> bool {
+fn vertical_path_is_obstructed(from: usize, delta_y: i32, state: &GameState) -> bool {
     for x in 1..delta_y.abs() {
         let index = if delta_y > 0 {
-            origin + x as usize * 8
+            from + x as usize * 8
         } else {
-            origin - x as usize * 8
+            from - x as usize * 8
         };
         if state.squares[index].is_some() {
             return true
@@ -254,9 +254,9 @@ fn vertical_path_is_obstructed(origin: usize, delta_y: i32, state: &GameState) -
     false
 }
 
-fn diagonal_is_obstructed(origin: usize, destination: usize, state: &GameState) -> bool {
-    let low = min(origin, destination);
-    let hi = max(origin, destination);
+fn diagonal_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
+    let low = min(from, to);
+    let hi = max(from, to);
 
     // The difference between two diagonal squares will divide by 7 or 9
     for n in [7,9].iter() {
@@ -270,9 +270,9 @@ fn diagonal_is_obstructed(origin: usize, destination: usize, state: &GameState) 
 }
 
 fn rook_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.from, m.to);
     // Return false if the path is obstructed
-    if horizontal_path_is_obstructed(m.origin, delta_x, state) {
+    if horizontal_path_is_obstructed(m.from, delta_x, state) {
         return false;
     }
 
@@ -284,16 +284,16 @@ fn rook_move_is_legal(m: &Move, state: &GameState) -> bool {
 }
 
 fn bishop_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.from, m.to);
     if delta_x.abs() != delta_y.abs() {
         return false;
     }
-    return false == diagonal_is_obstructed(m.origin, m.origin, state);
+    return false == diagonal_is_obstructed(m.from, m.from, state);
 }
 
 
 fn knight_move_is_legal(m: &Move, _state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.from, m.to);
 
     return match (delta_x.abs(), delta_y.abs()) {
         (1, 2) => true,
@@ -304,18 +304,18 @@ fn knight_move_is_legal(m: &Move, _state: &GameState) -> bool {
 }
 
 fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.from, m.to);
 
     return match (delta_x.abs(), delta_y.abs()) {
-        (0, _) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-        (_, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-        (x, y) => x == y && !diagonal_is_obstructed(m.origin, m.origin, state),
+        (0, _) => !horizontal_path_is_obstructed(m.from, delta_x, state),
+        (_, 0) => !horizontal_path_is_obstructed(m.from, delta_x, state),
+        (x, y) => x == y && !diagonal_is_obstructed(m.from, m.from, state),
     }
 
 }
 
 fn is_legal_castle(m: &Move, state: &GameState) -> bool {
-    if state.to_move == White && m.origin == 4 && m.destination == 6 {
+    if state.to_move == White && m.from == 4 && m.to == 6 {
         if !state.white_can_castle_kingside { return false }
         // Rook must be on the correct square
         if !piece_is(White, Rook, state.squares[7]) { return false }
@@ -329,7 +329,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         if color_threatens_square(Black, 7, &state) { return false }
         return true
     }
-    if state.to_move == Black && m.origin == 60 && m.destination == 62 {
+    if state.to_move == Black && m.from == 60 && m.to == 62 {
         if !state.black_can_castle_kingside { return false }
         if !piece_is(Black, Rook, state.squares[63]) { return false }
         if state.squares[61].is_some() { return false }
@@ -340,7 +340,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         if color_threatens_square(White, 63, &state) { return false }
         return true
     }
-    if state.to_move == White && m.origin == 4 && m.destination == 2 {
+    if state.to_move == White && m.from == 4 && m.to == 2 {
         if !state.white_can_castle_queenside { return false }
         if !piece_is(White, Rook, state.squares[0]) { return false }
         if state.squares[1].is_some() { return false }
@@ -353,7 +353,7 @@ fn is_legal_castle(m: &Move, state: &GameState) -> bool {
         if color_threatens_square(Black, 4, &state) { return false }
         return true
     }
-    if state.to_move == Black && m.origin == 60 && m.destination == 58 {
+    if state.to_move == Black && m.from == 60 && m.to == 58 {
         if !state.black_can_castle_queenside { return false }
         if !piece_is(Black, Rook, state.squares[56]) { return false }
         if state.squares[57].is_some() { return false }
@@ -377,19 +377,19 @@ pub fn piece_is(color: Color, name: PieceName, actual: Option<Piece>) -> bool {
 }
 
 fn king_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.origin, m.destination);
+    let (delta_x, delta_y)  = position_delta(m.from, m.to);
     return match (delta_x.abs(), delta_y.abs()) {
-        (0, 1) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-        (1, 0) => !horizontal_path_is_obstructed(m.origin, delta_x, state),
-        (1, 1) => !diagonal_is_obstructed(m.origin, m.origin, state),
+        (0, 1) => !horizontal_path_is_obstructed(m.from, delta_x, state),
+        (1, 0) => !horizontal_path_is_obstructed(m.from, delta_x, state),
+        (1, 1) => !diagonal_is_obstructed(m.from, m.from, state),
         _ => false,
     }
 }
 
 // Determine the horizontal distance between two squares
-pub fn position_delta(origin: usize, destination: usize) -> (i32, i32) {
-    let x = (destination as i32 % 8) - (origin as i32 % 8);
-    let y = (destination as i32 / 8) - (origin as i32 / 8);
+pub fn position_delta(from: usize, to: usize) -> (i32, i32) {
+    let x = (to as i32 % 8) - (from as i32 % 8);
+    let y = (to as i32 / 8) - (from as i32 / 8);
     return (x, y);
 }
 

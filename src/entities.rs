@@ -141,8 +141,8 @@ pub enum PieceName {
 #[derive(PartialEq)]
 pub struct Move {
     pub piece: PieceName,
-    pub origin: usize,
-    pub destination: usize,
+    pub from: usize,
+    pub to: usize,
 }
 
 #[derive(Copy)]

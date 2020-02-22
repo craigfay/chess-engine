@@ -14,5 +14,4 @@
 * Handle castling
 * Handle promotion
 * Create a `potential_states()` as an alternative to `legal_moves()`
-* Rename origin/destination -> to/from
 * Comprehensively test illegal castles because of check

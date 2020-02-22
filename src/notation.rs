@@ -13,8 +13,8 @@ use crate::entities::{
 // Create a move from algebraic notation
 pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
     
-    let dummy_move = Move { piece: Pawn, origin: 0 as usize,
-        destination: 1 as usize,
+    let dummy_move = Move { piece: Pawn, from: 0 as usize,
+        to: 1 as usize,
     };
 
     // static PIECES: [char; 5] = ['B','N','R','Q','K'];
@@ -32,15 +32,15 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
                 if square < 16 { return None }
                 if state.squares[square - 8].is_some() {
                     return Some(Move {
-                        origin: square - 8,
-                        destination: square,
+                        from: square - 8,
+                        to: square,
                         piece: Pawn,
                     })
                 }
                 else {
                     return  Some(Move {
-                        origin: square - 16,
-                        destination: square,
+                        from: square - 16,
+                        to: square,
                         piece: Pawn,
                     })
                 }
@@ -49,15 +49,15 @@ pub fn algebraic_move(s: &str, state: GameState) -> Option<Move> {
                 if square >= 48 { return None }
                 if state.squares[square + 8].is_some() {
                     return Some(Move {
-                        origin: square + 8,
-                        destination: square,
+                        from: square + 8,
+                        to: square,
                         piece: Pawn,
                     })
                 }
                 else {
                     return  Some(Move {
-                        origin: square + 16,
-                        destination: square,
+                        from: square + 16,
+                        to: square,
                         piece: Pawn,
                     })
                 }

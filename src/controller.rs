@@ -15,7 +15,7 @@ pub fn apply_move(m: &Move, state: &mut GameState) {
         panic!("Cannot apply illegal move: {:?}", m);
     }
 
-    state.squares[m.destination] = state.squares[m.origin];
-    state.squares[m.origin] = None;
+    state.squares[m.to] = state.squares[m.from];
+    state.squares[m.from] = None;
 }
 
