@@ -28,13 +28,13 @@ pub fn relative_material_values(state: &GameState) -> (usize, usize) {
 
     for maybe_piece in state.squares.iter() {
         match maybe_piece {
+            None => (),
             Some(piece) => {
                 match piece.color {
                     White => white += piece_value(&piece.name),
                     Black => black += piece_value(&piece.name),
                 }
             }
-            None => (),
         }
     }
 
@@ -54,23 +54,37 @@ pub fn piece_value(name: &PieceName) -> usize {
 
 pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     let mut new_state = state.clone();
+    let (delta_x, delta_y) = position_delta(m.from, m.to);
 
     // En-Passant opportunities must expire after each turn
     new_state.en_passant_square = None;
 
     // Handle two square pawn advances
     if m.piece == Pawn {
-        let (delta_x, delta_y) = position_delta(m.from, m.to);
         if delta_y.abs() == 2 {
             match state.squares[m.from] {
+                None => (),
                 Some(pawn) => {
                     match pawn.color {
                         White => new_state.en_passant_square = Some(m.from + 8),
                         Black => new_state.en_passant_square = Some(m.from - 8),
                     }
                 },
-                None => (),
             }
+        }
+    }
+
+    // Handle en-passant captures
+    if m.piece == Pawn && Some(m.to) == state.en_passant_square {
+        match state.squares[m.from] {
+            None => (),
+            Some(pawn) => {
+                match pawn.color {
+                    White => new_state.squares[m.to - 8] = None,
+                    Black => new_state.squares[m.to + 8] = None,
+                }
+            }
+
         }
     }
 
@@ -245,7 +259,7 @@ fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
 
     let to_is_enemy_piece = match state.squares[m.to] {
         Some(other_piece) => other_piece.color != piece.color,
-        None => false,
+        None => Some(m.to) == state.en_passant_square,
     };
 
     match piece.color {
