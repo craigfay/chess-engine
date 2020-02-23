@@ -820,6 +820,42 @@ fn pawn_threats_test() {
     assert!(!color_threatens_square(Black, 36, &state));
 }
 
+fn white_performs_en_passant_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 33),
+        Placement::new(Black, Pawn, 50),
+    ]);
+    assert!(state.en_passant_square == None);
+
+    // Two square advance
+    let m = Move { piece: Pawn, from: 50, to: 34 };
+    let state = state_after_move(&m, &state);
+    assert!(state.en_passant_square == Some(42));
+
+    // The pawn that advanced two squares has been captured
+    let m = Move { piece: Pawn, from: 33, to: 42 };
+    let state = state_after_move(&m, &state);
+    assert!(!state.squares[34].is_some());
+}
+
+fn black_performs_en_passant_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 12),
+        Placement::new(Black, Pawn, 29),
+    ]);
+    assert!(state.en_passant_square == None);
+
+    // Two square advance
+    let m = Move { piece: Pawn, from: 12, to: 28 };
+    let state = state_after_move(&m, &state);
+    assert!(state.en_passant_square == Some(20));
+
+    // The pawn that advanced two squares has been captured
+    let m = Move { piece: Pawn, from: 29, to: 20 };
+    let state = state_after_move(&m, &state);
+    assert!(!state.squares[28].is_some());
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -894,6 +930,8 @@ fn main() {
     black_queenside_castle_into_check_test();
     black_queenside_castle_through_check_test();
     pawn_threats_test();
+    white_performs_en_passant_test();
+    black_performs_en_passant_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);

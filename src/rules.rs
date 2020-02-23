@@ -123,7 +123,7 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
         }
     }
     else {
-        // Normal Moves
+        // Non-Castling moves
         new_state.squares[m.to] = new_state.squares[m.from];
         new_state.squares[m.from] = None;
     }
