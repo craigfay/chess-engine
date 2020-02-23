@@ -10,6 +10,7 @@ pub struct GameState {
     pub white_can_castle_kingside: bool,
     pub black_can_castle_queenside: bool,
     pub white_can_castle_queenside: bool,
+    pub en_passant_square: Option<usize>,
 }
 
 impl GameState {
@@ -21,6 +22,7 @@ impl GameState {
             white_can_castle_kingside: false,
             black_can_castle_queenside: false,
             white_can_castle_queenside: false,
+            en_passant_square: None,
         }
     }
     pub fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
@@ -42,6 +44,7 @@ impl GameState {
             white_can_castle_kingside: false,
             black_can_castle_queenside: false,
             white_can_castle_queenside: false,
+            en_passant_square: None,
         };
         for placement in placements.iter() {
             let piece = Piece::new(placement.color, placement.piece);
@@ -93,6 +96,7 @@ impl GameState {
         state.white_can_castle_kingside = true;
         state.black_can_castle_queenside = true;
         state.white_can_castle_queenside = true;
+        state.en_passant_square = None;
 
         state
     }
