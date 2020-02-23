@@ -22,8 +22,57 @@ use crate::notation::{algebraic};
 
 use std::cmp::{min, max};
 
+pub fn relative_material_values(state: &GameState) -> (usize, usize) {
+    let mut white = 0;
+    let mut black = 0;
+
+    for maybe_piece in state.squares.iter() {
+        match maybe_piece {
+            Some(piece) => {
+                match piece.color {
+                    White => white += piece_value(&piece.name),
+                    Black => black += piece_value(&piece.name),
+                }
+            }
+            None => (),
+        }
+    }
+
+    (white, black)
+}
+
+pub fn piece_value(name: &PieceName) -> usize {
+    match name {
+        Pawn => 1,
+        Bishop => 3,
+        Knight => 3,
+        Rook => 5,
+        Queen => 9,
+        King => 0,
+    }
+}
+
 pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     let mut new_state = state.clone();
+
+    // En-Passant opportunities must expire after each turn
+    new_state.en_passant_square = None;
+
+    // Handle two square pawn advances
+    if m.piece == Pawn {
+        let (delta_x, delta_y) = position_delta(m.from, m.to);
+        if delta_y.abs() == 2 {
+            match state.squares[m.from] {
+                Some(pawn) => {
+                    match pawn.color {
+                        White => new_state.en_passant_square = Some(m.from + 8),
+                        Black => new_state.en_passant_square = Some(m.from - 8),
+                    }
+                },
+                None => (),
+            }
+        }
+    }
 
     // Handle castling
     if is_legal_castle(&m, &state) {
