@@ -8,9 +8,8 @@
 * Consolidate static variables
 * Comment/Rename `algebraic_move()`
 * Provide bit vector representation of game state
-* Handle en-passant
 * Handle promotion
 * Create a `potential_states()` as an alternative to `legal_moves()`
 * Decide between a conventions chosen_move / m
 * Move piece property to the beginning of Move constructors
-
+* Maybe extract en-passant logic into it's own function
