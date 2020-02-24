@@ -10,6 +10,7 @@ use rules::{
     color_threatens_square,
     color_is_checked,
     move_is_legal,
+    promotion_is_legal,
     legal_moves,
     position_delta,
 };
@@ -858,6 +859,17 @@ fn black_performs_en_passant_test() {
     assert!(!state.squares[28].is_some());
 }
 
+fn white_knight_promotion_legality_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 55),
+    ]);
+
+    let p = Promotion { piece: Knight, from: 55 };
+    assert!(promotion_is_legal(&p, &state));
+}
+
+
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -934,8 +946,10 @@ fn main() {
     pawn_threats_test();
     white_performs_en_passant_test();
     black_performs_en_passant_test();
+    white_knight_promotion_legality_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
 }
+
 
