@@ -128,6 +128,10 @@ impl std::fmt::Debug for GameState {
     }
 }
 
+pub trait Action {
+    fn is_legal(&self, state: &GameState) -> bool;
+}
+
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
@@ -140,13 +144,6 @@ pub enum PieceName {
     Queen,
     King,
 }
-
-pub enum Action {
-    Move,
-    Castle,
-    PawnPromotion,
-}
-
 
 #[derive(Debug)]
 #[derive(PartialEq)]
@@ -199,5 +196,7 @@ impl Piece {
         Piece { color, name }
     }
 }
+
+
 
 

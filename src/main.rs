@@ -9,7 +9,6 @@ use rules::{
     state_after_move,
     color_threatens_square,
     color_is_checked,
-    move_is_legal,
     promotion_is_legal,
     legal_moves,
     position_delta,
@@ -133,8 +132,8 @@ fn pawn_movement_sideways_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 16),
     ]);
-    let m = Move { piece: Pawn, from: 16, to: 17 };
-    assert_eq!(false, move_is_legal(&m, &state));
+    let action = Move { piece: Pawn, from: 16, to: 17 };
+    assert_eq!(false, action.is_legal(&state));
 }
 
 
@@ -143,8 +142,8 @@ fn pawn_movement_too_far_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 18),
     ]);
-    let chosen_move = Move { piece: Pawn, from: 18, to: 42 };
-    assert_eq!(false, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Pawn, from: 18, to: 42 };
+    assert_eq!(false, action.is_legal(&state));
 }
 
 // White pawns should be able to move 1 square up
@@ -152,8 +151,8 @@ fn pawn_movement_normal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 22),
     ]);
-    let chosen_move = Move { piece: Pawn, from: 22, to: 30 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Pawn, from: 22, to: 30 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Pawns should not be able to move from an from square that has no pawn
@@ -161,8 +160,8 @@ fn pawn_movement_wrong_from_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 4),
     ]);
-    let chosen_move = Move { piece: Pawn, from: 22, to: 30 };
-    assert_eq!(false, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Pawn, from: 22, to: 30 };
+    assert_eq!(false, action.is_legal(&state));
 }
 
 // Rooks should be able to travel horizontally
@@ -170,8 +169,8 @@ fn rook_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
-    let chosen_move = Move { piece: Rook, from: 35, to: 32 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Rook, from: 35, to: 32 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Rooks should be able to travel vertically
@@ -179,8 +178,8 @@ fn rook_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
-    let chosen_move = Move { piece: Rook, from: 35, to: 3 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Rook, from: 35, to: 3 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 
@@ -190,8 +189,8 @@ fn rook_movement_horizontal_obstruction_test() {
         Placement::new(White, Rook, 32),
         Placement::new(Black, Pawn, 33),
     ]);
-    let chosen_move = Move { piece: Rook, from: 32, to: 36 };
-    assert_eq!(false, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Rook, from: 32, to: 36 };
+    assert_eq!(false, action.is_legal(&state));
 }
 
 // Bishops should be able to travel diagonally up-left
@@ -199,8 +198,8 @@ fn bishop_movement_diagonal_up_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 22),
     ]);
-    let chosen_move = Move { piece: Bishop, from: 22, to: 36 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Bishop, from: 22, to: 36 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 
@@ -209,8 +208,8 @@ fn bishop_movement_diagonal_up_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 0),
     ]);
-    let chosen_move = Move { piece: Bishop, from: 0, to: 36 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Bishop, from: 0, to: 36 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Bishops should be able to travel diagonally down-left
@@ -218,8 +217,8 @@ fn bishop_movement_diagonal_down_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 27),
     ]);
-    let chosen_move = Move { piece: Bishop, from: 27, to: 9 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Bishop, from: 27, to: 9 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 
@@ -228,8 +227,8 @@ fn bishop_movement_diagonal_down_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 56),
     ]);
-    let chosen_move = Move { piece: Bishop, from: 56, to: 42 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Bishop, from: 56, to: 42 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 
@@ -238,8 +237,8 @@ fn bishop_movement_diagonal_right_edge_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 23),
     ]);
-    let chosen_move = Move { piece: Bishop, from: 23, to: 41 };
-    assert_eq!(false, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Bishop, from: 23, to: 41 };
+    assert_eq!(false, action.is_legal(&state));
 }
 
 
@@ -248,8 +247,8 @@ fn bishop_movement_diagonal_left_edge_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 24),
     ]);
-    let chosen_move = Move { piece: Bishop, from: 24, to: 15 };
-    assert_eq!(false, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Bishop, from: 24, to: 15 };
+    assert_eq!(false, action.is_legal(&state));
 }
 
 
@@ -257,8 +256,8 @@ fn knight_movement_two_up_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 45 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 45 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 
@@ -266,16 +265,16 @@ fn knight_movement_one_up_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 38 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 38 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 fn knight_movement_two_up_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 43 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 43 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 
@@ -283,40 +282,40 @@ fn knight_movement_one_up_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 34 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 34 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 fn knight_movement_two_down_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 13 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 13 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 fn knight_movement_one_down_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 22 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 22 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 fn knight_movement_two_down_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 11 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 11 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 fn knight_movement_one_down_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let chosen_move = Move { piece: Knight, from: 28, to: 18 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Knight, from: 28, to: 18 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Queens should be able to move horizontally
@@ -324,8 +323,8 @@ fn queen_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
-    let chosen_move = Move { piece: Queen, from: 24, to: 30 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Queen, from: 24, to: 30 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Queens should be able to move horizontally
@@ -333,8 +332,8 @@ fn queen_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
-    let chosen_move = Move { piece: Queen, from: 24, to: 48 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Queen, from: 24, to: 48 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Queens should be able to move diagonally
@@ -342,8 +341,8 @@ fn queen_movement_diagonal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Queen, 24),
     ]);
-    let chosen_move = Move { piece: Queen, from: 24, to: 42 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: Queen, from: 24, to: 42 };
+    assert_eq!(true, action.is_legal(&state));
 }
 
 // Kings should be able to move one square horizontally
@@ -351,8 +350,8 @@ fn king_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
-    let m = Move { piece: King, from: 28, to: 27 };
-    assert_eq!(true, move_is_legal(&m, &state));
+    let action = Move { piece: King, from: 28, to: 27 };
+    assert!(action.is_legal(&state));
 }
 
 // Kings should be able to move one square vertically
@@ -360,8 +359,8 @@ fn king_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
-    let m = Move { piece: King, from: 28, to: 20 };
-    assert_eq!(true, move_is_legal(&m, &state));
+    let action = Move { piece: King, from: 28, to: 20 };
+    assert!(action.is_legal(&state));
 }
 
 
@@ -370,8 +369,8 @@ fn king_movement_diagonal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 24),
     ]);
-    let chosen_move = Move { piece: King, from: 24, to: 33 };
-    assert_eq!(true, move_is_legal(&chosen_move, &state));
+    let action = Move { piece: King, from: 24, to: 33 };
+    assert!(action.is_legal(&state));
 }
 
 fn algebraic_notation_to_index_test() {
@@ -391,9 +390,9 @@ fn algebraic_moves_white_pawn_one_forward_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
     ]);
-    let m = algebraic_move("a3", state);
+    let action = algebraic_move("a3", state);
     let expected = Some(Move { piece: Pawn, from: 8, to: 16 });
-    assert_eq!(m, expected);
+    assert_eq!(action, expected);
 }
 
 fn algebraic_moves_black_pawn_one_forward_test() {
@@ -401,18 +400,18 @@ fn algebraic_moves_black_pawn_one_forward_test() {
         Placement::new(Black, Pawn, 48),
     ]);
     state.to_move = Black;
-    let m = algebraic_move("a6", state);
+    let action = algebraic_move("a6", state);
     let expected = Some(Move { piece: Pawn, from: 48, to: 40 });
-    assert_eq!(m, expected);
+    assert_eq!(action, expected);
 }
 
 fn algebraic_moves_white_pawn_two_forward_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
     ]);
-    let m = algebraic_move("a4", state);
+    let action = algebraic_move("a4", state);
     let expected = Some(Move { piece: Pawn, from: 8, to: 24 });
-    assert_eq!(m, expected);
+    assert_eq!(action, expected);
 }
 
 fn algebraic_moves_black_pawn_two_forward_test() {
@@ -420,9 +419,9 @@ fn algebraic_moves_black_pawn_two_forward_test() {
         Placement::new(Black, Pawn, 48),
     ]);
     state.to_move = Black;
-    let m = algebraic_move("a5", state);
+    let action = algebraic_move("a5", state);
     let expected = Some(Move { piece: Pawn, from: 48, to: 32 });
-    assert_eq!(m, expected);
+    assert_eq!(action, expected);
 }
 
 fn algebraic_moves_white_pawn_rank_1_test() {
@@ -466,8 +465,8 @@ fn algebraic_moves_black_pawn_rank_8_test() {
 fn apply_move_test() {
     let mut state = GameState::new();
 
-    let m = Move { from: 11, to: 27, piece: Pawn };
-    apply_move(&m, &mut state);
+    let action = Move { from: 11, to: 27, piece: Pawn };
+    apply_move(&action, &mut state);
 
     assert!(state.squares[27].is_some());
     assert!(!state.squares[11].is_some());
@@ -500,8 +499,8 @@ fn state_after_move_test() {
         Placement::new(White, King, 0),
         Placement::new(Black, Rook, 56),
     ]);   
-    let m = Move { from: 0, to: 1, piece: King };
-    let new_state = state_after_move(&m, &state);
+    let action = Move { from: 0, to: 1, piece: King };
+    let new_state = state_after_move(&action, &state);
     assert!(new_state.squares[1].unwrap().name == King);
     assert!(!new_state.squares[0].is_some());
 }
@@ -511,8 +510,8 @@ fn cannot_move_into_check_test() {
         Placement::new(Black, King, 59),
         Placement::new(Black, Pawn, 20),
     ]);   
-    let m = Move { from: 4, to: 13, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 13, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 
@@ -522,8 +521,8 @@ fn white_kingside_castle_legality_test() {
         Placement::new(White, Rook, 7),
     ]);
     state.white_can_castle_kingside = true;
-    let m = Move { from: 4, to: 6, piece: King };
-    assert!(move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 6, piece: King };
+    assert!(action.is_legal(&state));
 }
   
 fn black_kingside_castle_legality_test() {
@@ -533,8 +532,8 @@ fn black_kingside_castle_legality_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 62, piece: King };
-    assert!(move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 62, piece: King };
+    assert!(action.is_legal(&state));
 }
 
 fn white_queenside_castle_legality_test() {
@@ -543,8 +542,8 @@ fn white_queenside_castle_legality_test() {
         Placement::new(White, Rook, 0),
     ]);
     state.white_can_castle_queenside = true;
-    let m = Move { from: 4, to: 2, piece: King };
-    assert!(move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 2, piece: King };
+    assert!(action.is_legal(&state));
 }
   
 fn black_queenside_castle_legality_test() {
@@ -554,8 +553,8 @@ fn black_queenside_castle_legality_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 58, piece: King };
-    assert!(move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 58, piece: King };
+    assert!(action.is_legal(&state));
 }
 
 fn white_kingside_castle_aftermath_test() {
@@ -564,8 +563,8 @@ fn white_kingside_castle_aftermath_test() {
         Placement::new(White, Rook, 7),
     ]);
     state.white_can_castle_kingside = true;
-    let m = Move { from: 4, to: 6, piece: King };
-    let aftermath = state_after_move(&m, &state);
+    let action = Move { from: 4, to: 6, piece: King };
+    let aftermath = state_after_move(&action, &state);
     let king = aftermath.squares[6].unwrap();
     let rook = aftermath.squares[5].unwrap();
     assert!(king.name == King && king.color == White);
@@ -580,8 +579,8 @@ fn white_queenside_castle_aftermath_test() {
         Placement::new(White, Rook, 0),
     ]);
     state.white_can_castle_queenside = true;
-    let m = Move { from: 4, to: 2, piece: King };
-    let aftermath = state_after_move(&m, &state);
+    let action = Move { from: 4, to: 2, piece: King };
+    let aftermath = state_after_move(&action, &state);
     let king = aftermath.squares[2].unwrap();
     let rook = aftermath.squares[3].unwrap();
     assert!(king.name == King && king.color == White);
@@ -597,8 +596,8 @@ fn black_kingside_castle_aftermath_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 62, piece: King };
-    let aftermath = state_after_move(&m, &state);
+    let action = Move { from: 60, to: 62, piece: King };
+    let aftermath = state_after_move(&action, &state);
     let king = aftermath.squares[62].unwrap();
     let rook = aftermath.squares[61].unwrap();
     assert!(king.name == King && king.color == Black);
@@ -614,8 +613,8 @@ fn black_queenside_castle_aftermath_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 58, piece: King };
-    let aftermath = state_after_move(&m, &state);
+    let action = Move { from: 60, to: 58, piece: King };
+    let aftermath = state_after_move(&action, &state);
     let king = aftermath.squares[58].unwrap();
     let rook = aftermath.squares[59].unwrap();
     assert!(king.name == King && king.color == Black);
@@ -631,8 +630,8 @@ fn white_kingside_castle_obstruction_test() {
         Placement::new(White, Rook, 7),
     ]);
     state.white_can_castle_kingside = true;
-    let m = Move { from: 4, to: 6, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 6, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_queenside_castle_obstruction_test() {
@@ -642,8 +641,8 @@ fn white_queenside_castle_obstruction_test() {
         Placement::new(White, Rook, 0),
     ]);
     state.white_can_castle_queenside = true;
-    let m = Move { from: 4, to: 2, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 2, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_kingside_castle_obstruction_test() {
@@ -654,8 +653,8 @@ fn black_kingside_castle_obstruction_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 62, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 62, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_queenside_castle_obstruction_test() {
@@ -666,8 +665,8 @@ fn black_queenside_castle_obstruction_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 58, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 58, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_kingside_castle_out_of_check_test() {
@@ -677,8 +676,8 @@ fn white_kingside_castle_out_of_check_test() {
         Placement::new(Black, Rook, 21),
     ]);
     state.white_can_castle_kingside = true;
-    let m = Move { from: 4, to: 6, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 6, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_kingside_castle_into_check_test() {
@@ -688,8 +687,8 @@ fn white_kingside_castle_into_check_test() {
         Placement::new(Black, Pawn, 15),
     ]);
     state.white_can_castle_kingside = true;
-    let m = Move { from: 4, to: 6, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 6, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_kingside_castle_through_check_test() {
@@ -699,8 +698,8 @@ fn white_kingside_castle_through_check_test() {
         Placement::new(Black, Bishop, 12),
     ]);
     state.white_can_castle_kingside = true;
-    let m = Move { from: 4, to: 6, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 6, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_queenside_castle_out_of_check_test() {
@@ -710,8 +709,8 @@ fn white_queenside_castle_out_of_check_test() {
         Placement::new(Black, Rook, 28),
     ]);
     state.white_can_castle_queenside = true;
-    let m = Move { from: 4, to: 2, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 2, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_queenside_castle_into_check_test() {
@@ -721,8 +720,8 @@ fn white_queenside_castle_into_check_test() {
         Placement::new(Black, Knight, 17),
     ]);
     state.white_can_castle_queenside = true;
-    let m = Move { from: 4, to: 2, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 2, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn white_queenside_castle_through_check_test() {
@@ -732,8 +731,8 @@ fn white_queenside_castle_through_check_test() {
         Placement::new(Black, Queen, 59),
     ]);
     state.white_can_castle_queenside = true;
-    let m = Move { from: 4, to: 2, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 4, to: 2, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_kingside_castle_out_of_check_test() {
@@ -744,8 +743,8 @@ fn black_kingside_castle_out_of_check_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 62, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 62, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_kingside_castle_into_check_test() {
@@ -756,8 +755,8 @@ fn black_kingside_castle_into_check_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 62, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 62, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_kingside_castle_through_check_test() {
@@ -768,8 +767,8 @@ fn black_kingside_castle_through_check_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 62, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 62, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_queenside_castle_out_of_check_test() {
@@ -780,8 +779,8 @@ fn black_queenside_castle_out_of_check_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 58, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 58, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_queenside_castle_into_check_test() {
@@ -792,8 +791,8 @@ fn black_queenside_castle_into_check_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 58, piece: King };
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 58, piece: King };
+    assert!(!action.is_legal(&state));
 }
 
 fn black_queenside_castle_through_check_test() {
@@ -804,8 +803,8 @@ fn black_queenside_castle_through_check_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let m = Move { from: 60, to: 58, piece: King } ;
-    assert!(!move_is_legal(&m, &state));
+    let action = Move { from: 60, to: 58, piece: King } ;
+    assert!(!action.is_legal(&state));
 }
 
 fn pawn_threats_test() {
@@ -831,13 +830,13 @@ fn white_performs_en_passant_test() {
     assert!(state.en_passant_square == None);
 
     // Two square advance
-    let m = Move { piece: Pawn, from: 50, to: 34 };
-    let state = state_after_move(&m, &state);
+    let action = Move { piece: Pawn, from: 50, to: 34 };
+    let state = state_after_move(&action, &state);
     assert!(state.en_passant_square == Some(42));
 
     // The pawn that advanced two squares has been captured
-    let m = Move { piece: Pawn, from: 33, to: 42 };
-    let state = state_after_move(&m, &state);
+    let action = Move { piece: Pawn, from: 33, to: 42 };
+    let state = state_after_move(&action, &state);
     assert!(!state.squares[34].is_some());
 }
 
@@ -849,13 +848,13 @@ fn black_performs_en_passant_test() {
     assert!(state.en_passant_square == None);
 
     // Two square advance
-    let m = Move { piece: Pawn, from: 12, to: 28 };
-    let state = state_after_move(&m, &state);
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = state_after_move(&action, &state);
     assert!(state.en_passant_square == Some(20));
 
     // The pawn that advanced two squares has been captured
-    let m = Move { piece: Pawn, from: 29, to: 20 };
-    let state = state_after_move(&m, &state);
+    let action = Move { piece: Pawn, from: 29, to: 20 };
+    let state = state_after_move(&action, &state);
     assert!(!state.squares[28].is_some());
 }
 

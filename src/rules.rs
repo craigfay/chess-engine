@@ -13,6 +13,7 @@ use crate::entities::{
         King,
     },
     Piece,
+    Action,
     Move,
     Castle,
     Promotion,
@@ -20,6 +21,12 @@ use crate::entities::{
     CastleDirection::{Kingside, Queenside},
     Color::{White, Black},
 };
+
+impl Action for Move {
+    fn is_legal(&self, state: &GameState) -> bool {
+       move_is_legal(&self, &state)
+    }
+}
 
 use crate::notation::{algebraic};
 
