@@ -228,7 +228,7 @@ pub fn promotion_is_legal(p: &Promotion, state: &GameState) -> bool {
                         Black => {
                             if p.from < 8 { return false }
                             if p.from > 15 { return false }
-                            if state.squares[p.from + 8].is_some() { return false }
+                            if state.squares[p.from - 8].is_some() { return false }
                             true
                         },
                     }
