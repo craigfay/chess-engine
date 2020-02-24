@@ -131,6 +131,10 @@ impl Action for Castle {
     }
     fn apply(&self, state: &GameState) -> GameState {
         let mut new_state = state.clone();
+
+        // En-Passant opportunities must expire after each turn
+        new_state.en_passant_square = None;
+    
         match (state.to_move, &self.direction) {
             (White, Kingside) => {
                 new_state.white_can_castle_kingside = false;
@@ -202,8 +206,12 @@ impl Action for Promotion {
             panic!("Cannot apply illegal promotion)");
         }
 
-        // Remove pawn
         let mut new_state = state.clone();
+
+        // En-Passant opportunities must expire after each turn
+        new_state.en_passant_square = None;
+
+        // Remove pawn
         new_state.squares[self.moving_from] = None;
 
         // Place new piece
@@ -244,94 +252,6 @@ pub fn piece_value(name: &PieceName) -> usize {
         Queen => 9,
         King => 0,
     }
-}
-
-pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
-
-    let mut new_state = state.clone();
-    let (delta_x, delta_y) = position_delta(m.from, m.to);
-
-    // En-Passant opportunities must expire after each turn
-    new_state.en_passant_square = None;
-
-    // Handle two square pawn advances
-    if m.piece == Pawn {
-        if delta_y.abs() == 2 {
-            match state.squares[m.from] {
-                None => (),
-                Some(pawn) => {
-                    match pawn.color {
-                        White => new_state.en_passant_square = Some(m.from + 8),
-                        Black => new_state.en_passant_square = Some(m.from - 8),
-                    }
-                },
-            }
-        }
-    }
-
-    // Handle en-passant captures
-    if m.piece == Pawn && Some(m.to) == state.en_passant_square {
-        match state.squares[m.from] {
-            None => (),
-            Some(pawn) => {
-                match pawn.color {
-                    White => new_state.squares[m.to - 8] = None,
-                    Black => new_state.squares[m.to + 8] = None,
-                }
-            }
-
-        }
-    }
-
-    // Handle castling
-    let maybe_castle: Option<Castle> = match (m.from, m.to) {
-        (4, 6) => Some(Castle { direction: Kingside }),
-        (4, 2) => Some(Castle { direction: Queenside }),
-        (60, 62) => Some(Castle { direction: Kingside }),
-        (60, 58) => Some(Castle { direction: Queenside }),
-        _ => None,
-    };
-
-    if maybe_castle.is_some() && maybe_castle.unwrap().is_legal(&state) {
-        match (state.to_move, &maybe_castle.unwrap().direction) {
-            (White, Kingside) => {
-                new_state.white_can_castle_kingside = false;
-                new_state.squares[6] = new_state.squares[4];
-                new_state.squares[5] = new_state.squares[7];
-                new_state.squares[4] = None;
-                new_state.squares[7] = None;
-            },
-            (White, Queenside) => {
-                new_state.white_can_castle_queenside = false;
-                new_state.squares[2] = new_state.squares[4];
-                new_state.squares[3] = new_state.squares[0];
-                new_state.squares[4] = None;
-                new_state.squares[0] = None;
-            },
-            (Black, Kingside) => {
-                new_state.black_can_castle_kingside = false;
-                new_state.squares[62] = new_state.squares[60];
-                new_state.squares[61] = new_state.squares[63];
-                new_state.squares[60] = None;
-                new_state.squares[63] = None;
-            },
-            (Black, Queenside) => {
-                new_state.black_can_castle_queenside = false;
-                new_state.squares[58] = new_state.squares[60];
-                new_state.squares[59] = new_state.squares[56];
-                new_state.squares[60] = None;
-                new_state.squares[56] = None;
-            },
-            _ => panic!("Castle is considered legal but not playable"),
-        }
-    }
-    else {
-        // Non-Castling moves
-        new_state.squares[m.to] = new_state.squares[m.from];
-        new_state.squares[m.from] = None;
-    }
-
-    new_state
 }
 
 pub fn color_threatens_square(color: Color, target_square: usize, state: &GameState) -> bool {
@@ -439,15 +359,10 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     // The function may be more efficient if this block gets moved
     // below individual piece rules, because of how often it runs
     // with illegal moves by legal_moves().
-    let aftermath = state_after_move(&m, &state);
+    let aftermath = m.apply(&state);
     if color_is_checked(state.to_move, &aftermath) {
         return false;
     }
-
-    // It may also be problematic that move_is_legal and color_is_checked
-    // call one another.
-    
-    if castle_is_legal(&m, &state) { return true }
 
     move_is_pseudo_legal(&m, &state) 
 }

@@ -6,8 +6,7 @@ mod notation;
 mod controller;
 
 use rules::{
-    state_after_move,
-   color_threatens_square,
+    color_threatens_square,
     color_is_checked,
     legal_moves,
     position_delta,
