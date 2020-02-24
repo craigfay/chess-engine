@@ -14,8 +14,10 @@ use crate::entities::{
     },
     Piece,
     Move,
+    Castle,
     Promotion,
     Color,
+    CastleDirection::{Kingside, Queenside},
     Color::{White, Black},
 };
 
@@ -90,7 +92,7 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     }
 
     // Handle castling
-    if is_legal_castle(&m, &state) {
+    if castle_is_legal(&m, &state) {
         match (m.from, m.to) {
             (4, 6) => {
                 new_state.white_can_castle_kingside = false;
@@ -276,7 +278,7 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     // It may also be problematic that move_is_legal and color_is_checked
     // call one another.
     
-    if is_legal_castle(&m, &state) { return true }
+    if castle_is_legal(&m, &state) { return true }
 
     move_is_pseudo_legal(&m, &state) 
 }
@@ -420,7 +422,7 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 
 }
 
-fn is_legal_castle(m: &Move, state: &GameState) -> bool {
+fn castle_is_legal(m: &Move, state: &GameState) -> bool {
     if state.to_move == White && m.from == 4 && m.to == 6 {
         if !state.white_can_castle_kingside { return false }
         // Rook must be on the correct square

@@ -143,7 +143,22 @@ pub enum PieceName {
 
 pub enum Action {
     Move,
+    Castle,
     PawnPromotion,
+}
+
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub enum CastleDirection {
+    Kingside,
+    Queenside,
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct Castle {
+    direction: CastleDirection,
 }
 
 #[derive(Debug)]
