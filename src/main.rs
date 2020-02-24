@@ -9,7 +9,6 @@ use rules::{
     state_after_move,
     color_threatens_square,
     color_is_checked,
-    promotion_is_legal,
     legal_moves,
     position_delta,
 };
@@ -864,27 +863,25 @@ fn white_knight_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 55),
     ]);
-    let p = Promotion { pawn_becomes: Knight, moving_from: 55, to: 63 };
-    assert!(promotion_is_legal(&p, &state));
+    let action = Promotion { pawn_becomes: Knight, moving_from: 55, to: 63 };
+    assert!(action.is_legal(&state));
 }
 
 fn white_bishop_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 48),
     ]);
-    let p = Promotion { pawn_becomes: Bishop, moving_from: 48, to: 56 };
-    assert!(promotion_is_legal(&p, &state));
+    let action = Promotion { pawn_becomes: Bishop, moving_from: 48, to: 56 };
+    assert!(action.is_legal(&state));
 }
 
 fn white_rook_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 49),
     ]);
-    let p = Promotion { pawn_becomes: Rook, moving_from: 49, to: 57 };
-    assert!(promotion_is_legal(&p, &state));
+    let action = Promotion { pawn_becomes: Rook, moving_from: 49, to: 57 };
+    assert!(action.is_legal(&state));
 }
-
-
 
 fn main() {
     // Time tests

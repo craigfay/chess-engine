@@ -283,33 +283,35 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
     results
 }
 
-pub fn promotion_is_legal(p: &Promotion, state: &GameState) -> bool {
-    if false == pawn_can_promote_to(&p.pawn_becomes) { return false }
-
-    match state.squares[p.moving_from] {
-        None => false,
-        Some(piece) => {
-            if piece.color != state.to_move {
-                return false
-            }
-            match piece.name {
-                Pawn => {
-                    match piece.color {
-                        White => {
-                            if p.moving_from < 47 { return false }
-                            if p.moving_from > 56 { return false }
-                            if state.squares[p.moving_from + 8].is_some() { return false }
-                            true
-                        },
-                        Black => {
-                            if p.moving_from < 8 { return false }
-                            if p.moving_from > 15 { return false }
-                            if state.squares[p.moving_from - 8].is_some() { return false }
-                            true
-                        },
-                    }
+impl Action for Promotion {
+    fn is_legal(&self, state: &GameState) -> bool {
+        if false == pawn_can_promote_to(&self.pawn_becomes) { return false }
+    
+        match state.squares[self.moving_from] {
+            None => false,
+            Some(piece) => {
+                if piece.color != state.to_move {
+                    return false
                 }
-                _ => false
+                match piece.name {
+                    Pawn => {
+                        match piece.color {
+                            White => {
+                                if self.moving_from < 47 { return false }
+                                if self.moving_from > 56 { return false }
+                                if state.squares[self.moving_from + 8].is_some() { return false }
+                                true
+                            },
+                            Black => {
+                                if self.moving_from < 8 { return false }
+                                if self.moving_from > 15 { return false }
+                                if state.squares[self.moving_from - 8].is_some() { return false }
+                                true
+                            },
+                        }
+                    }
+                    _ => false
+                }
             }
         }
     }
