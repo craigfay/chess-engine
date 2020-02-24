@@ -30,6 +30,8 @@ use entities::{
     Action,
     Move,
     Promotion,
+    Castle,
+    CastleDirection::{Kingside, Queenside},
 };
 
 use controller::{
@@ -504,6 +506,7 @@ fn state_after_move_test() {
     assert!(new_state.squares[1].unwrap().name == King);
     assert!(!new_state.squares[0].is_some());
 }
+
 fn cannot_move_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -514,14 +517,13 @@ fn cannot_move_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
-
 fn white_kingside_castle_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(White, Rook, 7),
     ]);
     state.white_can_castle_kingside = true;
-    let action = Move { from: 4, to: 6, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(action.is_legal(&state));
 }
   
@@ -532,7 +534,7 @@ fn black_kingside_castle_legality_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 62, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(action.is_legal(&state));
 }
 
@@ -542,7 +544,7 @@ fn white_queenside_castle_legality_test() {
         Placement::new(White, Rook, 0),
     ]);
     state.white_can_castle_queenside = true;
-    let action = Move { from: 4, to: 2, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(action.is_legal(&state));
 }
   
@@ -553,7 +555,7 @@ fn black_queenside_castle_legality_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 58, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(action.is_legal(&state));
 }
 

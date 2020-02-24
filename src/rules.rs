@@ -35,6 +35,7 @@ impl Action for Castle {
                 match &self.direction {
                     Kingside => {
                         if !state.white_can_castle_kingside { return false }
+                        if !piece_is(White, King, state.squares[4]) { return false }
                         if !piece_is(White, Rook, state.squares[7]) { return false }
                         if state.squares[5].is_some() { return false }
                         if state.squares[6].is_some() { return false }
@@ -46,6 +47,7 @@ impl Action for Castle {
                     },
                     Queenside => {
                         if !state.white_can_castle_queenside { return false }
+                        if !piece_is(White, King, state.squares[4]) { return false }
                         if !piece_is(White, Rook, state.squares[0]) { return false }
                         if state.squares[1].is_some() { return false }
                         if state.squares[2].is_some() { return false }
@@ -63,6 +65,7 @@ impl Action for Castle {
                 match &self.direction {
                     Kingside => {
                         if !state.black_can_castle_kingside { return false }
+                        if !piece_is(Black, King, state.squares[60]) { return false }
                         if !piece_is(Black, Rook, state.squares[63]) { return false }
                         if state.squares[61].is_some() { return false }
                         if state.squares[62].is_some() { return false }
@@ -74,6 +77,7 @@ impl Action for Castle {
                     },
                     Queenside => {
                         if !state.black_can_castle_queenside { return false }
+                        if !piece_is(Black, King, state.squares[60]) { return false }
                         if !piece_is(Black, Rook, state.squares[56]) { return false }
                         if state.squares[57].is_some() { return false }
                         if state.squares[58].is_some() { return false }
