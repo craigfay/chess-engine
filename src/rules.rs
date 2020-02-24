@@ -32,6 +32,40 @@ impl Action for Move {
     }
     fn apply(&self, state: &GameState) -> GameState {
         let mut new_state = state.clone();
+        let (delta_x, delta_y) = position_delta(self.from, self.to);
+    
+        // En-Passant opportunities must expire after each turn
+        new_state.en_passant_square = None;
+    
+        // Handle two square pawn advances
+        if self.piece == Pawn {
+            if delta_y.abs() == 2 {
+                match state.squares[self.from] {
+                    None => (),
+                    Some(pawn) => {
+                        match pawn.color {
+                            White => new_state.en_passant_square = Some(self.from + 8),
+                            Black => new_state.en_passant_square = Some(self.from - 8),
+                        }
+                    },
+                }
+            }
+        }
+    
+        // Handle en-passant captures
+        if self.piece == Pawn && Some(self.to) == state.en_passant_square {
+            match state.squares[self.from] {
+                None => (),
+                Some(pawn) => {
+                    match pawn.color {
+                        White => new_state.squares[self.to - 8] = None,
+                        Black => new_state.squares[self.to + 8] = None,
+                    }
+                }
+    
+            }
+        }
+
         new_state.squares[self.to] = new_state.squares[self.from];
         new_state.squares[self.from] = None;
         new_state
@@ -213,6 +247,7 @@ pub fn piece_value(name: &PieceName) -> usize {
 }
 
 pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
+
     let mut new_state = state.clone();
     let (delta_x, delta_y) = position_delta(m.from, m.to);
 

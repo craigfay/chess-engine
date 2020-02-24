@@ -7,7 +7,7 @@ mod controller;
 
 use rules::{
     state_after_move,
-    color_threatens_square,
+   color_threatens_square,
     color_is_checked,
     legal_moves,
     position_delta,
@@ -501,7 +501,7 @@ fn state_after_move_test() {
         Placement::new(Black, Rook, 56),
     ]);   
     let action = Move { from: 0, to: 1, piece: King };
-    let new_state = state_after_move(&action, &state);
+    let new_state = action.apply(&state);
     assert!(new_state.squares[1].unwrap().name == King);
     assert!(!new_state.squares[0].is_some());
 }
@@ -564,8 +564,8 @@ fn white_kingside_castle_aftermath_test() {
         Placement::new(White, Rook, 7),
     ]);
     state.white_can_castle_kingside = true;
-    let action = Move { from: 4, to: 6, piece: King };
-    let aftermath = state_after_move(&action, &state);
+    let action = Castle { direction: Kingside };
+    let aftermath = action.apply(&state);
     let king = aftermath.squares[6].unwrap();
     let rook = aftermath.squares[5].unwrap();
     assert!(king.name == King && king.color == White);
@@ -580,8 +580,8 @@ fn white_queenside_castle_aftermath_test() {
         Placement::new(White, Rook, 0),
     ]);
     state.white_can_castle_queenside = true;
-    let action = Move { from: 4, to: 2, piece: King };
-    let aftermath = state_after_move(&action, &state);
+    let action = Castle { direction: Queenside };
+    let aftermath = action.apply(&state);
     let king = aftermath.squares[2].unwrap();
     let rook = aftermath.squares[3].unwrap();
     assert!(king.name == King && king.color == White);
@@ -597,8 +597,8 @@ fn black_kingside_castle_aftermath_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 62, piece: King };
-    let aftermath = state_after_move(&action, &state);
+    let action = Castle { direction: Kingside };
+    let aftermath = action.apply(&state);
     let king = aftermath.squares[62].unwrap();
     let rook = aftermath.squares[61].unwrap();
     assert!(king.name == King && king.color == Black);
@@ -614,8 +614,8 @@ fn black_queenside_castle_aftermath_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 58, piece: King };
-    let aftermath = state_after_move(&action, &state);
+    let action = Castle { direction: Queenside };
+    let aftermath = action.apply(&state);
     let king = aftermath.squares[58].unwrap();
     let rook = aftermath.squares[59].unwrap();
     assert!(king.name == King && king.color == Black);
@@ -631,7 +631,7 @@ fn white_kingside_castle_obstruction_test() {
         Placement::new(White, Rook, 7),
     ]);
     state.white_can_castle_kingside = true;
-    let action = Move { from: 4, to: 6, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -642,7 +642,7 @@ fn white_queenside_castle_obstruction_test() {
         Placement::new(White, Rook, 0),
     ]);
     state.white_can_castle_queenside = true;
-    let action = Move { from: 4, to: 2, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -654,7 +654,7 @@ fn black_kingside_castle_obstruction_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 62, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -666,7 +666,7 @@ fn black_queenside_castle_obstruction_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 58, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -677,7 +677,7 @@ fn white_kingside_castle_out_of_check_test() {
         Placement::new(Black, Rook, 21),
     ]);
     state.white_can_castle_kingside = true;
-    let action = Move { from: 4, to: 6, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -688,7 +688,7 @@ fn white_kingside_castle_into_check_test() {
         Placement::new(Black, Pawn, 15),
     ]);
     state.white_can_castle_kingside = true;
-    let action = Move { from: 4, to: 6, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -699,7 +699,7 @@ fn white_kingside_castle_through_check_test() {
         Placement::new(Black, Bishop, 12),
     ]);
     state.white_can_castle_kingside = true;
-    let action = Move { from: 4, to: 6, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -710,7 +710,7 @@ fn white_queenside_castle_out_of_check_test() {
         Placement::new(Black, Rook, 28),
     ]);
     state.white_can_castle_queenside = true;
-    let action = Move { from: 4, to: 2, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -721,7 +721,7 @@ fn white_queenside_castle_into_check_test() {
         Placement::new(Black, Knight, 17),
     ]);
     state.white_can_castle_queenside = true;
-    let action = Move { from: 4, to: 2, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -732,7 +732,7 @@ fn white_queenside_castle_through_check_test() {
         Placement::new(Black, Queen, 59),
     ]);
     state.white_can_castle_queenside = true;
-    let action = Move { from: 4, to: 2, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -744,7 +744,7 @@ fn black_kingside_castle_out_of_check_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 62, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -756,7 +756,7 @@ fn black_kingside_castle_into_check_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 62, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -768,7 +768,7 @@ fn black_kingside_castle_through_check_test() {
     ]);
     state.black_can_castle_kingside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 62, piece: King };
+    let action = Castle { direction: Kingside };
     assert!(!action.is_legal(&state));
 }
 
@@ -780,7 +780,7 @@ fn black_queenside_castle_out_of_check_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 58, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -792,7 +792,7 @@ fn black_queenside_castle_into_check_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 58, piece: King };
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -804,7 +804,7 @@ fn black_queenside_castle_through_check_test() {
     ]);
     state.black_can_castle_queenside = true;
     state.to_move = Black;
-    let action = Move { from: 60, to: 58, piece: King } ;
+    let action = Castle { direction: Queenside };
     assert!(!action.is_legal(&state));
 }
 
@@ -832,12 +832,12 @@ fn white_performs_en_passant_test() {
 
     // Two square advance
     let action = Move { piece: Pawn, from: 50, to: 34 };
-    let state = state_after_move(&action, &state);
+    let state = action.apply(&state);
     assert!(state.en_passant_square == Some(42));
 
     // The pawn that advanced two squares has been captured
     let action = Move { piece: Pawn, from: 33, to: 42 };
-    let state = state_after_move(&action, &state);
+    let state = action.apply(&state);
     assert!(!state.squares[34].is_some());
 }
 
@@ -850,12 +850,12 @@ fn black_performs_en_passant_test() {
 
     // Two square advance
     let action = Move { piece: Pawn, from: 12, to: 28 };
-    let state = state_after_move(&action, &state);
+    let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
     // The pawn that advanced two squares has been captured
     let action = Move { piece: Pawn, from: 29, to: 20 };
-    let state = state_after_move(&action, &state);
+    let state = action.apply(&state);
     assert!(!state.squares[28].is_some());
 }
 
