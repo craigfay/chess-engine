@@ -875,6 +875,16 @@ fn white_bishop_promotion_legality_test() {
     assert!(promotion_is_legal(&p, &state));
 }
 
+fn white_rook_promotion_legality_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 49),
+    ]);
+    let p = Promotion { piece: Rook, from: 49 };
+    assert!(promotion_is_legal(&p, &state));
+}
+
+
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -953,6 +963,7 @@ fn main() {
     black_performs_en_passant_test();
     white_knight_promotion_legality_test();
     white_bishop_promotion_legality_test();
+    white_rook_promotion_legality_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
