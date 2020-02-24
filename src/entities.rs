@@ -147,6 +147,8 @@ pub enum PieceName {
 
 #[derive(Debug)]
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
 pub enum CastleDirection {
     Kingside,
     Queenside,
@@ -154,6 +156,8 @@ pub enum CastleDirection {
 
 #[derive(Debug)]
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
 pub struct Castle {
     pub direction: CastleDirection,
 }

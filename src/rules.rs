@@ -22,6 +22,10 @@ use crate::entities::{
     Color::{White, Black},
 };
 
+use crate::notation::{algebraic};
+
+use std::cmp::{min, max};
+
 impl Action for Move {
     fn is_legal(&self, state: &GameState) -> bool {
        move_is_legal(&self, &state)
@@ -95,9 +99,43 @@ impl Action for Castle {
     }
 }
 
-use crate::notation::{algebraic};
+impl Action for Promotion {
+    fn is_legal(&self, state: &GameState) -> bool {
+        if false == pawn_can_promote_to(&self.pawn_becomes) { return false }
+    
+        match state.squares[self.moving_from] {
+            None => false,
+            Some(piece) => {
+                if piece.color != state.to_move {
+                    return false
+                }
+                match piece.name {
+                    Pawn => {
+                        match piece.color {
+                            White => {
+                                if self.moving_from < 47 { return false }
+                                if self.moving_from > 56 { return false }
+                                if state.squares[self.moving_from + 8].is_some() { return false }
+                                true
+                            },
+                            Black => {
+                                if self.moving_from < 8 { return false }
+                                if self.moving_from > 15 { return false }
+                                if state.squares[self.moving_from - 8].is_some() { return false }
+                                true
+                            },
+                        }
+                    }
+                    _ => false
+                }
+            }
+        }
+    }
+}
 
-use std::cmp::{min, max};
+impl GameState {
+    // fn after
+}
 
 pub fn relative_material_values(state: &GameState) -> (usize, usize) {
     let mut white = 0;
@@ -166,30 +204,38 @@ pub fn state_after_move(m: &Move, state: &GameState) -> GameState {
     }
 
     // Handle castling
-    if castle_is_legal(&m, &state) {
-        match (m.from, m.to) {
-            (4, 6) => {
+    let maybe_castle: Option<Castle> = match (m.from, m.to) {
+        (4, 6) => Some(Castle { direction: Kingside }),
+        (4, 2) => Some(Castle { direction: Queenside }),
+        (60, 62) => Some(Castle { direction: Kingside }),
+        (60, 58) => Some(Castle { direction: Queenside }),
+        _ => None,
+    };
+
+    if maybe_castle.is_some() && maybe_castle.unwrap().is_legal(&state) {
+        match (state.to_move, &maybe_castle.unwrap().direction) {
+            (White, Kingside) => {
                 new_state.white_can_castle_kingside = false;
                 new_state.squares[6] = new_state.squares[4];
                 new_state.squares[5] = new_state.squares[7];
                 new_state.squares[4] = None;
                 new_state.squares[7] = None;
             },
-            (4, 2) => {
+            (White, Queenside) => {
                 new_state.white_can_castle_queenside = false;
                 new_state.squares[2] = new_state.squares[4];
                 new_state.squares[3] = new_state.squares[0];
                 new_state.squares[4] = None;
                 new_state.squares[0] = None;
             },
-            (60, 62) => {
+            (Black, Kingside) => {
                 new_state.black_can_castle_kingside = false;
                 new_state.squares[62] = new_state.squares[60];
                 new_state.squares[61] = new_state.squares[63];
                 new_state.squares[60] = None;
                 new_state.squares[63] = None;
             },
-            (60, 58) => {
+            (Black, Queenside) => {
                 new_state.black_can_castle_queenside = false;
                 new_state.squares[58] = new_state.squares[60];
                 new_state.squares[59] = new_state.squares[56];
@@ -283,39 +329,6 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
     results
 }
 
-impl Action for Promotion {
-    fn is_legal(&self, state: &GameState) -> bool {
-        if false == pawn_can_promote_to(&self.pawn_becomes) { return false }
-    
-        match state.squares[self.moving_from] {
-            None => false,
-            Some(piece) => {
-                if piece.color != state.to_move {
-                    return false
-                }
-                match piece.name {
-                    Pawn => {
-                        match piece.color {
-                            White => {
-                                if self.moving_from < 47 { return false }
-                                if self.moving_from > 56 { return false }
-                                if state.squares[self.moving_from + 8].is_some() { return false }
-                                true
-                            },
-                            Black => {
-                                if self.moving_from < 8 { return false }
-                                if self.moving_from > 15 { return false }
-                                if state.squares[self.moving_from - 8].is_some() { return false }
-                                true
-                            },
-                        }
-                    }
-                    _ => false
-                }
-            }
-        }
-    }
-}
 
 pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
     match piece {
