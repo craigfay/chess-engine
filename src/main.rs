@@ -27,7 +27,9 @@ use entities::{
         King,
     },
     Color::{White, Black},
+    Action,
     Move,
+    Promotion,
 };
 
 use controller::{

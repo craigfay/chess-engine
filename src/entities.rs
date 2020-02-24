@@ -141,6 +141,18 @@ pub enum PieceName {
     King,
 }
 
+pub enum Action {
+    Move,
+    Promotion,
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct Promotion {
+    pub piece: PieceName,
+    pub from: usize,
+}
+
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Move {

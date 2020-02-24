@@ -14,6 +14,7 @@ use crate::entities::{
     },
     Piece,
     Move,
+    Promotion,
     Color,
     Color::{White, Black},
 };
@@ -204,6 +205,48 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
         }
     }
     results
+}
+
+pub fn promotion_is_legal(p: &Promotion, state: &GameState) -> bool {
+    if false == can_promote_pawn_to(&p.piece) { return false }
+
+    match state.squares[p.from] {
+        None => false,
+        Some(piece) => {
+            if piece.color != state.to_move {
+                return false
+            }
+            match piece.name {
+                Pawn => {
+                    match piece.color {
+                        White => {
+                            if p.from < 47 { return false }
+                            if p.from > 56 { return false }
+                            if state.squares[p.from + 8].is_some() { return false }
+                            true
+                        },
+                        Black => {
+                            if p.from < 8 { return false }
+                            if p.from > 15 { return false }
+                            if state.squares[p.from + 8].is_some() { return false }
+                            true
+                        },
+                    }
+                }
+                _ => false
+            }
+        }
+    }
+}
+
+pub fn can_promote_pawn_to(piece: &PieceName) -> bool {
+    match piece {
+        Bishop => true,
+        Knight => true,
+        Rook => true,
+        Queen => true,
+        _ => false,
+    }
 }
 
 pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
