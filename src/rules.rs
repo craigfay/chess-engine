@@ -30,6 +30,12 @@ impl Action for Move {
     fn is_legal(&self, state: &GameState) -> bool {
        move_is_legal(&self, &state)
     }
+    fn apply(&self, state: &GameState) -> GameState {
+        let mut new_state = state.clone();
+        new_state.squares[self.to] = new_state.squares[self.from];
+        new_state.squares[self.from] = None;
+        new_state
+    }
 }
 
 impl Action for Castle {
@@ -89,6 +95,40 @@ impl Action for Castle {
             }
         }
     }
+    fn apply(&self, state: &GameState) -> GameState {
+        let mut new_state = state.clone();
+        match (state.to_move, &self.direction) {
+            (White, Kingside) => {
+                new_state.white_can_castle_kingside = false;
+                new_state.squares[6] = new_state.squares[4];
+                new_state.squares[5] = new_state.squares[7];
+                new_state.squares[4] = None;
+                new_state.squares[7] = None;
+            },
+            (White, Queenside) => {
+                new_state.white_can_castle_queenside = false;
+                new_state.squares[2] = new_state.squares[4];
+                new_state.squares[3] = new_state.squares[0];
+                new_state.squares[4] = None;
+                new_state.squares[0] = None;
+            },
+            (Black, Kingside) => {
+                new_state.black_can_castle_kingside = false;
+                new_state.squares[62] = new_state.squares[60];
+                new_state.squares[61] = new_state.squares[63];
+                new_state.squares[60] = None;
+                new_state.squares[63] = None;
+            },
+            (Black, Queenside) => {
+                new_state.black_can_castle_queenside = false;
+                new_state.squares[58] = new_state.squares[60];
+                new_state.squares[59] = new_state.squares[56];
+                new_state.squares[60] = None;
+                new_state.squares[56] = None;
+            }
+        }
+        new_state
+    }
 }
 
 impl Action for Promotion {
@@ -122,6 +162,23 @@ impl Action for Promotion {
                 }
             }
         }
+    }
+    fn apply(&self, state: &GameState) -> GameState {
+        if false == self.is_legal(&state) {
+            panic!("Cannot apply illegal promotion)");
+        }
+
+        // Remove pawn
+        let mut new_state = state.clone();
+        new_state.squares[self.moving_from] = None;
+
+        // Place new piece
+        new_state.squares[self.to] = Some(Piece {
+            name: self.pawn_becomes,
+            color: state.to_move,
+        });
+
+        new_state
     }
 }
 
