@@ -208,9 +208,9 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
 }
 
 pub fn promotion_is_legal(p: &Promotion, state: &GameState) -> bool {
-    if false == can_promote_pawn_to(&p.piece) { return false }
+    if false == pawn_can_promote_to(&p.pawn_becomes) { return false }
 
-    match state.squares[p.from] {
+    match state.squares[p.moving_from] {
         None => false,
         Some(piece) => {
             if piece.color != state.to_move {
@@ -220,15 +220,15 @@ pub fn promotion_is_legal(p: &Promotion, state: &GameState) -> bool {
                 Pawn => {
                     match piece.color {
                         White => {
-                            if p.from < 47 { return false }
-                            if p.from > 56 { return false }
-                            if state.squares[p.from + 8].is_some() { return false }
+                            if p.moving_from < 47 { return false }
+                            if p.moving_from > 56 { return false }
+                            if state.squares[p.moving_from + 8].is_some() { return false }
                             true
                         },
                         Black => {
-                            if p.from < 8 { return false }
-                            if p.from > 15 { return false }
-                            if state.squares[p.from - 8].is_some() { return false }
+                            if p.moving_from < 8 { return false }
+                            if p.moving_from > 15 { return false }
+                            if state.squares[p.moving_from - 8].is_some() { return false }
                             true
                         },
                     }
@@ -239,7 +239,7 @@ pub fn promotion_is_legal(p: &Promotion, state: &GameState) -> bool {
     }
 }
 
-pub fn can_promote_pawn_to(piece: &PieceName) -> bool {
+pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
     match piece {
         Bishop => true,
         Knight => true,

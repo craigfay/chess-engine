@@ -143,14 +143,15 @@ pub enum PieceName {
 
 pub enum Action {
     Move,
-    Promotion,
+    PawnPromotion,
 }
 
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Promotion {
-    pub piece: PieceName,
-    pub from: usize,
+    pub pawn_becomes: PieceName,
+    pub moving_from: usize,
+    pub to: usize,
 }
 
 #[derive(Debug)]
