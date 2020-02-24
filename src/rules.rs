@@ -34,66 +34,58 @@ impl Action for Move {
 
 impl Action for Castle {
     fn is_legal(&self, state: &GameState) -> bool {
-        match state.to_move {
-            White => {
-                match &self.direction {
-                    Kingside => {
-                        if !state.white_can_castle_kingside { return false }
-                        if !piece_is(White, King, state.squares[4]) { return false }
-                        if !piece_is(White, Rook, state.squares[7]) { return false }
-                        if state.squares[5].is_some() { return false }
-                        if state.squares[6].is_some() { return false }
-                        if color_threatens_square(Black, 4, &state) { return false }
-                        if color_threatens_square(Black, 5, &state) { return false }
-                        if color_threatens_square(Black, 6, &state) { return false }
-                        if color_threatens_square(Black, 7, &state) { return false }
-                        return true
-                    },
-                    Queenside => {
-                        if !state.white_can_castle_queenside { return false }
-                        if !piece_is(White, King, state.squares[4]) { return false }
-                        if !piece_is(White, Rook, state.squares[0]) { return false }
-                        if state.squares[1].is_some() { return false }
-                        if state.squares[2].is_some() { return false }
-                        if state.squares[3].is_some() { return false }
-                        if color_threatens_square(Black, 0, &state) { return false }
-                        if color_threatens_square(Black, 1, &state) { return false }
-                        if color_threatens_square(Black, 2, &state) { return false }
-                        if color_threatens_square(Black, 3, &state) { return false }
-                        if color_threatens_square(Black, 4, &state) { return false }
-                        return true
-                    }
-                }
+        match (state.to_move, &self.direction) {
+            (White, Kingside) => {
+                 if !state.white_can_castle_kingside { return false }
+                 if !piece_is(White, King, state.squares[4]) { return false }
+                 if !piece_is(White, Rook, state.squares[7]) { return false }
+                 if state.squares[5].is_some() { return false }
+                 if state.squares[6].is_some() { return false }
+                 if color_threatens_square(Black, 4, &state) { return false }
+                 if color_threatens_square(Black, 5, &state) { return false }
+                 if color_threatens_square(Black, 6, &state) { return false }
+                 if color_threatens_square(Black, 7, &state) { return false }
+                 return true
+            }
+            (White, Queenside) => {
+                if !state.white_can_castle_queenside { return false }
+                if !piece_is(White, King, state.squares[4]) { return false }
+                if !piece_is(White, Rook, state.squares[0]) { return false }
+                if state.squares[1].is_some() { return false }
+                if state.squares[2].is_some() { return false }
+                if state.squares[3].is_some() { return false }
+                if color_threatens_square(Black, 0, &state) { return false }
+                if color_threatens_square(Black, 1, &state) { return false }
+                if color_threatens_square(Black, 2, &state) { return false }
+                if color_threatens_square(Black, 3, &state) { return false }
+                if color_threatens_square(Black, 4, &state) { return false }
+                return true
+            }
+            (Black, Kingside) => {
+                if !state.black_can_castle_kingside { return false }
+                if !piece_is(Black, King, state.squares[60]) { return false }
+                if !piece_is(Black, Rook, state.squares[63]) { return false }
+                if state.squares[61].is_some() { return false }
+                if state.squares[62].is_some() { return false }
+                if color_threatens_square(White, 60, &state) { return false }
+                if color_threatens_square(White, 61, &state) { return false }
+                if color_threatens_square(White, 62, &state) { return false }
+                if color_threatens_square(White, 63, &state) { return false }
+                return true
             },
-            Black => {
-                match &self.direction {
-                    Kingside => {
-                        if !state.black_can_castle_kingside { return false }
-                        if !piece_is(Black, King, state.squares[60]) { return false }
-                        if !piece_is(Black, Rook, state.squares[63]) { return false }
-                        if state.squares[61].is_some() { return false }
-                        if state.squares[62].is_some() { return false }
-                        if color_threatens_square(White, 60, &state) { return false }
-                        if color_threatens_square(White, 61, &state) { return false }
-                        if color_threatens_square(White, 62, &state) { return false }
-                        if color_threatens_square(White, 63, &state) { return false }
-                        return true
-                    },
-                    Queenside => {
-                        if !state.black_can_castle_queenside { return false }
-                        if !piece_is(Black, King, state.squares[60]) { return false }
-                        if !piece_is(Black, Rook, state.squares[56]) { return false }
-                        if state.squares[57].is_some() { return false }
-                        if state.squares[58].is_some() { return false }
-                        if state.squares[59].is_some() { return false }
-                        if color_threatens_square(White, 56, &state) { return false }
-                        if color_threatens_square(White, 57, &state) { return false }
-                        if color_threatens_square(White, 58, &state) { return false }
-                        if color_threatens_square(White, 59, &state) { return false }
-                        if color_threatens_square(White, 60, &state) { return false }
-                        return true
-                    }
-                }
+            (Black, Queenside) => {
+                if !state.black_can_castle_queenside { return false }
+                if !piece_is(Black, King, state.squares[60]) { return false }
+                if !piece_is(Black, Rook, state.squares[56]) { return false }
+                if state.squares[57].is_some() { return false }
+                if state.squares[58].is_some() { return false }
+                if state.squares[59].is_some() { return false }
+                if color_threatens_square(White, 56, &state) { return false }
+                if color_threatens_square(White, 57, &state) { return false }
+                if color_threatens_square(White, 58, &state) { return false }
+                if color_threatens_square(White, 59, &state) { return false }
+                if color_threatens_square(White, 60, &state) { return false }
+                return true
             }
         }
     }
@@ -131,10 +123,6 @@ impl Action for Promotion {
             }
         }
     }
-}
-
-impl GameState {
-    // fn after
 }
 
 pub fn relative_material_values(state: &GameState) -> (usize, usize) {
