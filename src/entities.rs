@@ -155,7 +155,7 @@ pub enum CastleDirection {
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Castle {
-    direction: CastleDirection,
+    pub direction: CastleDirection,
 }
 
 #[derive(Debug)]
