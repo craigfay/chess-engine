@@ -13,3 +13,8 @@
 * Decide between a conventions chosen_move / m
 * Move piece property to the beginning of Move constructors
 * Maybe extract en-passant logic into it's own function
+* Add remaining Action types
+* Handle/Test generic legality checks for each action
+* Refactor with tuple matching
+* Test en-passant expiration
+* Test all promotion cases
