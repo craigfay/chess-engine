@@ -933,6 +933,24 @@ fn en_passant_expires_after_promotion_test() {
     assert!(state.en_passant_square == None);
 }
 
+fn to_move_switches_after_move_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 8),
+        Placement::new(Black, Pawn, 48),
+    ]);
+    // Advance by White
+    let action = Move { piece: Pawn, from: 8, to: 16 };
+    let state = action.apply(&state);
+    assert!(state.to_move == Black);
+
+    // Advance by Black 
+    let action = Move { piece: Pawn, from: 48, to: 40 };
+    let state = action.apply(&state);
+    assert!(state.to_move == White);
+}
+
+
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1014,6 +1032,7 @@ fn main() {
     en_passant_expires_after_move_test();
     en_passant_expires_after_castle_test();
     en_passant_expires_after_promotion_test();
+    to_move_switches_after_move_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
