@@ -949,6 +949,23 @@ fn to_move_switches_after_move_test() {
     assert!(state.to_move == White);
 }
 
+fn to_move_switches_after_promotion_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 55),
+        Placement::new(Black, Pawn, 8),
+    ]);
+    // Promotion by White
+    let action = Promotion { pawn_becomes: Queen, moving_from: 55, to: 63 };
+    let state = action.apply(&state);
+    assert!(state.to_move == Black);
+
+    // Promotion by Black
+    let action = Promotion { pawn_becomes: Queen, moving_from: 8, to: 1 };
+    let state = action.apply(&state);
+    assert!(state.to_move == White);
+
+}
+
 
 
 fn main() {
@@ -1033,6 +1050,7 @@ fn main() {
     en_passant_expires_after_castle_test();
     en_passant_expires_after_promotion_test();
     to_move_switches_after_move_test();
+    to_move_switches_after_promotion_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
