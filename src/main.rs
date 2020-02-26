@@ -462,16 +462,6 @@ fn algebraic_moves_black_pawn_rank_8_test() {
     assert_eq!(action, None);
 }
 
-fn apply_move_test() {
-    let mut state = GameState::new();
-
-    let action = Move { from: 11, to: 27, piece: Pawn };
-    apply_move(&action, &mut state);
-
-    assert!(state.squares[27].is_some());
-    assert!(!state.squares[11].is_some());
-}
-
 fn color_is_checked_test() {
     let state = GameState::new();
     assert!(!color_is_checked(White, &state));
@@ -882,6 +872,27 @@ fn white_rook_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+fn en_passant_expires_after_move_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 12),
+        Placement::new(Black, Pawn, 29),
+        Placement::new(Black, King, 60),
+    ]);
+    // Two square advance by White
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(20));
+
+   // Black moves king
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+
+    // En-passant no longer legal
+    let action = Move { piece: Pawn, from: 29, to: 20 };
+    assert!(state.en_passant_square == None);
+    assert!(!action.is_legal(&state));
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -926,7 +937,6 @@ fn main() {
     algebraic_moves_white_pawn_rank_2_test(); 
     algebraic_moves_black_pawn_rank_7_test(); 
     algebraic_moves_black_pawn_rank_8_test(); 
-    apply_move_test();
     color_is_checked_test();
     color_threatens_square_test();
     state_after_move_test();
@@ -961,6 +971,7 @@ fn main() {
     white_knight_promotion_legality_test();
     white_bishop_promotion_legality_test();
     white_rook_promotion_legality_test();
+    en_passant_expires_after_move_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);

@@ -16,5 +16,5 @@
 * Add remaining Action types
 * Handle/Test generic legality checks for each action
 * Refactor with tuple matching
-* Test en-passant expiration
+* Test en-passant expiration for each action
 * Test all promotion cases

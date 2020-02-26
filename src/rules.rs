@@ -329,7 +329,6 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
     results
 }
 
-
 pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
     match piece {
         Bishop => true,
