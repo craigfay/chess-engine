@@ -888,9 +888,28 @@ fn en_passant_expires_after_move_test() {
     let state = action.apply(&state);
 
     // En-passant no longer legal
+    assert!(state.en_passant_square == None);
+}
+
+fn en_passant_expires_after_castle_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 12),
+        Placement::new(Black, Pawn, 29),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 63),
+    ]);
+    // Two square advance by White
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(20));
+
+   // Black castles
+    let action = Castle { direction: Kingside };
+    let state = action.apply(&state);
+
+    // En-passant no longer legal
     let action = Move { piece: Pawn, from: 29, to: 20 };
     assert!(state.en_passant_square == None);
-    assert!(!action.is_legal(&state));
 }
 
 fn main() {
@@ -972,6 +991,7 @@ fn main() {
     white_bishop_promotion_legality_test();
     white_rook_promotion_legality_test();
     en_passant_expires_after_move_test();
+    en_passant_expires_after_castle_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
