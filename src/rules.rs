@@ -30,12 +30,19 @@ impl Action for Move {
     fn is_legal(&self, state: &GameState) -> bool {
        move_is_legal(&self, &state)
     }
+
     fn apply(&self, state: &GameState) -> GameState {
         let mut new_state = state.clone();
         let (delta_x, delta_y) = position_delta(self.from, self.to);
     
         // En-Passant opportunities must expire after each turn
         new_state.en_passant_square = None;
+
+        // Switch turns
+        match new_state.to_move {
+            White => new_state.to_move = Black,
+            Black => new_state.to_move = White,
+        }
     
         // Handle two square pawn advances
         if self.piece == Pawn {
@@ -134,7 +141,13 @@ impl Action for Castle {
 
         // En-Passant opportunities must expire after each turn
         new_state.en_passant_square = None;
-    
+
+        // Switch turns
+        match new_state.to_move {
+            White => new_state.to_move = Black,
+            Black => new_state.to_move = White,
+        }
+
         match (state.to_move, &self.direction) {
             (White, Kingside) => {
                 new_state.white_can_castle_kingside = false;
@@ -171,7 +184,9 @@ impl Action for Castle {
 
 impl Action for Promotion {
     fn is_legal(&self, state: &GameState) -> bool {
-        if false == pawn_can_promote_to(&self.pawn_becomes) { return false }
+        if !pawn_can_promote_to(&self.pawn_becomes) {
+            return false
+        }
     
         match state.squares[self.moving_from] {
             None => false,
@@ -210,6 +225,12 @@ impl Action for Promotion {
 
         // En-Passant opportunities must expire after each turn
         new_state.en_passant_square = None;
+
+        // Switch turns
+        match new_state.to_move {
+            White => new_state.to_move = Black,
+            Black => new_state.to_move = White,
+        }
 
         // Remove pawn
         new_state.squares[self.moving_from] = None;
@@ -305,7 +326,7 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
     }
 
     // Determine whether the other color is threatening king_square
-    let attacker = if state.to_move == White { Black } else { White };
+    let attacker = if color == White { Black } else { White };
     color_threatens_square(attacker, king_square.unwrap(), &state)
 }
 
@@ -341,10 +362,14 @@ pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
 
 pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     // Don't allow moves with the same from/to
-    if m.from == m.to { return false }
+    if m.from == m.to {
+        return false
+    }
 
     // Don't allow moves to/from nonexistent squares
-    if m.from > 63 || m.to > 63 { return false }
+    if m.from > 63 || m.to > 63 {
+        return false
+    }
 
     let maybe_piece = state.squares[m.from];
     let to = state.squares[m.to];
@@ -363,6 +388,7 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
         return false;
     }
 
+    let result = move_is_pseudo_legal(&m, &state);
     move_is_pseudo_legal(&m, &state) 
 }
 

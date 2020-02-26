@@ -912,6 +912,29 @@ fn en_passant_expires_after_castle_test() {
     assert!(state.en_passant_square == None);
 }
 
+fn en_passant_expires_after_promotion_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 12),
+        Placement::new(Black, Pawn, 29),
+        Placement::new(Black, Pawn, 9),
+    ]);
+
+    assert!(state.to_move == White);
+    // Two square advance by White
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(20));
+    assert!(state.to_move == Black);
+
+   // Black promotes
+    let action = Promotion { pawn_becomes: Queen, moving_from: 9, to: 1 };
+    let state = action.apply(&state);
+    assert!(state.to_move == White);
+
+    // En-passant no longer legal
+    assert!(state.en_passant_square == None);
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -992,6 +1015,7 @@ fn main() {
     white_rook_promotion_legality_test();
     en_passant_expires_after_move_test();
     en_passant_expires_after_castle_test();
+    en_passant_expires_after_promotion_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
