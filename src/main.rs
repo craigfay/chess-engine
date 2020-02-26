@@ -924,12 +924,10 @@ fn en_passant_expires_after_promotion_test() {
     let action = Move { piece: Pawn, from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
-    assert!(state.to_move == Black);
 
    // Black promotes
     let action = Promotion { pawn_becomes: Queen, moving_from: 9, to: 1 };
     let state = action.apply(&state);
-    assert!(state.to_move == White);
 
     // En-passant no longer legal
     assert!(state.en_passant_square == None);
