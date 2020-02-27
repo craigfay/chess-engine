@@ -983,8 +983,6 @@ fn to_move_switches_after_castle_test() {
     assert!(state.to_move == White);
 }
 
-
-
 fn main() {
     // Time tests
     let timer = Instant::now();
