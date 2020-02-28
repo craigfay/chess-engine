@@ -983,6 +983,21 @@ fn to_move_switches_after_castle_test() {
     assert!(state.to_move == White);
 }
 
+fn legal_actions_includes_castles_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 7),
+        Placement::new(Black, King, 60),
+    ]);   
+    let actions = legal_actions(&state);
+    assert!(actions.iter().any(|action| {
+        match action {
+            Castle => true,
+            _ => false,
+        }
+    }));
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1067,6 +1082,7 @@ fn main() {
     to_move_switches_after_move_test();
     to_move_switches_after_promotion_test();
     to_move_switches_after_castle_test();
+    legal_actions_includes_castles_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
