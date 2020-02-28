@@ -333,10 +333,11 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
 pub fn legal_actions(state: &GameState) -> Vec<Box<dyn Action>> {
     let mut results: Vec<Box<dyn Action>> = vec![];
 
-    let moves = legal_moves(&state);
-
-    for m in moves {
+    for m in legal_moves(&state) {
         results.push(Box::new(m));
+    }
+    for c in legal_castles(&state) {
+        results.push(Box::new(c));
     }
     
     results
@@ -358,6 +359,23 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
             }
 
         }
+    }
+    results
+}
+
+pub fn legal_castles(state: &GameState) -> Vec<Castle> {
+    let mut results = vec![];
+    if state.to_move == White && state.white_can_castle_kingside {
+        results.push(Castle { direction: Kingside });
+    }
+    if state.to_move == White && state.white_can_castle_queenside {
+        results.push(Castle { direction: Queenside });
+    }
+    if state.to_move == Black && state.black_can_castle_kingside {
+        results.push(Castle { direction: Kingside });
+    }
+    if state.to_move == Black && state.white_can_castle_kingside {
+        results.push(Castle { direction: Queenside });
     }
     results
 }
