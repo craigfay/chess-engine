@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::time::{Instant};
 
 mod rules;
 mod entities;
@@ -387,7 +387,7 @@ fn algebraic_notation_to_index_test() {
 }
 
 fn algebraic_moves_white_pawn_one_forward_test() {
-    let mut state = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
     ]);
     let action = algebraic_move("a3", state);
@@ -406,7 +406,7 @@ fn algebraic_moves_black_pawn_one_forward_test() {
 }
 
 fn algebraic_moves_white_pawn_two_forward_test() {
-    let mut state = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
     ]);
     let action = algebraic_move("a4", state);
@@ -983,6 +983,22 @@ fn to_move_switches_after_castle_test() {
     assert!(state.to_move == White);
 }
 
+fn legal_actions_includes_moves_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 7),
+        Placement::new(Black, King, 60),
+    ]);   
+    state.to_move = Black;
+    let actions = legal_actions(&state);
+    assert!(actions.iter().any(|action| {
+        match action {
+            Move => true,
+            _ => false,
+        }
+    }));
+}
+
 fn legal_actions_includes_castles_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1082,6 +1098,7 @@ fn main() {
     to_move_switches_after_move_test();
     to_move_switches_after_promotion_test();
     to_move_switches_after_castle_test();
+    legal_actions_includes_moves_test();
     legal_actions_includes_castles_test();
 
     let duration = timer.elapsed();
