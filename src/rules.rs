@@ -330,6 +330,18 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
     color_threatens_square(attacker, king_square.unwrap(), &state)
 }
 
+pub fn legal_actions(state: &GameState) -> Vec<Box<dyn Action>> {
+    let mut results: Vec<Box<dyn Action>> = vec![];
+
+    let moves = legal_moves(&state);
+
+    for m in moves {
+        results.push(Box::new(m));
+    }
+    
+    results
+}
+
 pub fn legal_moves(state: &GameState) -> Vec<Move> {
     let mut results = vec![];
 

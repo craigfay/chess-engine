@@ -8,7 +8,7 @@ mod controller;
 use rules::{
     color_threatens_square,
     color_is_checked,
-    legal_moves,
+    legal_actions,
     position_delta,
 };
 
@@ -96,22 +96,22 @@ fn new_gamestate_test() {
     assert!(state.white_can_castle_queenside);
 }
 
-fn legal_moves_test() {
+fn legal_actions_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(Black, King, 60),
     ]);
-    assert_eq!(5, legal_moves(&state).len());
+    assert_eq!(5, legal_actions(&state).len());
 }
 
-fn legal_moves_no_kings_test() {
+fn legal_actions_no_kings_test() {
     // There can be legal moves even if state lacks Kings
     //
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
         Placement::new(White, Pawn, 9),
     ]);
-    assert_eq!(4, legal_moves(&state).len());
+    assert_eq!(4, legal_actions(&state).len());
 }
 
 
@@ -988,8 +988,8 @@ fn main() {
     let timer = Instant::now();
 
     new_gamestate_test();
-    legal_moves_test();
-    legal_moves_no_kings_test();
+    legal_actions_test();
+    legal_actions_no_kings_test();
     position_delta_test();
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();
