@@ -38,10 +38,6 @@ use controller::{
 
 use notation::{algebraic, algebraic_move};
 
-fn typeId<T: std::any::Any>(_: &T) -> std::any::TypeId {
-    std::any::TypeId::of::<T>()
-}
-
 fn new_gamestate_test() {
     // Gamestate can be constructed to represent a normal start
     let state = GameState::new();
