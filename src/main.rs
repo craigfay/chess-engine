@@ -38,6 +38,10 @@ use controller::{
 
 use notation::{algebraic, algebraic_move};
 
+fn typeId<T: std::any::Any>(_: &T) -> std::any::TypeId {
+    std::any::TypeId::of::<T>()
+}
+
 fn new_gamestate_test() {
     // Gamestate can be constructed to represent a normal start
     let state = GameState::new();
@@ -992,8 +996,8 @@ fn legal_actions_includes_moves_test() {
     state.to_move = Black;
     let actions = legal_actions(&state);
     assert!(actions.iter().any(|action| {
-        match action {
-            Move => true,
+        match action.name() {
+            "Move" => true,
             _ => false,
         }
     }));
@@ -1007,8 +1011,8 @@ fn legal_actions_includes_castles_test() {
     ]);   
     let actions = legal_actions(&state);
     assert!(actions.iter().any(|action| {
-        match action {
-            Castle => true,
+        match action.name() {
+            "Castle" => true,
             _ => false,
         }
     }));

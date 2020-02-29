@@ -27,6 +27,9 @@ use crate::notation::{algebraic};
 use std::cmp::{min, max};
 
 impl Action for Move {
+    fn name(&self) -> &str {
+        "Move"
+    }
     fn is_legal(&self, state: &GameState) -> bool {
        move_is_legal(&self, &state)
     }
@@ -80,6 +83,9 @@ impl Action for Move {
 }
 
 impl Action for Castle {
+    fn name(&self) -> &str {
+        "Castle"
+    }
     fn is_legal(&self, state: &GameState) -> bool {
         match (state.to_move, &self.direction) {
             (White, Kingside) => {
@@ -183,6 +189,9 @@ impl Action for Castle {
 }
 
 impl Action for Promotion {
+    fn name(&self) -> &str {
+        "Promotion"
+    }
     fn is_legal(&self, state: &GameState) -> bool {
         if !pawn_can_promote_to(&self.pawn_becomes) {
             return false

@@ -131,6 +131,7 @@ impl std::fmt::Debug for GameState {
 pub trait Action {
     fn is_legal(&self, state: &GameState) -> bool;
     fn apply(&self, state: &GameState) -> GameState;
+    fn name(&self) -> &str;
 }
 
 #[derive(Copy)]
