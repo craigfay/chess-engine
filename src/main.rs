@@ -992,10 +992,7 @@ fn legal_actions_includes_moves_test() {
     state.to_move = Black;
     let actions = legal_actions(&state);
     assert!(actions.iter().any(|action| {
-        match action.name() {
-            "Move" => true,
-            _ => false,
-        }
+        action.name() == "Move"
     }));
 }
 
@@ -1009,10 +1006,7 @@ fn legal_actions_includes_castles_test() {
 
     let actions = legal_actions(&state);
     assert!(actions.iter().any(|action| {
-        match action.name() {
-            "Castle" => true,
-            _ => false,
-        }
+        action.name() == "Castle"
     }));
 }
 
@@ -1025,10 +1019,7 @@ fn legal_actions_includes_promotions_test() {
 
     let actions = legal_actions(&state);
     assert!(actions.iter().any(|action| {
-        match action.name() {
-            "Promotion" => true,
-            _ => false,
-        }
+        action.name() == "Promotion"
     }));
 }
 
