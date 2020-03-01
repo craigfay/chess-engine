@@ -1000,11 +1000,13 @@ fn legal_actions_includes_moves_test() {
 }
 
 fn legal_actions_includes_castles_test() {
-    let state = GameState::with_placements(vec![
+    let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(White, Rook, 7),
         Placement::new(Black, King, 60),
     ]);   
+    state.white_can_castle_kingside = true;
+
     let actions = legal_actions(&state);
     assert!(actions.iter().any(|action| {
         match action.name() {
