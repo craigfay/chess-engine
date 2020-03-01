@@ -1032,6 +1032,24 @@ fn legal_actions_includes_promotions_test() {
     }));
 }
 
+fn legal_actions_includes_all_legal_castles_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 0),
+        Placement::new(White, Rook, 7),
+        Placement::new(Black, King, 63),
+    ]);   
+    state.white_can_castle_kingside = true;
+    state.white_can_castle_queenside = true;
+
+    let actions = legal_actions(&state);
+    let legal_castles = actions.iter().filter(|action| {
+        action.name() == "Castle"
+    }).collect::<Vec<_>>();
+
+    assert_eq!(2, legal_castles.len());
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1119,6 +1137,7 @@ fn main() {
     legal_actions_includes_moves_test();
     legal_actions_includes_castles_test();
     legal_actions_includes_promotions_test();
+    legal_actions_includes_all_legal_castles_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
