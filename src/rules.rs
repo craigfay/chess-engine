@@ -342,13 +342,15 @@ pub fn color_is_checked(color: Color, state: &GameState) -> bool {
 pub fn legal_actions(state: &GameState) -> Vec<Box<dyn Action>> {
     let mut results: Vec<Box<dyn Action>> = vec![];
 
-    for m in legal_moves(&state) {
-        results.push(Box::new(m));
+    for action  in legal_moves(&state) {
+        results.push(Box::new(action));
     }
-    for c in legal_castles(&state) {
-        results.push(Box::new(c));
+    for action in legal_castles(&state) {
+        results.push(Box::new(action));
     }
-    
+    for action in legal_promotions(&state) {
+        results.push(Box::new(action));
+    }
     results
 }
 
@@ -388,6 +390,43 @@ pub fn legal_castles(state: &GameState) -> Vec<Castle> {
     }
     results
 }
+
+pub fn legal_promotions(state: &GameState) -> Vec<Promotion> {
+    let mut results = vec![];
+    let promotion_targets: [PieceName; 4] = [Bishop, Knight, Rook, Queen];
+
+    if state.to_move == White {
+        for square in 48..56 {
+            for target in promotion_targets.iter() {
+                let action = Promotion {
+                    pawn_becomes: *target,
+                    moving_from: square,
+                    to: square + 8
+                };
+                if action.is_legal(&state) {
+                    results.push(action);
+                }
+            }
+        }
+    }
+    else if state.to_move == Black {
+        for square in 8..16 {
+            for target in promotion_targets.iter() {
+                let action = Promotion {
+                    pawn_becomes: *target,
+                    moving_from: square,
+                    to: square - 8
+                };
+                if action.is_legal(&state) {
+                    results.push(action);
+                }
+            }
+        }
+    }
+    results
+}
+
+
 
 pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
     match piece {

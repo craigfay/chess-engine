@@ -1016,6 +1016,22 @@ fn legal_actions_includes_castles_test() {
     }));
 }
 
+fn legal_actions_includes_promotions_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Pawn, 49),
+        Placement::new(Black, King, 63),
+    ]);   
+
+    let actions = legal_actions(&state);
+    assert!(actions.iter().any(|action| {
+        match action.name() {
+            "Promotion" => true,
+            _ => false,
+        }
+    }));
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1102,6 +1118,7 @@ fn main() {
     to_move_switches_after_castle_test();
     legal_actions_includes_moves_test();
     legal_actions_includes_castles_test();
+    legal_actions_includes_promotions_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
