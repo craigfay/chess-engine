@@ -376,17 +376,13 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
 
 pub fn legal_castles(state: &GameState) -> Vec<Castle> {
     let mut results = vec![];
-    if state.to_move == White && state.white_can_castle_kingside {
-        results.push(Castle { direction: Kingside });
+    let kingside_castle = Castle { direction: Kingside };
+    if kingside_castle.is_legal(&state) {
+        results.push(kingside_castle);
     }
-    if state.to_move == White && state.white_can_castle_queenside {
-        results.push(Castle { direction: Queenside });
-    }
-    if state.to_move == Black && state.black_can_castle_kingside {
-        results.push(Castle { direction: Kingside });
-    }
-    if state.to_move == Black && state.white_can_castle_kingside {
-        results.push(Castle { direction: Queenside });
+    let queenside_castle = Castle { direction: Queenside };
+    if kingside_castle.is_legal(&state) {
+        results.push(kingside_castle);
     }
     results
 }
