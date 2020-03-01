@@ -376,13 +376,11 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
 
 pub fn legal_castles(state: &GameState) -> Vec<Castle> {
     let mut results = vec![];
-    let kingside_castle = Castle { direction: Kingside };
-    if kingside_castle.is_legal(&state) {
-        results.push(kingside_castle);
-    }
-    let queenside_castle = Castle { direction: Queenside };
-    if kingside_castle.is_legal(&state) {
-        results.push(kingside_castle);
+    for direction in [Kingside, Queenside].iter() {
+        let action = Castle { direction: *direction };
+        if action.is_legal(&state) {
+            results.push(action);
+        }
     }
     results
 }
