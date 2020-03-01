@@ -1023,7 +1023,7 @@ fn legal_actions_includes_promotions_test() {
     }));
 }
 
-fn legal_actions_includes_all_legal_castles_test() {
+fn legal_actions_includes_all_legal_castles_by_white_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(White, Rook, 0),
@@ -1032,6 +1032,25 @@ fn legal_actions_includes_all_legal_castles_test() {
     ]);   
     state.white_can_castle_kingside = true;
     state.white_can_castle_queenside = true;
+
+    let actions = legal_actions(&state);
+    let legal_castles = actions.iter().filter(|action| {
+        action.name() == "Castle"
+    }).collect::<Vec<_>>();
+
+    assert_eq!(2, legal_castles.len());
+}
+
+fn legal_actions_includes_all_legal_castles_by_black_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 63),
+        Placement::new(Black, Rook, 56),
+    ]);   
+    state.black_can_castle_kingside = true;
+    state.black_can_castle_queenside = true;
+    state.to_move = Black;
 
     let actions = legal_actions(&state);
     let legal_castles = actions.iter().filter(|action| {
@@ -1128,7 +1147,8 @@ fn main() {
     legal_actions_includes_moves_test();
     legal_actions_includes_castles_test();
     legal_actions_includes_promotions_test();
-    legal_actions_includes_all_legal_castles_test();
+    legal_actions_includes_all_legal_castles_by_white_test();
+    legal_actions_includes_all_legal_castles_by_black_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
