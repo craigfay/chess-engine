@@ -15,4 +15,5 @@
 * Refactor with tuple matching
 * Test en-passant expiration for each action
 * Test all promotion cases
+* Use non-deterministic tests with random move selection to test for states that should never exist.
 
