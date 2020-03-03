@@ -1066,7 +1066,15 @@ fn white_promotion_to_knight_test() {
     assert!(action.is_legal(&state));
 }
 
-
+fn white_promotion_to_rook_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Pawn, 49),
+        Placement::new(Black, King, 60),
+    ]);   
+    let action = Promotion { pawn_becomes: Rook, moving_from: 49, to: 57 };
+    assert!(action.is_legal(&state));
+}
 
 fn main() {
     // Time tests
@@ -1158,6 +1166,7 @@ fn main() {
     legal_actions_includes_all_legal_castles_by_black_test();
     white_promotion_to_bishop_test();
     white_promotion_to_knight_test();
+    white_promotion_to_rook_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
