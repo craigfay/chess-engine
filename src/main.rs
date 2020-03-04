@@ -1055,9 +1055,11 @@ fn legal_actions_includes_all_legal_en_passants_by_white_test() {
     let action = Move { piece: Pawn, from: 50, to: 34 };
     assert!(action.is_legal(&state));
 
+    // EnPassant is now available
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(42));
 
+    // Legal Actions include EnPassant
     let actions = legal_actions(&state);
     let legal_en_passants= actions.iter().filter(|action| {
         action.name() == "EnPassant"
@@ -1076,9 +1078,13 @@ fn legal_actions_includes_all_legal_en_passants_by_black_test() {
 
     // Two square advance
     let action = Move { piece: Pawn, from: 12, to: 28 };
+    assert!(action.is_legal(&state));
+
+    // EnPassant is now available
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
+    // Legal Actions include EnPassant
     let actions = legal_actions(&state);
     let legal_en_passants= actions.iter().filter(|action| {
         action.name() == "EnPassant"
@@ -1305,6 +1311,7 @@ fn main() {
     legal_actions_includes_all_legal_castles_by_white_test();
     legal_actions_includes_all_legal_castles_by_black_test();
     legal_actions_includes_all_legal_en_passants_by_white_test();
+    legal_actions_includes_all_legal_en_passants_by_black_test();
     white_promotion_to_bishop_test();
     white_promotion_to_knight_test();
     white_promotion_to_rook_test();
