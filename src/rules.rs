@@ -31,7 +31,7 @@ impl Action for Move {
         "Move"
     }
     fn is_legal(&self, state: &GameState) -> bool {
-       move_is_legal(&self, &state)
+      move_is_legal(&self, &state)
     }
 
     fn apply(&self, state: &GameState) -> GameState {
@@ -87,6 +87,10 @@ impl Action for Castle {
         "Castle"
     }
     fn is_legal(&self, state: &GameState) -> bool {
+        // Don't allow actions that put/leave the player in check
+        if color_is_checked(state.to_move, &self.apply(&state)) {
+            return false
+        }
         match (state.to_move, &self.direction) {
             (White, Kingside) => {
                  if !state.white_can_castle_kingside { return false }
@@ -188,6 +192,10 @@ impl Action for Castle {
     }
 }
 
+fn action_is_illegal_due_to_check(action: &Action, state: &GameState) -> bool {
+    true
+}
+
 impl Action for Promotion {
     fn name(&self) -> &str {
         "Promotion"
@@ -196,7 +204,12 @@ impl Action for Promotion {
         if !pawn_can_promote_to(&self.pawn_becomes) {
             return false
         }
-    
+
+        // Don't allow actions that put/leave the player in check
+        if color_is_checked(state.to_move, &self.apply(&state)) {
+            return false
+        }
+
         match state.squares[self.moving_from] {
             None => false,
             Some(piece) => {
@@ -226,10 +239,6 @@ impl Action for Promotion {
         }
     }
     fn apply(&self, state: &GameState) -> GameState {
-        if false == self.is_legal(&state) {
-            panic!("Cannot apply illegal promotion)");
-        }
-
         let mut new_state = state.clone();
 
         // En-Passant opportunities must expire after each turn
@@ -443,11 +452,8 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
         return false
     }
 
-    let maybe_piece = state.squares[m.from];
-    let to = state.squares[m.to];
-
     // If there is no piece present at the chosen from
-    if maybe_piece.is_none() {
+    if state.squares[m.from].is_none() {
         return false
     }
 
@@ -455,9 +461,8 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
     // The function may be more efficient if this block gets moved
     // below individual piece rules, because of how often it runs
     // with illegal moves by legal_moves().
-    let aftermath = m.apply(&state);
-    if color_is_checked(state.to_move, &aftermath) {
-        return false;
+    if color_is_checked(state.to_move, &m.apply(&state)) {
+        return false
     }
 
     let result = move_is_pseudo_legal(&m, &state);

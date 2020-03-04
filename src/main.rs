@@ -1108,9 +1108,7 @@ fn black_promotion_to_knight_test() {
     assert!(action.is_legal(&state));
 }
 
-fn black_promotion_to_rook_test() {
-    let mut state = GameState::with_placements(vec![
-        Placement::new(White, King, 4),
+fn black_promotion_to_rook_test() { let mut state = GameState::with_placements(vec![ Placement::new(White, King, 4),
         Placement::new(Black, Pawn, 14),
         Placement::new(Black, King, 60),
     ]);
@@ -1119,8 +1117,7 @@ fn black_promotion_to_rook_test() {
     assert!(action.is_legal(&state));
 }
 
-fn black_promotion_to_queen_test() {
-    let mut state = GameState::with_placements(vec![
+fn black_promotion_to_queen_test() { let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(Black, Pawn, 13),
         Placement::new(Black, King, 60),
@@ -1128,6 +1125,17 @@ fn black_promotion_to_queen_test() {
     state.to_move = Black;
     let action = Promotion { pawn_becomes: Queen, moving_from: 13, to: 5 };
     assert!(action.is_legal(&state));
+}
+
+fn white_cant_promote_out_of_check_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Pawn, 50),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 0),
+    ]);   
+    let action = Promotion { pawn_becomes: Queen, moving_from: 50, to: 58 };
+    assert!(!action.is_legal(&state));
 }
 
 fn main() {
@@ -1226,10 +1234,7 @@ fn main() {
     black_promotion_to_knight_test();
     black_promotion_to_rook_test();
     black_promotion_to_queen_test();
-
-
-
-    white_promotion_to_bishop_test();
+    white_cant_promote_out_of_check_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
