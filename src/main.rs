@@ -495,16 +495,6 @@ fn state_after_move_test() {
     assert!(!new_state.squares[0].is_some());
 }
 
-fn cannot_move_into_check_test() {
-    let mut state = GameState::with_placements(vec![
-        Placement::new(White, King, 4),
-        Placement::new(Black, King, 59),
-        Placement::new(Black, Pawn, 20),
-    ]);   
-    let action = Move { from: 4, to: 13, piece: King };
-    assert!(!action.is_legal(&state));
-}
-
 fn white_kingside_castle_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1150,6 +1140,31 @@ fn white_cant_promote_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+
+fn black_cant_move_into_check_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Queen, 48),
+        Placement::new(Black, King, 60),
+    ]);   
+    state.to_move = Black;
+    let action = Move { piece: King, from: 60, to: 52 };
+    assert!(!action.is_legal(&state));
+}
+
+
+fn black_cant_promote_into_check_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Queen, 56),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Pawn, 11),
+    ]);   
+    state.to_move = Black;
+    let action = Promotion { pawn_becomes: Queen, moving_from: 11, to: 3 };
+    assert!(!action.is_legal(&state));
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1197,7 +1212,6 @@ fn main() {
     color_is_checked_test();
     color_threatens_square_test();
     state_after_move_test();
-    cannot_move_into_check_test();
     white_kingside_castle_legality_test();
     black_kingside_castle_legality_test();
     white_queenside_castle_legality_test();
@@ -1248,6 +1262,8 @@ fn main() {
     black_promotion_to_queen_test();
     white_cant_move_into_check_test();
     white_cant_promote_into_check_test();
+    black_cant_move_into_check_test();
+    black_cant_promote_into_check_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
