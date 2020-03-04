@@ -457,16 +457,18 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
         return false
     }
 
+    // Verify that the pieces are allowed to move in accordance
+    // with the specified to/from squares
+    if !move_is_pseudo_legal(&m, &state) {
+        return false
+    }
+
     // Don't allow moves that leave the current player checked
-    // The function may be more efficient if this block gets moved
-    // below individual piece rules, because of how often it runs
-    // with illegal moves by legal_moves().
     if color_is_checked(state.to_move, &m.apply(&state)) {
         return false
     }
 
-    let result = move_is_pseudo_legal(&m, &state);
-    move_is_pseudo_legal(&m, &state) 
+    true
 }
 
 // Determine whether the pieces can move in accordance
