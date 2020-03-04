@@ -30,6 +30,7 @@ use entities::{
     Promotion,
     Castle,
     CastleDirection::{Kingside, Queenside},
+    EnPassant,
 };
 
 use controller::{
@@ -814,9 +815,11 @@ fn white_performs_en_passant_test() {
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(42));
 
-    // The pawn that advanced two squares has been captured
-    let action = Move { piece: Pawn, from: 33, to: 42 };
+    // En Passant
+    let action = EnPassant { from: 33, to: 42 };
     let state = action.apply(&state);
+
+    // The pawn that advanced two squares has been captured
     assert!(!state.squares[34].is_some());
 }
 
@@ -831,10 +834,12 @@ fn black_performs_en_passant_test() {
     let action = Move { piece: Pawn, from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
+    
+    // En Passant
+    let action = EnPassant { from: 29, to: 20 };
+    let state = action.apply(&state);
 
     // The pawn that advanced two squares has been captured
-    let action = Move { piece: Pawn, from: 29, to: 20 };
-    let state = action.apply(&state);
     assert!(!state.squares[28].is_some());
 }
 
@@ -1151,7 +1156,6 @@ fn black_cant_move_into_check_test() {
     let action = Move { piece: King, from: 60, to: 52 };
     assert!(!action.is_legal(&state));
 }
-
 
 fn black_cant_promote_into_check_test() {
     let mut state = GameState::with_placements(vec![

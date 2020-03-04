@@ -16,9 +16,10 @@ use crate::entities::{
     Action,
     Move,
     Castle,
-    Promotion,
-    Color,
     CastleDirection::{Kingside, Queenside},
+    Promotion,
+    EnPassant,
+    Color,
     Color::{White, Black},
 };
 
@@ -62,20 +63,58 @@ impl Action for Move {
             }
         }
     
-        // Handle en-passant captures
-        if self.piece == Pawn && Some(self.to) == state.en_passant_square {
-            match state.squares[self.from] {
-                None => (),
-                Some(pawn) => {
-                    match pawn.color {
-                        White => new_state.squares[self.to - 8] = None,
-                        Black => new_state.squares[self.to + 8] = None,
-                    }
+        new_state.squares[self.to] = new_state.squares[self.from];
+        new_state.squares[self.from] = None;
+        new_state
+    }
+}
+
+impl Action for EnPassant {
+    fn name(&self) -> &str {
+        "EnPassant"
+    }
+    fn is_legal(&self, state: &GameState) -> bool {
+        // Only consider en-passant if the last move was a two square pawn advance
+        if Some(self.to) != state.en_passant_square {
+            return false
+        }
+        // Don't allow actions that put/leave the player in check
+        if color_is_checked(state.to_move, &self.apply(&state)) {
+            return false
+        }
+        match state.squares[self.from] {
+            None => false,
+            Some(piece) => {
+                match (piece.color, piece.name, position_delta(self.from, self.to)) {
+                    (White, Pawn, (1, 1)) => true,
+                    (Black, Pawn, (1, -1)) => true,
+                    _ => false,
                 }
-    
             }
         }
+    }
+    fn apply(&self, state: &GameState) -> GameState {
+        let mut new_state = state.clone();
+    
+        let attacker = state.squares[self.from].unwrap();
+        let destination = state.en_passant_square.unwrap();
 
+        // Remove pawn that made en-passant eligable
+        match attacker.color {
+            White => new_state.squares[destination - 8] = None,
+            Black => new_state.squares[destination + 8] = None,
+        }
+        
+        // Expire the en-passant opportunity
+        new_state.en_passant_square = None;
+
+        // Switch turns
+        match new_state.to_move {
+            White => new_state.to_move = Black,
+            Black => new_state.to_move = White,
+        }
+
+        // Move the attacking pawn into its new location
         new_state.squares[self.to] = new_state.squares[self.from];
         new_state.squares[self.from] = None;
         new_state

@@ -180,6 +180,13 @@ pub struct Move {
     pub to: usize,
 }
 
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct EnPassant {
+    pub from: usize,
+    pub to: usize,
+}
+
 #[derive(Copy)]
 #[derive(Clone)]
 #[derive(Debug)]
