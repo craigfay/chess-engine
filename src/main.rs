@@ -1043,17 +1043,41 @@ fn legal_actions_includes_all_legal_castles_by_black_test() {
 }
 
 fn legal_actions_includes_all_legal_en_passants_by_white_test() {
-    let state = GameState::with_placements(vec![
+    let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
         Placement::new(White, Pawn, 35),
         Placement::new(Black, Pawn, 50),
     ]);
+    state.to_move = Black;
     assert!(state.en_passant_square == None);
 
     // Two square advance
     let action = Move { piece: Pawn, from: 50, to: 34 };
+    assert!(action.is_legal(&state));
+
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(42));
+
+    let actions = legal_actions(&state);
+    let legal_en_passants= actions.iter().filter(|action| {
+        action.name() == "EnPassant"
+    }).collect::<Vec<_>>();
+
+    assert_eq!(2, legal_en_passants.len());
+}
+
+fn legal_actions_includes_all_legal_en_passants_by_black_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 27),
+        Placement::new(Black, Pawn, 29),
+        Placement::new(White, Pawn, 12),
+    ]);
+    assert!(state.en_passant_square == None);
+
+    // Two square advance
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(20));
 
     let actions = legal_actions(&state);
     let legal_en_passants= actions.iter().filter(|action| {

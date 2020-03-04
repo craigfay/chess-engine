@@ -83,10 +83,10 @@ impl Action for EnPassant {
             None => false,
             Some(piece) => {
                 match (piece.color, piece.name, position_delta(self.from, self.to)) {
-                    (White, Pawn, ( 1,  1)) => true,
-                    (White, Pawn, (-1,  1)) => true,
-                    (Black, Pawn, ( 1, -1)) => true,
-                    (Black, Pawn, (-1, -1)) => true,
+                    (White, Pawn, ( 1,  1)) => state.to_move == White,
+                    (White, Pawn, (-1,  1)) => state.to_move == White,
+                    (Black, Pawn, ( 1, -1)) => state.to_move == Black,
+                    (Black, Pawn, (-1, -1)) => state.to_move == Black,
                     _ => false,
                 }
             }
