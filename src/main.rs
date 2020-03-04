@@ -1087,6 +1087,18 @@ fn white_promotion_to_queen_test() {
 }
 
 
+fn black_promotion_to_bishop_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(Black, Pawn, 8),
+        Placement::new(Black, King, 60),
+    ]);
+    state.to_move = Black;
+    let action = Promotion { pawn_becomes: Bishop, moving_from: 8, to: 0 };
+    assert!(action.is_legal(&state));
+}
+
+
 
 fn main() {
     // Time tests
@@ -1180,6 +1192,14 @@ fn main() {
     white_promotion_to_knight_test();
     white_promotion_to_rook_test();
     white_promotion_to_queen_test();
+    black_promotion_to_bishop_test();
+    // black_promotion_to_knight_test();
+    // black_promotion_to_rook_test();
+    // black_promotion_to_queen_test();
+
+
+
+    white_promotion_to_bishop_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
