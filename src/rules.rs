@@ -78,20 +78,30 @@ impl Action for EnPassant {
         if Some(self.to) != state.en_passant_square {
             return false
         }
+
+        let is_pseudo_legal = match state.squares[self.from] {
+            None => false,
+            Some(piece) => {
+                match (piece.color, piece.name, position_delta(self.from, self.to)) {
+                    (White, Pawn, ( 1,  1)) => true,
+                    (White, Pawn, (-1,  1)) => true,
+                    (Black, Pawn, ( 1, -1)) => true,
+                    (Black, Pawn, (-1, -1)) => true,
+                    _ => false,
+                }
+            }
+        };
+
+        if !is_pseudo_legal {
+            return false
+        }
+
         // Don't allow actions that put/leave the player in check
         if color_is_checked(state.to_move, &self.apply(&state)) {
             return false
         }
-        match state.squares[self.from] {
-            None => false,
-            Some(piece) => {
-                match (piece.color, piece.name, position_delta(self.from, self.to)) {
-                    (White, Pawn, (1, 1)) => true,
-                    (Black, Pawn, (1, -1)) => true,
-                    _ => false,
-                }
-            }
-        }
+
+        true
     }
     fn apply(&self, state: &GameState) -> GameState {
         let mut new_state = state.clone();
@@ -393,12 +403,36 @@ pub fn legal_actions(state: &GameState) -> Vec<Box<dyn Action>> {
     for action  in legal_moves(&state) {
         results.push(Box::new(action));
     }
+    for action  in legal_en_passants(&state) {
+        results.push(Box::new(action));
+    }
     for action in legal_castles(&state) {
         results.push(Box::new(action));
     }
     for action in legal_promotions(&state) {
         results.push(Box::new(action));
     }
+    results
+}
+
+pub fn legal_en_passants(state: &GameState) -> Vec<EnPassant> {
+    let mut results = vec![];
+    if !state.en_passant_square.is_some() { return results }
+
+    let destination = state.en_passant_square.unwrap();
+
+    let action = EnPassant { from: destination - 7, to: destination };
+    if action.is_legal(&state) { results.push(action); }
+
+    let action = EnPassant { from: destination + 7, to: destination };
+    if action.is_legal(&state) { results.push(action); }
+
+    let action = EnPassant { from: destination - 9, to: destination };
+    if action.is_legal(&state) { results.push(action); }
+
+    let action = EnPassant { from: destination + 9, to: destination };
+    if action.is_legal(&state) { results.push(action); }
+
     results
 }
 

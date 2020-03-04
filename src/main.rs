@@ -821,6 +821,7 @@ fn white_performs_en_passant_test() {
 
     // The pawn that advanced two squares has been captured
     assert!(!state.squares[34].is_some());
+
 }
 
 fn black_performs_en_passant_test() {
@@ -1041,6 +1042,29 @@ fn legal_actions_includes_all_legal_castles_by_black_test() {
     assert_eq!(2, legal_castles.len());
 }
 
+fn legal_actions_includes_all_legal_en_passants_by_white_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 33),
+        Placement::new(White, Pawn, 35),
+        Placement::new(Black, Pawn, 50),
+    ]);
+    assert!(state.en_passant_square == None);
+
+    // Two square advance
+    let action = Move { piece: Pawn, from: 50, to: 34 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(42));
+
+    let actions = legal_actions(&state);
+    let legal_en_passants= actions.iter().filter(|action| {
+        action.name() == "EnPassant"
+    }).collect::<Vec<_>>();
+
+    assert_eq!(2, legal_en_passants.len());
+}
+
+
+
 fn white_promotion_to_bishop_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1256,6 +1280,7 @@ fn main() {
     legal_actions_includes_promotions_test();
     legal_actions_includes_all_legal_castles_by_white_test();
     legal_actions_includes_all_legal_castles_by_black_test();
+    legal_actions_includes_all_legal_en_passants_by_white_test();
     white_promotion_to_bishop_test();
     white_promotion_to_knight_test();
     white_promotion_to_rook_test();

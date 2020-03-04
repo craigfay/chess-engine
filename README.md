@@ -14,6 +14,7 @@
 * Handle/Test generic legality checks for each action (is correct color, piece exists, etc..)
 * Refactor with tuple matching
 * Test en-passant expiration for each action
-* Test all promotion cases
+* Test that to_move has flipped after each applied action
+* Should actions be responsible for changing the turn?
 * Use non-deterministic tests with random move selection to test for states that should never exist.
 
