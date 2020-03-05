@@ -373,6 +373,36 @@ fn king_movement_diagonal_test() {
     assert!(action.is_legal(&state));
 }
 
+fn cant_move_onto_another_piece_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(Black, King, 63),
+        Placement::new(Black, Pawn, 52),
+        Placement::new(White, Pawn, 44),
+        Placement::new(White, Bishop, 43),
+        Placement::new(White, Knight, 35),
+        Placement::new(White, Rook, 53),
+        Placement::new(White, Queen, 51),
+        Placement::new(White, King, 60),
+    ]);
+
+    let action = Move { piece: Pawn, from: 44, to:52  };
+    assert!(!action.is_legal(&state));
+
+    let action = Move { piece: Bishop, from: 43, to:52  };
+    assert!(!action.is_legal(&state));
+
+    let action = Move { piece: Knight, from: 35, to:52  };
+    assert!(!action.is_legal(&state));
+
+    let action = Move { piece: Rook, from: 53, to:52  };
+    assert!(!action.is_legal(&state));
+
+    let action = Move { piece: Queen, from: 51, to:52  };
+    assert!(!action.is_legal(&state));
+}
+
+
+
 fn algebraic_notation_to_index_test() {
     let ranks = ["1","2","3","4","5","6","7","8"];
     let files = ["a","b","c","d","e","f","g","h"];
@@ -1257,6 +1287,7 @@ fn main() {
     king_movement_horizontal_test();
     king_movement_vertical_test();
     king_movement_diagonal_test();
+    cant_move_onto_another_piece_test();
     algebraic_notation_to_index_test(); 
     algebraic_moves_white_pawn_one_forward_test(); 
     algebraic_moves_black_pawn_one_forward_test(); 

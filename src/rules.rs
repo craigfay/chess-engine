@@ -505,8 +505,6 @@ pub fn legal_promotions(state: &GameState) -> Vec<Promotion> {
     results
 }
 
-
-
 pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
     match piece {
         Bishop => true,
@@ -518,6 +516,11 @@ pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
 }
 
 pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
+    // Don't allow moves onto another piece
+    if state.squares[m.to].is_some() {
+        return false
+    }
+
     // Don't allow moves with the same from/to
     if m.from == m.to {
         return false
