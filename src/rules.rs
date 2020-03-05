@@ -82,6 +82,9 @@ impl Action for EnPassant {
         let is_pseudo_legal = match state.squares[self.from] {
             None => false,
             Some(piece) => {
+                // Check that the piece being moved is a pawn, that the vertical
+                // movement corresponds to the pawn's color, and that the pawn's
+                // color matches the current player's color.
                 match (piece.color, piece.name, position_delta(self.from, self.to)) {
                     (White, Pawn, ( 1,  1)) => state.to_move == White,
                     (White, Pawn, (-1,  1)) => state.to_move == White,

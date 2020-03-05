@@ -252,7 +252,6 @@ fn bishop_movement_diagonal_left_edge_test() {
     assert_eq!(false, action.is_legal(&state));
 }
 
-
 fn knight_movement_two_up_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
