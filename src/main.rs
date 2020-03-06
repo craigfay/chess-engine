@@ -27,6 +27,7 @@ use entities::{
     Color::{White, Black},
     Action,
     Move,
+    Capture,
     Promotion,
     Castle,
     CastleDirection::{Kingside, Queenside},
@@ -156,12 +157,15 @@ fn pawn_movement_normal_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Pawns should not be able to move from an from square that has no pawn
-fn pawn_movement_wrong_from_test() {
+// Pawns should not be able to move diagonally
+fn pawn_cant_move_diagonally_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 4),
     ]);
-    let action = Move { piece: Pawn, from: 22, to: 30 };
+    let action = Move { piece: Pawn, from: 22, to: 31 };
+    assert_eq!(false, action.is_legal(&state));
+
+    let action = Move { piece: Pawn, from: 22, to: 29 };
     assert_eq!(false, action.is_legal(&state));
 }
 
@@ -183,7 +187,6 @@ fn rook_movement_vertical_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-
 // Rooks should not be able to travel horizontally through other pieces
 fn rook_movement_horizontal_obstruction_test() {
     let state = GameState::with_placements(vec![
@@ -202,7 +205,6 @@ fn bishop_movement_diagonal_up_left_test() {
     let action = Move { piece: Bishop, from: 22, to: 36 };
     assert_eq!(true, action.is_legal(&state));
 }
-
 
 // Bishops should be able to travel diagonally up-right
 fn bishop_movement_diagonal_up_right_test() {
@@ -1252,6 +1254,15 @@ fn black_cant_promote_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+fn white_pawn_can_capture_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Pawn, 28),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Pawn, 37),
+    ]);
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1263,7 +1274,7 @@ fn main() {
     pawn_movement_sideways_test();
     pawn_movement_too_far_test();
     pawn_movement_normal_test();
-    pawn_movement_wrong_from_test();
+    pawn_cant_move_diagonally_test();
     rook_movement_horizontal_test();
     rook_movement_vertical_test();
     rook_movement_horizontal_obstruction_test();
@@ -1354,6 +1365,7 @@ fn main() {
     white_cant_promote_into_check_test();
     black_cant_move_into_check_test();
     black_cant_promote_into_check_test();
+    white_pawn_can_capture_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);

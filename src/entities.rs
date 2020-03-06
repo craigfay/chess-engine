@@ -182,6 +182,15 @@ pub struct Move {
 
 #[derive(Debug)]
 #[derive(PartialEq)]
+pub struct Capture {
+    pub on: usize,
+    pub with: usize,
+}
+
+
+
+#[derive(Debug)]
+#[derive(PartialEq)]
 pub struct EnPassant {
     pub from: usize,
     pub to: usize,

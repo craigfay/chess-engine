@@ -15,6 +15,7 @@ use crate::entities::{
     Piece,
     Action,
     Move,
+    Capture,
     Castle,
     CastleDirection::{Kingside, Queenside},
     Promotion,
@@ -68,6 +69,69 @@ impl Action for Move {
         new_state
     }
 }
+
+impl Action for Capture {
+    fn name(&self) -> &str {
+        "Capture"
+    }
+    fn is_legal(&self, state: &GameState) -> bool {
+        // If there is no piece present at the chosen from
+        if state.squares[self.with].is_none() {
+            return false
+        }
+        // Don't allow moves with the same origin/destination
+        if self.with == self.on {
+            return false
+        }
+        // Don't allow moves to/from nonexistent squares
+        if self.with> 63 || self.on > 63 {
+            return false
+        }
+
+        // TODO prevent attacking with the wrong color
+        
+        let attacker = state.squares[self.with].unwrap();
+
+
+        // Translate the Capture into a Move, and check if it would be legal
+
+        // Verify that the pieces are allowed to move in accordance
+        // with the specified to/from squares
+        let action = Move {
+            piece: attacker.name,
+            from: self.with, 
+            to: self.on,
+        };
+
+        if !move_is_pseudo_legal(&action, &state) {
+            return false
+        }
+        // Don't allow moves that leave the current player checked
+        if color_is_checked(state.to_move, &self.apply(&state)) {
+            return false
+        }
+        true
+    }
+
+    fn apply(&self, state: &GameState) -> GameState {
+        let mut new_state = state.clone();
+        let (delta_x, delta_y) = position_delta(self.with, self.on);
+    
+        // En-Passant opportunities must expire after each turn
+        new_state.en_passant_square = None;
+
+        // Switch turns
+        match new_state.to_move {
+            White => new_state.to_move = Black,
+            Black => new_state.to_move = White,
+        }
+        new_state.squares[self.on] = new_state.squares[self.with];
+        new_state.squares[self.with] = None;
+        new_state
+    }
+}
+
+
 
 impl Action for EnPassant {
     fn name(&self) -> &str {
@@ -521,6 +585,11 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
         return false
     }
 
+    // If there is no piece present at the chosen from
+    if state.squares[m.from].is_none() {
+        return false
+    }
+
     // Don't allow moves with the same from/to
     if m.from == m.to {
         return false
@@ -528,11 +597,6 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
 
     // Don't allow moves to/from nonexistent squares
     if m.from > 63 || m.to > 63 {
-        return false
-    }
-
-    // If there is no piece present at the chosen from
-    if state.squares[m.from].is_none() {
         return false
     }
 
