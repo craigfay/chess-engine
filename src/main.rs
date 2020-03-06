@@ -988,7 +988,7 @@ fn legal_actions_includes_moves_test() {
 }
 
 fn legal_actions_includes_promotions_test() {
-    let mut state = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(White, Pawn, 49),
         Placement::new(Black, King, 63),

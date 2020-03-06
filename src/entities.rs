@@ -14,17 +14,6 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn empty() -> GameState {
-        GameState {
-            squares: [None; 64],
-            to_move: Color::White,
-            black_can_castle_kingside: false,
-            white_can_castle_kingside: false,
-            black_can_castle_queenside: false,
-            white_can_castle_queenside: false,
-            en_passant_square: None,
-        }
-    }
     pub fn place_piece(&mut self, piece: Piece, square: usize) -> bool {
         if square > 63 {
             return false;
