@@ -1279,6 +1279,18 @@ fn black_pawn_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+fn white_bishop_can_capture_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Bishop, 19),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Pawn, 37),
+    ]);
+
+    let action = Capture { on: 37, with: 19 };
+    assert!(action.is_legal(&state));
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1383,6 +1395,7 @@ fn main() {
     black_cant_promote_into_check_test();
     white_pawn_can_capture_test();
     black_pawn_can_capture_test();
+    white_bishop_can_capture_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
