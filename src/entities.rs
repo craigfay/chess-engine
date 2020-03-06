@@ -192,8 +192,7 @@ pub struct Capture {
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct EnPassant {
-    pub from: usize,
-    pub to: usize,
+    pub with: usize,
 }
 
 #[derive(Copy)]

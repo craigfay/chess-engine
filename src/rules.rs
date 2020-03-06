@@ -131,25 +131,26 @@ impl Action for Capture {
     }
 }
 
-
-
 impl Action for EnPassant {
     fn name(&self) -> &str {
         "EnPassant"
     }
     fn is_legal(&self, state: &GameState) -> bool {
-        // Only consider en-passant if the last move was a two square pawn advance
-        if Some(self.to) != state.en_passant_square {
+        // Make sure en-passant is available
+        if !state.en_passant_square.is_some() {
             return false
         }
 
-        let is_pseudo_legal = match state.squares[self.from] {
+        let destination = state.en_passant_square.unwrap();
+        let delta = position_delta(self.with, destination);
+
+        let is_pseudo_legal = match state.squares[self.with] {
             None => false,
             Some(piece) => {
                 // Check that the piece being moved is a pawn, that the vertical
                 // movement corresponds to the pawn's color, and that the pawn's
                 // color matches the current player's color.
-                match (piece.color, piece.name, position_delta(self.from, self.to)) {
+                match (piece.color, piece.name, delta) {
                     (White, Pawn, ( 1,  1)) => state.to_move == White,
                     (White, Pawn, (-1,  1)) => state.to_move == White,
                     (Black, Pawn, ( 1, -1)) => state.to_move == Black,
@@ -173,7 +174,7 @@ impl Action for EnPassant {
     fn apply(&self, state: &GameState) -> GameState {
         let mut new_state = state.clone();
     
-        let attacker = state.squares[self.from].unwrap();
+        let attacker = state.squares[self.with].unwrap();
         let destination = state.en_passant_square.unwrap();
 
         // Remove pawn that made en-passant eligable
@@ -192,8 +193,9 @@ impl Action for EnPassant {
         }
 
         // Move the attacking pawn into its new location
-        new_state.squares[self.to] = new_state.squares[self.from];
-        new_state.squares[self.from] = None;
+        let destination = state.en_passant_square.unwrap();
+        new_state.squares[destination] = new_state.squares[self.with];
+        new_state.squares[self.with] = None;
         new_state
     }
 }
@@ -488,16 +490,16 @@ pub fn legal_en_passants(state: &GameState) -> Vec<EnPassant> {
 
     let destination = state.en_passant_square.unwrap();
 
-    let action = EnPassant { from: destination - 7, to: destination };
+    let action = EnPassant { with: destination - 7 };
     if action.is_legal(&state) { results.push(action); }
 
-    let action = EnPassant { from: destination + 7, to: destination };
+    let action = EnPassant { with: destination + 7 };
     if action.is_legal(&state) { results.push(action); }
 
-    let action = EnPassant { from: destination - 9, to: destination };
+    let action = EnPassant { with: destination - 9 };
     if action.is_legal(&state) { results.push(action); }
 
-    let action = EnPassant { from: destination + 9, to: destination };
+    let action = EnPassant { with: destination + 9 };
     if action.is_legal(&state) { results.push(action); }
 
     results

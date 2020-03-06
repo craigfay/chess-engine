@@ -847,7 +847,7 @@ fn white_performs_en_passant_test() {
     assert!(state.en_passant_square == Some(42));
 
     // En Passant
-    let action = EnPassant { from: 33, to: 42 };
+    let action = EnPassant { with: 33 };
     let state = action.apply(&state);
 
     // The pawn that advanced two squares has been captured
@@ -868,7 +868,7 @@ fn black_performs_en_passant_test() {
     assert!(state.en_passant_square == Some(20));
     
     // En Passant
-    let action = EnPassant { from: 29, to: 20 };
+    let action = EnPassant { with: 29 };
     let state = action.apply(&state);
 
     // The pawn that advanced two squares has been captured
@@ -973,7 +973,7 @@ fn en_passant_expires_after_en_passant_test() {
     assert!(state.en_passant_square == Some(20));
 
    // Black accepts en-passant
-    let action = EnPassant { to: 61, from: 60 };
+    let action = EnPassant { with: 60 };
     let state = action.apply(&state);
 
     // En-passant no longer legal
