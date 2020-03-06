@@ -960,6 +960,49 @@ fn en_passant_expires_after_promotion_test() {
     assert!(state.en_passant_square == None);
 }
 
+fn en_passant_expires_after_en_passant_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Bishop, 61),
+        Placement::new(White, Pawn, 12),
+        Placement::new(Black, Pawn, 29),
+        Placement::new(Black, King, 60),
+    ]);
+    // Two square advance by White
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(20));
+
+   // Black accepts en-passant
+    let action = EnPassant { to: 61, from: 60 };
+    let state = action.apply(&state);
+
+    // En-passant no longer legal
+    assert!(state.en_passant_square == None);
+}
+
+
+fn en_passant_expires_after_capture_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Bishop, 61),
+        Placement::new(White, Pawn, 12),
+        Placement::new(Black, Pawn, 29),
+        Placement::new(Black, King, 60),
+    ]);
+    // Two square advance by White
+    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let state = action.apply(&state);
+    assert!(state.en_passant_square == Some(20));
+
+   // Black capturess
+    let action = Capture { on: 61, with: 60 };
+    let state = action.apply(&state);
+
+    // En-passant no longer legal
+    assert!(state.en_passant_square == None);
+}
+
+
+
 fn to_move_switches_after_move_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
@@ -1402,7 +1445,6 @@ fn black_king_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
-
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1484,6 +1526,8 @@ fn main() {
     en_passant_expires_after_move_test();
     en_passant_expires_after_castle_test();
     en_passant_expires_after_promotion_test();
+    en_passant_expires_after_en_passant_test();
+    en_passant_expires_after_capture_test();
     to_move_switches_after_move_test();
     to_move_switches_after_promotion_test();
     to_move_switches_after_castle_test();
@@ -1521,5 +1565,4 @@ fn main() {
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
 }
-
 
