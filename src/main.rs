@@ -1372,8 +1372,21 @@ fn black_king_can_capture_test() {
 
 fn print_test() {
     let state = GameState::new();
+    let expected = format!(
+        "{}{}{}{}{}{}{}{}",
+
+        "r n b q k b n r \n",
+        "p p p p p p p p \n",
+        ". . . . . . . . \n",
+        ". . . . . . . . \n",
+        ". . . . . . . . \n",
+        ". . . . . . . . \n",
+        "P P P P P P P P \n",
+        "R N B Q K B N R \n"
+    );
+
     let output = print(&state);
-    assert!(output.len() == 64);
+    assert_eq!(output, expected);
 }
 
 fn main() {
