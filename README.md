@@ -19,3 +19,4 @@
 * Use non-deterministic tests with random move selection to test for states that should never exist.
 * prevent attacking with the wrong color
 * Make move_is_psuedo_legal() more generic, and just take a piecename, origin, and destination.
+* Maybe remove piece names from actions

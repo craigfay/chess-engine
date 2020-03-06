@@ -88,7 +88,6 @@ impl Action for Capture {
             return false
         }
 
-        // TODO prevent attacking with the wrong color
         
         let attacker = state.squares[self.with].unwrap();
 
