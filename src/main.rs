@@ -1379,6 +1379,29 @@ fn black_queen_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+fn white_king_can_capture_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 36),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Pawn, 37),
+    ]);
+
+    let action = Capture { on: 37, with: 36 };
+    assert!(action.is_legal(&state));
+}
+
+fn black_king_can_capture_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Pawn, 20),
+        Placement::new(Black, King, 28),
+    ]);
+
+    state.to_move = Black;
+    let action = Capture { on: 20, with: 28 };
+    assert!(action.is_legal(&state));
+}
+
 
 fn main() {
     // Time tests
@@ -1492,6 +1515,8 @@ fn main() {
     black_rook_can_capture_test();
     white_queen_can_capture_test();
     black_queen_can_capture_test();
+    white_king_can_capture_test();
+    black_king_can_capture_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
