@@ -4,6 +4,7 @@ mod rules;
 mod entities;
 mod controller;
 mod notation;
+mod display;
 
 use rules::{
     color_threatens_square,
@@ -39,6 +40,9 @@ use controller::{
 };
 
 use notation::{algebraic, index};
+
+use display::print;
+
 
 fn new_gamestate_test() {
     // Gamestate can be constructed to represent a normal start
@@ -741,7 +745,7 @@ fn black_queenside_castle_through_check_test() {
 }
 
 fn pawn_threats_test() {
-    let mut state = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 44),
         Placement::new(White, Pawn, 36),
     ]);
@@ -1366,6 +1370,12 @@ fn black_king_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+fn print_test() {
+    let state = GameState::new();
+    let output = print(&state);
+    assert!(output.len() == 64);
+}
+
 fn main() {
     // Time tests
     let timer = Instant::now();
@@ -1473,6 +1483,7 @@ fn main() {
     black_queen_can_capture_test();
     white_king_can_capture_test();
     black_king_can_capture_test();
+    print_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
