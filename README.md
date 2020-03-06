@@ -7,16 +7,12 @@
 * Comment/Rename `algebraic_move()`
 * Provide bit vector representation of game state
 * Create a `potential_states()` as an alternative to `legal_moves()`
-* Decide between a conventions chosen_move / m
 * Move piece property to the beginning of Move constructors
-* Maybe extract en-passant logic into it's own function
-* Add remaining Action types (EnPassant, Capture)
 * Handle/Test generic legality checks for each action (is correct color, piece exists, etc..)
 * Refactor with tuple matching
-* Test en-passant expiration for each action
 * Test that to_move has flipped after each applied action
 * Should actions be responsible for changing the turn?
 * Use non-deterministic tests with random move selection to test for states that should never exist.
 * prevent attacking with the wrong color
 * Make move_is_psuedo_legal() more generic, and just take a piecename, origin, and destination.
-* Maybe remove piece names from actions
+* Use rays to check legality
