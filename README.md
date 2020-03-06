@@ -18,3 +18,4 @@
 * Make move_is_psuedo_legal() more generic, and just take a piecename, origin, and destination.
 * Use rays to check legality
 * Use a controller/display modules to play a game in the command line
+* Fix diagonal_move_is_obstructed()
