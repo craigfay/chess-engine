@@ -1255,7 +1255,7 @@ fn black_cant_promote_into_check_test() {
 }
 
 fn white_pawn_can_capture_test() {
-    let mut state = GameState::with_placements(vec![
+    let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
         Placement::new(White, Pawn, 28),
         Placement::new(Black, King, 60),
@@ -1263,6 +1263,19 @@ fn white_pawn_can_capture_test() {
     ]);
 
     let action = Capture { on: 37, with: 28 };
+    assert!(action.is_legal(&state));
+}
+
+fn black_pawn_can_capture_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Pawn, 28),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Pawn, 37),
+    ]);
+
+    state.to_move = Black;
+    let action = Capture { on: 28, with: 37 };
     assert!(action.is_legal(&state));
 }
 
@@ -1369,6 +1382,7 @@ fn main() {
     black_cant_move_into_check_test();
     black_cant_promote_into_check_test();
     white_pawn_can_capture_test();
+    black_pawn_can_capture_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
