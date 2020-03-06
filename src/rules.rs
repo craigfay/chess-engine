@@ -319,10 +319,6 @@ impl Action for Castle {
     }
 }
 
-fn action_is_illegal_due_to_check(action: &Action, state: &GameState) -> bool {
-    true
-}
-
 impl Action for Promotion {
     fn name(&self) -> &str {
         "Promotion"
