@@ -24,8 +24,6 @@ use crate::entities::{
     Color::{White, Black},
 };
 
-use crate::notation::{algebraic};
-
 use std::cmp::{min, max};
 
 impl Action for Move {
@@ -49,8 +47,10 @@ impl Action for Move {
             Black => new_state.to_move = White,
         }
     
+        let piece = state.squares[self.from].unwrap();
+
         // Handle two square pawn advances
-        if self.piece == Pawn {
+        if piece.name == Pawn {
             if delta_y.abs() == 2 {
                 match state.squares[self.from] {
                     None => (),
@@ -97,7 +97,6 @@ impl Action for Capture {
         // Verify that the pieces are allowed to move in accordance
         // with the specified to/from squares
         let action = Move {
-            piece: attacker.name,
             from: self.with, 
             to: self.on,
         };
@@ -141,6 +140,16 @@ impl Action for EnPassant {
             return false
         }
 
+        // Make sure there a piece on the attacking square
+        if !state.squares[self.with].is_some() {
+            return false
+        }
+
+        // Make sure there a pawn on the attacking square
+        if (state.squares[self.with].unwrap()).name != Pawn {
+            return false
+        }
+
         let destination = state.en_passant_square.unwrap();
         let delta = position_delta(self.with, destination);
 
@@ -150,11 +159,11 @@ impl Action for EnPassant {
                 // Check that the piece being moved is a pawn, that the vertical
                 // movement corresponds to the pawn's color, and that the pawn's
                 // color matches the current player's color.
-                match (piece.color, piece.name, delta) {
-                    (White, Pawn, ( 1,  1)) => state.to_move == White,
-                    (White, Pawn, (-1,  1)) => state.to_move == White,
-                    (Black, Pawn, ( 1, -1)) => state.to_move == Black,
-                    (Black, Pawn, (-1, -1)) => state.to_move == Black,
+                match (piece.color, delta) {
+                    (White, ( 1,  1)) => state.to_move == White,
+                    (White, (-1,  1)) => state.to_move == White,
+                    (Black, ( 1, -1)) => state.to_move == Black,
+                    (Black, (-1, -1)) => state.to_move == Black,
                     _ => false,
                 }
             }
@@ -212,8 +221,8 @@ impl Action for Castle {
         match (state.to_move, &self.direction) {
             (White, Kingside) => {
                  if !state.white_can_castle_kingside { return false }
-                 if !piece_is(White, King, state.squares[4]) { return false }
-                 if !piece_is(White, Rook, state.squares[7]) { return false }
+                 if !piece_is(White, King, 4, &state) { return false }
+                 if !piece_is(White, Rook, 7, &state) { return false }
                  if state.squares[5].is_some() { return false }
                  if state.squares[6].is_some() { return false }
                  if color_threatens_square(Black, 4, &state) { return false }
@@ -224,8 +233,8 @@ impl Action for Castle {
             }
             (White, Queenside) => {
                 if !state.white_can_castle_queenside { return false }
-                if !piece_is(White, King, state.squares[4]) { return false }
-                if !piece_is(White, Rook, state.squares[0]) { return false }
+                if !piece_is(White, King, 4, &state) { return false }
+                if !piece_is(White, Rook, 0, &state) { return false }
                 if state.squares[1].is_some() { return false }
                 if state.squares[2].is_some() { return false }
                 if state.squares[3].is_some() { return false }
@@ -238,8 +247,8 @@ impl Action for Castle {
             }
             (Black, Kingside) => {
                 if !state.black_can_castle_kingside { return false }
-                if !piece_is(Black, King, state.squares[60]) { return false }
-                if !piece_is(Black, Rook, state.squares[63]) { return false }
+                if !piece_is(Black, King, 60, &state) { return false }
+                if !piece_is(Black, Rook, 63, &state) { return false }
                 if state.squares[61].is_some() { return false }
                 if state.squares[62].is_some() { return false }
                 if color_threatens_square(White, 60, &state) { return false }
@@ -250,8 +259,8 @@ impl Action for Castle {
             },
             (Black, Queenside) => {
                 if !state.black_can_castle_queenside { return false }
-                if !piece_is(Black, King, state.squares[60]) { return false }
-                if !piece_is(Black, Rook, state.squares[56]) { return false }
+                if !piece_is(Black, King, 60, &state) { return false }
+                if !piece_is(Black, Rook, 56, &state) { return false }
                 if state.squares[57].is_some() { return false }
                 if state.squares[58].is_some() { return false }
                 if state.squares[59].is_some() { return false }
@@ -418,11 +427,7 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
                 if piece.color != color {
                     continue;
                 }
-                let m = Move {
-                    from: square,
-                    to: target_square,
-                    piece: piece.name,
-                };
+                let m = Move { from: square, to: target_square };
 
                 // Not all pawn moves are threatening
                 if piece.name == Pawn {
@@ -513,7 +518,7 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
             let piece = state.squares[from].unwrap();
             if piece.color == state.to_move {
                 for to in 0..64 {
-                    let m = Move { from, to, piece: piece.name };
+                    let m = Move { from, to };
                     if move_is_legal(&m, state) {
                         results.push(m);
                     }
@@ -620,7 +625,11 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
 // with a given move, regardless of threats or non-placement
 // game state
 fn move_is_pseudo_legal(m: &Move, state: &GameState) -> bool {
-     return match m.piece {
+    if !state.squares[m.from].is_some() {
+        return false
+    }
+    let piece = state.squares[m.from].unwrap();
+    match piece.name {
         Pawn => pawn_move_is_legal(m, state),
         Rook => rook_move_is_legal(m, state),
         Bishop => bishop_move_is_legal(m, state),
@@ -759,7 +768,7 @@ fn castle_is_legal(m: &Move, state: &GameState) -> bool {
     if state.to_move == White && m.from == 4 && m.to == 6 {
         if !state.white_can_castle_kingside { return false }
         // Rook must be on the correct square
-        if !piece_is(White, Rook, state.squares[7]) { return false }
+        if !piece_is(White, Rook, 7, &state) { return false }
         // In-between squares must be empty
         if state.squares[5].is_some() { return false }
         if state.squares[6].is_some() { return false }
@@ -772,7 +781,7 @@ fn castle_is_legal(m: &Move, state: &GameState) -> bool {
     }
     if state.to_move == Black && m.from == 60 && m.to == 62 {
         if !state.black_can_castle_kingside { return false }
-        if !piece_is(Black, Rook, state.squares[63]) { return false }
+        if !piece_is(Black, Rook, 63, &state)  { return false }
         if state.squares[61].is_some() { return false }
         if state.squares[62].is_some() { return false }
         if color_threatens_square(White, 60, &state) { return false }
@@ -783,7 +792,7 @@ fn castle_is_legal(m: &Move, state: &GameState) -> bool {
     }
     if state.to_move == White && m.from == 4 && m.to == 2 {
         if !state.white_can_castle_queenside { return false }
-        if !piece_is(White, Rook, state.squares[0]) { return false }
+        if !piece_is(White, Rook, 0, &state) { return false }
         if state.squares[1].is_some() { return false }
         if state.squares[2].is_some() { return false }
         if state.squares[3].is_some() { return false }
@@ -796,7 +805,7 @@ fn castle_is_legal(m: &Move, state: &GameState) -> bool {
     }
     if state.to_move == Black && m.from == 60 && m.to == 58 {
         if !state.black_can_castle_queenside { return false }
-        if !piece_is(Black, Rook, state.squares[56]) { return false }
+        if !piece_is(Black, Rook, 56, &state) { return false }
         if state.squares[57].is_some() { return false }
         if state.squares[58].is_some() { return false }
         if state.squares[59].is_some() { return false }
@@ -810,8 +819,8 @@ fn castle_is_legal(m: &Move, state: &GameState) -> bool {
     false
 }
 
-pub fn piece_is(color: Color, name: PieceName, actual: Option<Piece>) -> bool {
-    match actual {
+pub fn piece_is(color: Color, name: PieceName, square: usize, state: &GameState) -> bool {
+    match state.squares[square] {
         Some(piece) => piece.color == color && piece.name == name,
         None => false
     }

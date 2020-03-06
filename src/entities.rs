@@ -175,7 +175,6 @@ pub struct Promotion {
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Move {
-    pub piece: PieceName,
     pub from: usize,
     pub to: usize,
 }

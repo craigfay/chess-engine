@@ -2,8 +2,8 @@ use std::time::{Instant};
 
 mod rules;
 mod entities;
-mod notation;
 mod controller;
+mod notation;
 
 use rules::{
     color_threatens_square,
@@ -38,7 +38,7 @@ use controller::{
     apply_move,
 };
 
-use notation::{algebraic, algebraic_move};
+use notation::{algebraic, index};
 
 fn new_gamestate_test() {
     // Gamestate can be constructed to represent a normal start
@@ -134,18 +134,17 @@ fn pawn_movement_sideways_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 16),
     ]);
-    let action = Move { piece: Pawn, from: 16, to: 17 };
+    let action = Move { from: 16, to: 17 };
     assert_eq!(false, action.is_legal(&state));
 }
-
 
 // Pawns should not be able to move more than two squares vertically
 fn pawn_movement_too_far_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 18),
     ]);
-    let action = Move { piece: Pawn, from: 18, to: 42 };
-    assert_eq!(false, action.is_legal(&state));
+    let action = Move { from: 18, to: 42 };
+    assert!(!action.is_legal(&state));
 }
 
 // White pawns should be able to move 1 square up
@@ -153,7 +152,7 @@ fn pawn_movement_normal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 22),
     ]);
-    let action = Move { piece: Pawn, from: 22, to: 30 };
+    let action = Move { from: 22, to: 30 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -162,10 +161,10 @@ fn pawn_cant_move_diagonally_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 4),
     ]);
-    let action = Move { piece: Pawn, from: 22, to: 31 };
+    let action = Move { from: 22, to: 31 };
     assert_eq!(false, action.is_legal(&state));
 
-    let action = Move { piece: Pawn, from: 22, to: 29 };
+    let action = Move { from: 22, to: 29 };
     assert_eq!(false, action.is_legal(&state));
 }
 
@@ -174,7 +173,7 @@ fn rook_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
-    let action = Move { piece: Rook, from: 35, to: 32 };
+    let action = Move { from: 35, to: 32 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -183,7 +182,7 @@ fn rook_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
-    let action = Move { piece: Rook, from: 35, to: 3 };
+    let action = Move { from: 35, to: 3 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -193,7 +192,7 @@ fn rook_movement_horizontal_obstruction_test() {
         Placement::new(White, Rook, 32),
         Placement::new(Black, Pawn, 33),
     ]);
-    let action = Move { piece: Rook, from: 32, to: 36 };
+    let action = Move { from: 32, to: 36 };
     assert_eq!(false, action.is_legal(&state));
 }
 
@@ -202,7 +201,7 @@ fn bishop_movement_diagonal_up_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 22),
     ]);
-    let action = Move { piece: Bishop, from: 22, to: 36 };
+    let action = Move { from: 22, to: 36 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -211,7 +210,7 @@ fn bishop_movement_diagonal_up_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 0),
     ]);
-    let action = Move { piece: Bishop, from: 0, to: 36 };
+    let action = Move { from: 0, to: 36 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -220,7 +219,7 @@ fn bishop_movement_diagonal_down_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 27),
     ]);
-    let action = Move { piece: Bishop, from: 27, to: 9 };
+    let action = Move { from: 27, to: 9 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -230,7 +229,7 @@ fn bishop_movement_diagonal_down_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 56),
     ]);
-    let action = Move { piece: Bishop, from: 56, to: 42 };
+    let action = Move { from: 56, to: 42 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -240,7 +239,7 @@ fn bishop_movement_diagonal_right_edge_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 23),
     ]);
-    let action = Move { piece: Bishop, from: 23, to: 41 };
+    let action = Move { from: 23, to: 41 };
     assert_eq!(false, action.is_legal(&state));
 }
 
@@ -250,7 +249,7 @@ fn bishop_movement_diagonal_left_edge_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 24),
     ]);
-    let action = Move { piece: Bishop, from: 24, to: 15 };
+    let action = Move { from: 24, to: 15 };
     assert_eq!(false, action.is_legal(&state));
 }
 
@@ -258,7 +257,7 @@ fn knight_movement_two_up_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 45 };
+    let action = Move { from: 28, to: 45 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -267,7 +266,7 @@ fn knight_movement_one_up_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 38 };
+    let action = Move { from: 28, to: 38 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -275,7 +274,7 @@ fn knight_movement_two_up_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 43 };
+    let action = Move { from: 28, to: 43 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -284,7 +283,7 @@ fn knight_movement_one_up_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 34 };
+    let action = Move { from: 28, to: 34 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -292,7 +291,7 @@ fn knight_movement_two_down_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 13 };
+    let action = Move { from: 28, to: 13 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -300,7 +299,7 @@ fn knight_movement_one_down_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 22 };
+    let action = Move { from: 28, to: 22 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -308,7 +307,7 @@ fn knight_movement_two_down_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 11 };
+    let action = Move { from: 28, to: 11 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -316,7 +315,7 @@ fn knight_movement_one_down_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
     ]);
-    let action = Move { piece: Knight, from: 28, to: 18 };
+    let action = Move { from: 28, to: 18 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -325,7 +324,7 @@ fn queen_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
-    let action = Move { piece: Queen, from: 24, to: 30 };
+    let action = Move { from: 24, to: 30 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -334,7 +333,7 @@ fn queen_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
-    let action = Move { piece: Queen, from: 24, to: 48 };
+    let action = Move { from: 24, to: 48 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -343,7 +342,7 @@ fn queen_movement_diagonal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Queen, 24),
     ]);
-    let action = Move { piece: Queen, from: 24, to: 42 };
+    let action = Move { from: 24, to: 42 };
     assert_eq!(true, action.is_legal(&state));
 }
 
@@ -352,7 +351,7 @@ fn king_movement_horizontal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
-    let action = Move { piece: King, from: 28, to: 27 };
+    let action = Move { from: 28, to: 27 };
     assert!(action.is_legal(&state));
 }
 
@@ -361,7 +360,7 @@ fn king_movement_vertical_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
-    let action = Move { piece: King, from: 28, to: 20 };
+    let action = Move { from: 28, to: 20 };
     assert!(action.is_legal(&state));
 }
 
@@ -371,7 +370,7 @@ fn king_movement_diagonal_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 24),
     ]);
-    let action = Move { piece: King, from: 24, to: 33 };
+    let action = Move { from: 24, to: 33 };
     assert!(action.is_legal(&state));
 }
 
@@ -387,23 +386,21 @@ fn cant_move_onto_another_piece_test() {
         Placement::new(White, King, 60),
     ]);
 
-    let action = Move { piece: Pawn, from: 44, to:52  };
+    let action = Move { from: 44, to:52  };
     assert!(!action.is_legal(&state));
 
-    let action = Move { piece: Bishop, from: 43, to:52  };
+    let action = Move { from: 43, to:52  };
     assert!(!action.is_legal(&state));
 
-    let action = Move { piece: Knight, from: 35, to:52  };
+    let action = Move { from: 35, to:52  };
     assert!(!action.is_legal(&state));
 
-    let action = Move { piece: Rook, from: 53, to:52  };
+    let action = Move { from: 53, to:52  };
     assert!(!action.is_legal(&state));
 
-    let action = Move { piece: Queen, from: 51, to:52  };
+    let action = Move { from: 51, to:52  };
     assert!(!action.is_legal(&state));
 }
-
-
 
 fn algebraic_notation_to_index_test() {
     let ranks = ["1","2","3","4","5","6","7","8"];
@@ -416,82 +413,6 @@ fn algebraic_notation_to_index_test() {
             assert_eq!(algebraic(&square), Some(index));
         }
     }
-}
-
-fn algebraic_moves_white_pawn_one_forward_test() {
-    let state = GameState::with_placements(vec![
-        Placement::new(White, Pawn, 8),
-    ]);
-    let action = algebraic_move("a3", state);
-    let expected = Some(Move { piece: Pawn, from: 8, to: 16 });
-    assert_eq!(action, expected);
-}
-
-fn algebraic_moves_black_pawn_one_forward_test() {
-    let mut state = GameState::with_placements(vec![
-        Placement::new(Black, Pawn, 48),
-    ]);
-    state.to_move = Black;
-    let action = algebraic_move("a6", state);
-    let expected = Some(Move { piece: Pawn, from: 48, to: 40 });
-    assert_eq!(action, expected);
-}
-
-fn algebraic_moves_white_pawn_two_forward_test() {
-    let state = GameState::with_placements(vec![
-        Placement::new(White, Pawn, 8),
-    ]);
-    let action = algebraic_move("a4", state);
-    let expected = Some(Move { piece: Pawn, from: 8, to: 24 });
-    assert_eq!(action, expected);
-}
-
-fn algebraic_moves_black_pawn_two_forward_test() {
-    let mut state = GameState::with_placements(vec![
-        Placement::new(Black, Pawn, 48),
-    ]);
-    state.to_move = Black;
-    let action = algebraic_move("a5", state);
-    let expected = Some(Move { piece: Pawn, from: 48, to: 32 });
-    assert_eq!(action, expected);
-}
-
-fn algebraic_moves_white_pawn_rank_1_test() {
-    // it should be impossible for white pawns to move to rank 1
-    let mut state = GameState::with_placements(vec![
-        Placement::new(White, Pawn, 8),
-    ]);
-    let action = algebraic_move("a1", state);
-    assert_eq!(action, None);
-}
-
-fn algebraic_moves_white_pawn_rank_2_test() {
-    // it should be impossible for white pawns to move to rank 2
-    let mut state = GameState::with_placements(vec![
-        Placement::new(White, Pawn, 16),
-    ]);
-    let action = algebraic_move("a2", state);
-    assert_eq!(action, None);
-}
-
-fn algebraic_moves_black_pawn_rank_7_test() {
-    // it should be impossible for black pawns to move to rank 7
-    let mut state = GameState::with_placements(vec![
-        Placement::new(Black, Pawn, 40),
-    ]);
-    state.to_move = Black;
-    let action = algebraic_move("a7", state);
-    assert_eq!(action, None);
-}
-
-fn algebraic_moves_black_pawn_rank_8_test() {
-    // it should be impossible for black pawns to move to rank 8
-    let mut state = GameState::with_placements(vec![
-        Placement::new(Black, Pawn, 48),
-    ]);
-    state.to_move = Black;
-    let action = algebraic_move("a8", state);
-    assert_eq!(action, None);
 }
 
 fn color_is_checked_test() {
@@ -521,7 +442,7 @@ fn state_after_move_test() {
         Placement::new(White, King, 0),
         Placement::new(Black, Rook, 56),
     ]);   
-    let action = Move { from: 0, to: 1, piece: King };
+    let action = Move { from: 0, to: 1 };
     let new_state = action.apply(&state);
     assert!(new_state.squares[1].unwrap().name == King);
     assert!(!new_state.squares[0].is_some());
@@ -842,7 +763,7 @@ fn white_performs_en_passant_test() {
     assert!(state.en_passant_square == None);
 
     // Two square advance
-    let action = Move { piece: Pawn, from: 50, to: 34 };
+    let action = Move { from: 50, to: 34 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(42));
 
@@ -863,7 +784,7 @@ fn black_performs_en_passant_test() {
     assert!(state.en_passant_square == None);
 
     // Two square advance
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
     
@@ -906,12 +827,12 @@ fn en_passant_expires_after_move_test() {
         Placement::new(Black, King, 60),
     ]);
     // Two square advance by White
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
    // Black moves king
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 60, to: 61 };
     let state = action.apply(&state);
 
     // En-passant no longer legal
@@ -926,7 +847,7 @@ fn en_passant_expires_after_castle_test() {
         Placement::new(Black, Rook, 63),
     ]);
     // Two square advance by White
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
@@ -935,7 +856,7 @@ fn en_passant_expires_after_castle_test() {
     let state = action.apply(&state);
 
     // En-passant no longer legal
-    let action = Move { piece: Pawn, from: 29, to: 20 };
+    let action = Move { from: 29, to: 20 };
     assert!(state.en_passant_square == None);
 }
 
@@ -948,7 +869,7 @@ fn en_passant_expires_after_promotion_test() {
 
     assert!(state.to_move == White);
     // Two square advance by White
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
@@ -968,7 +889,7 @@ fn en_passant_expires_after_en_passant_test() {
         Placement::new(Black, King, 60),
     ]);
     // Two square advance by White
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
@@ -989,7 +910,7 @@ fn en_passant_expires_after_capture_test() {
         Placement::new(Black, King, 60),
     ]);
     // Two square advance by White
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     let state = action.apply(&state);
     assert!(state.en_passant_square == Some(20));
 
@@ -1009,12 +930,12 @@ fn to_move_switches_after_move_test() {
         Placement::new(Black, Pawn, 48),
     ]);
     // Advance by White
-    let action = Move { piece: Pawn, from: 8, to: 16 };
+    let action = Move { from: 8, to: 16 };
     let state = action.apply(&state);
     assert!(state.to_move == Black);
 
     // Advance by Black 
-    let action = Move { piece: Pawn, from: 48, to: 40 };
+    let action = Move { from: 48, to: 40 };
     let state = action.apply(&state);
     assert!(state.to_move == White);
 }
@@ -1126,7 +1047,7 @@ fn legal_actions_includes_all_legal_en_passants_by_white_test() {
     assert!(state.en_passant_square == None);
 
     // Two square advance
-    let action = Move { piece: Pawn, from: 50, to: 34 };
+    let action = Move { from: 50, to: 34 };
     assert!(action.is_legal(&state));
 
     // EnPassant is now available
@@ -1151,7 +1072,7 @@ fn legal_actions_includes_all_legal_en_passants_by_black_test() {
     assert!(state.en_passant_square == None);
 
     // Two square advance
-    let action = Move { piece: Pawn, from: 12, to: 28 };
+    let action = Move { from: 12, to: 28 };
     assert!(action.is_legal(&state));
 
     // EnPassant is now available
@@ -1257,7 +1178,7 @@ fn white_cant_move_into_check_test() {
         Placement::new(Black, King, 60),
         Placement::new(Black, Rook, 0),
     ]);   
-    let action = Move { piece: Pawn, from: 42, to: 50 };
+    let action = Move { from: 42, to: 50 };
     assert!(!action.is_legal(&state));
 }
 
@@ -1281,7 +1202,7 @@ fn black_cant_move_into_check_test() {
         Placement::new(Black, King, 60),
     ]);   
     state.to_move = Black;
-    let action = Move { piece: King, from: 60, to: 52 };
+    let action = Move { from: 60, to: 52 };
     assert!(!action.is_legal(&state));
 }
 
@@ -1481,15 +1402,6 @@ fn main() {
     king_movement_vertical_test();
     king_movement_diagonal_test();
     cant_move_onto_another_piece_test();
-    algebraic_notation_to_index_test(); 
-    algebraic_moves_white_pawn_one_forward_test(); 
-    algebraic_moves_black_pawn_one_forward_test(); 
-    algebraic_moves_white_pawn_two_forward_test(); 
-    algebraic_moves_black_pawn_two_forward_test(); 
-    algebraic_moves_white_pawn_rank_1_test(); 
-    algebraic_moves_white_pawn_rank_2_test(); 
-    algebraic_moves_black_pawn_rank_7_test(); 
-    algebraic_moves_black_pawn_rank_8_test(); 
     color_is_checked_test();
     color_threatens_square_test();
     state_after_move_test();
