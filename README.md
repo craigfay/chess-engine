@@ -1,3 +1,4 @@
+
 # About
 * A Chess Engine built with Rust. **This is a work in progress**, and executing the crate with `cargo run` currently just runs the unit tests.
 
@@ -16,3 +17,4 @@
 * prevent attacking with the wrong color
 * Make move_is_psuedo_legal() more generic, and just take a piecename, origin, and destination.
 * Use rays to check legality
+* Use a controller/display modules to play a game in the command line
