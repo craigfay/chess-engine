@@ -101,7 +101,7 @@ impl Action for Capture {
             to: self.on,
         };
 
-        if !move_is_pseudo_legal(&action, &state) {
+        if !move_is_pseudo_legal(self.with, self.on, &state) {
             return false
         }
 
@@ -432,7 +432,7 @@ pub fn color_threatens_square(color: Color, target_square: usize, state: &GameSt
                     else { continue; }
                 }
 
-                if move_is_pseudo_legal(&m, &state) {
+                if move_is_pseudo_legal(m.from, m.to, &state) {
                     return true
                 }
             },
@@ -605,7 +605,7 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
 
     // Verify that the pieces are allowed to move in accordance
     // with the specified to/from squares
-    if !move_is_pseudo_legal(&m, &state) {
+    if !move_is_pseudo_legal(m.from, m.to, &state) {
         return false
     }
 
@@ -620,29 +620,30 @@ pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
 // Determine whether the pieces can move in accordance
 // with a given move, regardless of threats or non-placement
 // game state
-fn move_is_pseudo_legal(m: &Move, state: &GameState) -> bool {
-    if !state.squares[m.from].is_some() {
+fn move_is_pseudo_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+    if !state.squares[origin].is_some() {
         return false
     }
-    let piece = state.squares[m.from].unwrap();
+
+    let piece = state.squares[origin].unwrap();
     match piece.name {
-        Pawn => pawn_move_is_legal(m, state),
-        Rook => rook_move_is_legal(m, state),
-        Bishop => bishop_move_is_legal(m, state),
-        Knight => knight_move_is_legal(m, state),
-        Queen => queen_move_is_legal(m, state),
-        King => king_move_is_legal(m, state),
+        Pawn => pawn_move_is_legal(origin, destination, state),
+        Rook => rook_move_is_legal(origin, destination, state),
+        Bishop => bishop_move_is_legal(origin, destination, state),
+        Knight => knight_move_is_legal(origin, destination, state),
+        Queen => queen_move_is_legal(origin, destination, state),
+        King => king_move_is_legal(origin, destination, state),
     }   
 }
 
-fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let piece = state.squares[m.from].unwrap();
+fn pawn_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+    let piece = state.squares[origin].unwrap();
 
-    let (delta_x, delta_y)  = position_delta(m.from, m.to);
+    let (delta_x, delta_y)  = position_delta(origin, destination);
 
-    let to_is_enemy_piece = match state.squares[m.to] {
+    let to_is_enemy_piece = match state.squares[origin] {
         Some(other_piece) => other_piece.color != piece.color,
-        None => Some(m.to) == state.en_passant_square,
+        None => Some(destination) == state.en_passant_square,
     };
 
     match piece.color {
@@ -652,7 +653,7 @@ fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
                 // Normal Moves
                 (0, 1) => true,
                 // Two-Square Moves
-                (0, 2) => m.from > 7 && m.from < 16,
+                (0, 2) => origin > 7 && origin < 16,
                 // Captures
                 (1, 1) => to_is_enemy_piece,
                 (-1, 1) => to_is_enemy_piece,
@@ -665,7 +666,7 @@ fn pawn_move_is_legal(m: &Move, state: &GameState) -> bool {
                 // Normal Moves
                 (0, -1) => true,
                 // Two-Square Moves
-                (0, -2) => m.from > 47 && m.from < 56,
+                (0, -2) => origin > 47 && origin < 56,
                 // Captures
                 (1, -1) => to_is_enemy_piece,
                 (-1, -1) => to_is_enemy_piece,
@@ -687,11 +688,11 @@ fn horizontal_path_is_obstructed(from: usize, delta_x: i32, state: &GameState) -
 }
 
 fn vertical_path_is_obstructed(from: usize, delta_y: i32, state: &GameState) -> bool {
-    for x in 1..delta_y.abs() {
+    for y in 1..delta_y.abs() {
         let index = if delta_y > 0 {
-            from + x as usize * 8
+            from + y as usize * 8
         } else {
-            from - x as usize * 8
+            from - y as usize * 8
         };
         if state.squares[index].is_some() {
             return true
@@ -715,10 +716,10 @@ fn diagonal_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
     return false;
 }
 
-fn rook_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.from, m.to);
+fn rook_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(origin, destination);
     // Return false if the path is obstructed
-    if horizontal_path_is_obstructed(m.from, delta_x, state) {
+    if horizontal_path_is_obstructed(origin, delta_x, state) {
         return false;
     }
 
@@ -729,17 +730,17 @@ fn rook_move_is_legal(m: &Move, state: &GameState) -> bool {
     }
 }
 
-fn bishop_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.from, m.to);
+fn bishop_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(origin, destination);
     if delta_x.abs() != delta_y.abs() {
         return false;
     }
-    return false == diagonal_is_obstructed(m.from, m.from, state);
+    return false == diagonal_is_obstructed(origin, destination, state);
 }
 
 
-fn knight_move_is_legal(m: &Move, _state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.from, m.to);
+fn knight_move_is_legal(origin: usize, destination: usize, _state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(origin, destination);
 
     return match (delta_x.abs(), delta_y.abs()) {
         (1, 2) => true,
@@ -749,13 +750,13 @@ fn knight_move_is_legal(m: &Move, _state: &GameState) -> bool {
 
 }
 
-fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.from, m.to);
+fn queen_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(origin, destination);
 
     return match (delta_x.abs(), delta_y.abs()) {
-        (0, _) => !horizontal_path_is_obstructed(m.from, delta_x, state),
-        (_, 0) => !horizontal_path_is_obstructed(m.from, delta_x, state),
-        (x, y) => x == y && !diagonal_is_obstructed(m.from, m.from, state),
+        (0, _) => !horizontal_path_is_obstructed(origin, delta_x, state),
+        (_, 0) => !horizontal_path_is_obstructed(origin, delta_x, state),
+        (x, y) => x == y && !diagonal_is_obstructed(origin, destination, state),
     }
 
 }
@@ -767,12 +768,12 @@ pub fn piece_is(color: Color, name: PieceName, square: usize, state: &GameState)
     }
 }
 
-fn king_move_is_legal(m: &Move, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(m.from, m.to);
+fn king_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+    let (delta_x, delta_y)  = position_delta(origin, destination);
     return match (delta_x.abs(), delta_y.abs()) {
-        (0, 1) => !horizontal_path_is_obstructed(m.from, delta_x, state),
-        (1, 0) => !horizontal_path_is_obstructed(m.from, delta_x, state),
-        (1, 1) => !diagonal_is_obstructed(m.from, m.from, state),
+        (0, 1) => !state.squares[destination].is_some(),
+        (1, 0) => !state.squares[destination].is_some(),
+        (1, 1) => !state.squares[destination].is_some(),
         _ => false,
     }
 }
