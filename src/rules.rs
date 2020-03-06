@@ -764,61 +764,6 @@ fn queen_move_is_legal(m: &Move, state: &GameState) -> bool {
 
 }
 
-fn castle_is_legal(m: &Move, state: &GameState) -> bool {
-    if state.to_move == White && m.from == 4 && m.to == 6 {
-        if !state.white_can_castle_kingside { return false }
-        // Rook must be on the correct square
-        if !piece_is(White, Rook, 7, &state) { return false }
-        // In-between squares must be empty
-        if state.squares[5].is_some() { return false }
-        if state.squares[6].is_some() { return false }
-        // Must not be, or travel through/into/out of check
-        if color_threatens_square(Black, 4, &state) { return false }
-        if color_threatens_square(Black, 5, &state) { return false }
-        if color_threatens_square(Black, 6, &state) { return false }
-        if color_threatens_square(Black, 7, &state) { return false }
-        return true
-    }
-    if state.to_move == Black && m.from == 60 && m.to == 62 {
-        if !state.black_can_castle_kingside { return false }
-        if !piece_is(Black, Rook, 63, &state)  { return false }
-        if state.squares[61].is_some() { return false }
-        if state.squares[62].is_some() { return false }
-        if color_threatens_square(White, 60, &state) { return false }
-        if color_threatens_square(White, 61, &state) { return false }
-        if color_threatens_square(White, 62, &state) { return false }
-        if color_threatens_square(White, 63, &state) { return false }
-        return true
-    }
-    if state.to_move == White && m.from == 4 && m.to == 2 {
-        if !state.white_can_castle_queenside { return false }
-        if !piece_is(White, Rook, 0, &state) { return false }
-        if state.squares[1].is_some() { return false }
-        if state.squares[2].is_some() { return false }
-        if state.squares[3].is_some() { return false }
-        if color_threatens_square(Black, 0, &state) { return false }
-        if color_threatens_square(Black, 1, &state) { return false }
-        if color_threatens_square(Black, 2, &state) { return false }
-        if color_threatens_square(Black, 3, &state) { return false }
-        if color_threatens_square(Black, 4, &state) { return false }
-        return true
-    }
-    if state.to_move == Black && m.from == 60 && m.to == 58 {
-        if !state.black_can_castle_queenside { return false }
-        if !piece_is(Black, Rook, 56, &state) { return false }
-        if state.squares[57].is_some() { return false }
-        if state.squares[58].is_some() { return false }
-        if state.squares[59].is_some() { return false }
-        if color_threatens_square(White, 56, &state) { return false }
-        if color_threatens_square(White, 57, &state) { return false }
-        if color_threatens_square(White, 58, &state) { return false }
-        if color_threatens_square(White, 59, &state) { return false }
-        if color_threatens_square(White, 60, &state) { return false }
-        return true
-    }
-    false
-}
-
 pub fn piece_is(color: Color, name: PieceName, square: usize, state: &GameState) -> bool {
     match state.squares[square] {
         Some(piece) => piece.color == color && piece.name == name,
