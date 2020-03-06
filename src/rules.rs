@@ -106,6 +106,7 @@ impl Action for Capture {
         if !move_is_pseudo_legal(&action, &state) {
             return false
         }
+
         // Don't allow moves that leave the current player checked
         if color_is_checked(state.to_move, &self.apply(&state)) {
             return false
