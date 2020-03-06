@@ -1261,6 +1261,9 @@ fn white_pawn_can_capture_test() {
         Placement::new(Black, King, 60),
         Placement::new(Black, Pawn, 37),
     ]);
+
+    let action = Capture { on: 37, with: 28 };
+    assert!(action.is_legal(&state));
 }
 
 fn main() {
