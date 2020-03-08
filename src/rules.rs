@@ -708,8 +708,10 @@ fn diagonal_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
     // The difference between two diagonal squares will divide by 7 or 9
     for n in [7,9].iter() {
         if (hi - low) % n == 0 {
-            for i in (low..hi).step_by(*n) {
-                if state.squares[i].is_some() { return true } 
+            for i in (low+1..hi).step_by(*n) {
+                if state.squares[i].is_some() {
+                    return true
+                } 
             }
         }
     }
