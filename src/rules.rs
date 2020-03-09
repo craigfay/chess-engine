@@ -702,7 +702,7 @@ fn vertical_path_is_obstructed(from: usize, delta_y: i32, state: &GameState) -> 
     false
 }
 
-fn diagonal_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
+fn diagonal_path_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
     let low = min(from, to);
     let hi = max(from, to);
 
@@ -738,7 +738,7 @@ fn bishop_move_is_legal(origin: usize, destination: usize, state: &GameState) ->
     if delta_x.abs() != delta_y.abs() {
         return false;
     }
-    return false == diagonal_is_obstructed(origin, destination, state);
+    return false == diagonal_path_is_obstructed(origin, destination, state);
 }
 
 
@@ -759,7 +759,7 @@ fn queen_move_is_legal(origin: usize, destination: usize, state: &GameState) -> 
     return match (delta_x.abs(), delta_y.abs()) {
         (0, _) => !horizontal_path_is_obstructed(origin, delta_x, state),
         (_, 0) => !horizontal_path_is_obstructed(origin, delta_x, state),
-        (x, y) => x == y && !diagonal_is_obstructed(origin, destination, state),
+        (x, y) => x == y && !diagonal_path_is_obstructed(origin, destination, state),
     }
 
 }
@@ -776,7 +776,7 @@ fn king_move_is_legal(origin: usize, destination: usize, state: &GameState) -> b
     return match (delta_x.abs(), delta_y.abs()) {
         (0, 1) => !horizontal_path_is_obstructed(origin, delta_x, &state),
         (1, 0) => !vertical_path_is_obstructed(origin, delta_y, &state),
-        (1, 1) => !diagonal_is_obstructed(origin, destination, &state),
+        (1, 1) => !diagonal_path_is_obstructed(origin, destination, &state),
         _ => false,
     }
 }
