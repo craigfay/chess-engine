@@ -76,6 +76,7 @@ impl Action for Capture {
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // If there is no piece present at the chosen from
+        //
         if state.squares[self.with].is_none() {
             return false
         }
@@ -641,7 +642,7 @@ fn pawn_move_is_legal(origin: usize, destination: usize, state: &GameState) -> b
 
     let (delta_x, delta_y)  = position_delta(origin, destination);
 
-    let to_is_enemy_piece = match state.squares[origin] {
+    let to_is_enemy_piece = match state.squares[destination] {
         Some(other_piece) => other_piece.color != piece.color,
         None => Some(destination) == state.en_passant_square,
     };
