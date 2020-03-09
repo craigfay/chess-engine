@@ -774,9 +774,9 @@ pub fn piece_is(color: Color, name: PieceName, square: usize, state: &GameState)
 fn king_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
     let (delta_x, delta_y)  = position_delta(origin, destination);
     return match (delta_x.abs(), delta_y.abs()) {
-        (0, 1) => !state.squares[destination].is_some(),
-        (1, 0) => !state.squares[destination].is_some(),
-        (1, 1) => !state.squares[destination].is_some(),
+        (0, 1) => !horizontal_path_is_obstructed(origin, delta_x, &state),
+        (1, 0) => !vertical_path_is_obstructed(origin, delta_y, &state),
+        (1, 1) => !diagonal_is_obstructed(origin, destination, &state),
         _ => false,
     }
 }
