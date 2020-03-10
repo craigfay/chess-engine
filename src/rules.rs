@@ -486,6 +486,24 @@ pub fn legal_actions(state: &GameState) -> Vec<Box<dyn Action>> {
     results
 }
 
+pub fn legal_next_states(state: &GameState) -> Vec<GameState> {
+    let mut results: Vec<GameState> = vec![];
+
+    for action  in legal_moves(&state) {
+        results.push(action.apply(&state));
+    }
+    for action  in legal_en_passants(&state) {
+        results.push(action.apply(&state));
+    }
+    for action in legal_castles(&state) {
+        results.push(action.apply(&state));
+    }
+    for action in legal_promotions(&state) {
+        results.push(action.apply(&state));
+    }
+    results
+}
+
 pub fn legal_en_passants(state: &GameState) -> Vec<EnPassant> {
     let mut results = vec![];
     if !state.en_passant_square.is_some() { return results }
