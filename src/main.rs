@@ -35,10 +35,6 @@ use entities::{
     EnPassant,
 };
 
-use controller::{
-    apply_move,
-};
-
 use notation::{algebraic, index};
 
 use display::print;

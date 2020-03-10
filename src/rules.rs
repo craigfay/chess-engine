@@ -31,7 +31,32 @@ impl Action for Move {
         "Move"
     }
     fn is_legal(&self, state: &GameState) -> bool {
-      move_is_legal(&self, &state)
+        // Don't allow moves onto another piece
+        if state.squares[self.to].is_some() {
+            return false
+        }
+        // If there is no piece present at the chosen from
+        if state.squares[self.from].is_none() {
+            return false
+        }
+        // Don't allow moves with the same from/to
+        if self.from == self.to {
+            return false
+        }
+        // Don't allow moves to/from nonexistent squares
+        if self.from > 63 || self.to > 63 {
+            return false
+        }
+        // Verify that the pieces are allowed to move in accordance
+        // with the specified to/from squares
+        if !move_is_pseudo_legal(self.from, self.to, &state) {
+            return false
+        }
+        // Don't allow moves that leave the current player checked
+        if color_is_checked(state.to_move, &self.apply(&state)) {
+            return false
+        }
+        true
     }
 
     fn apply(&self, state: &GameState) -> GameState {
@@ -619,41 +644,6 @@ pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
         Queen => true,
         _ => false,
     }
-}
-
-pub fn move_is_legal(m: &Move, state: &GameState) -> bool {
-    // Don't allow moves onto another piece
-    if state.squares[m.to].is_some() {
-        return false
-    }
-
-    // If there is no piece present at the chosen from
-    if state.squares[m.from].is_none() {
-        return false
-    }
-
-    // Don't allow moves with the same from/to
-    if m.from == m.to {
-        return false
-    }
-
-    // Don't allow moves to/from nonexistent squares
-    if m.from > 63 || m.to > 63 {
-        return false
-    }
-
-    // Verify that the pieces are allowed to move in accordance
-    // with the specified to/from squares
-    if !move_is_pseudo_legal(m.from, m.to, &state) {
-        return false
-    }
-
-    // Don't allow moves that leave the current player checked
-    if color_is_checked(state.to_move, &m.apply(&state)) {
-        return false
-    }
-
-    true
 }
 
 // Determine whether the pieces can move in accordance
