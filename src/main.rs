@@ -1088,7 +1088,38 @@ fn legal_actions_includes_all_legal_en_passants_by_black_test() {
     assert_eq!(2, legal_en_passants.len());
 }
 
+fn legal_actions_includes_all_legal_captures_by_white_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 33),
+        Placement::new(Black, Pawn, 40),
+    ]);
+    assert!(state.en_passant_square == None);
 
+    // Legal Actions include 1 Capture
+    let actions = legal_actions(&state);
+    let legal_captures = actions.iter().filter(|action| {
+        action.name() == "Capture"
+    }).collect::<Vec<_>>();
+
+    assert_eq!(1, legal_captures.len());
+}
+
+fn legal_actions_includes_all_legal_captures_by_black_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 33),
+        Placement::new(Black, Pawn, 40),
+    ]);
+    state.to_move = Black;
+    assert!(state.en_passant_square == None);
+
+    // Legal Actions include 1 Capture
+    let actions = legal_actions(&state);
+    let legal_captures = actions.iter().filter(|action| {
+        action.name() == "Capture"
+    }).collect::<Vec<_>>();
+
+    assert_eq!(1, legal_captures.len());
+}
 
 fn white_promotion_to_bishop_test() {
     let state = GameState::with_placements(vec![
@@ -1468,6 +1499,8 @@ fn main() {
     legal_actions_includes_all_legal_castles_by_black_test();
     legal_actions_includes_all_legal_en_passants_by_white_test();
     legal_actions_includes_all_legal_en_passants_by_black_test();
+    legal_actions_includes_all_legal_captures_by_white_test();
+    legal_actions_includes_all_legal_captures_by_black_test();
     white_promotion_to_bishop_test();
     white_promotion_to_knight_test();
     white_promotion_to_rook_test();

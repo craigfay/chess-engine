@@ -100,9 +100,12 @@ impl Action for Capture {
         "Capture"
     }
     fn is_legal(&self, state: &GameState) -> bool {
-        // If there is no piece present at the chosen from
-        //
+        // If there is no piece present at the chosen origin 
         if state.squares[self.with].is_none() {
+            return false
+        }
+        // If there is no piece present at the chosen destination
+        if state.squares[self.on].is_none() {
             return false
         }
         // Don't allow moves with the same origin/destination
@@ -114,23 +117,13 @@ impl Action for Capture {
             return false
         }
 
-        
         let attacker = state.squares[self.with].unwrap();
-
-
-        // Translate the Capture into a Move, and check if it would be legal
 
         // Verify that the pieces are allowed to move in accordance
         // with the specified to/from squares
-        let action = Move {
-            from: self.with, 
-            to: self.on,
-        };
-
         if !move_is_pseudo_legal(self.with, self.on, &state) {
             return false
         }
-
         // Don't allow moves that leave the current player checked
         if color_is_checked(state.to_move, &self.apply(&state)) {
             return false
@@ -499,6 +492,9 @@ pub fn legal_actions(state: &GameState) -> Vec<Box<dyn Action>> {
     for action  in legal_moves(&state) {
         results.push(Box::new(action));
     }
+    for action in legal_captures(&state) {
+        results.push(Box::new(action));
+    }
     for action  in legal_en_passants(&state) {
         results.push(Box::new(action));
     }
@@ -515,6 +511,9 @@ pub fn legal_next_states(state: &GameState) -> Vec<GameState> {
     let mut results: Vec<GameState> = vec![];
 
     for action  in legal_moves(&state) {
+        results.push(action.apply(&state));
+    }
+    for action  in legal_captures(&state) {
         results.push(action.apply(&state));
     }
     for action  in legal_en_passants(&state) {
