@@ -118,6 +118,16 @@ impl Action for Capture {
         }
 
         let attacker = state.squares[self.with].unwrap();
+        let defender = state.squares[self.on].unwrap();
+
+        // Don't allow captures with the opponent's pieces
+        if attacker.color != state.to_move {
+            return false
+        }
+        // Don't allow players to capture their own pieces
+        if defender.color == state.to_move {
+            return false
+        }
 
         // Verify that the pieces are allowed to move in accordance
         // with the specified to/from squares

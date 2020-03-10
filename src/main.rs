@@ -1091,7 +1091,7 @@ fn legal_actions_includes_all_legal_en_passants_by_black_test() {
 fn legal_actions_includes_all_legal_captures_by_white_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
-        Placement::new(White, Rook, 36),
+        Placement::new(White, Rook, 43),
         Placement::new(Black, Pawn, 40),
     ]);
 
