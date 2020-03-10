@@ -545,6 +545,26 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
     results
 }
 
+pub fn legal_captures(state: &GameState) -> Vec<Capture> {
+    let mut results = vec![];
+
+    for with in 0..64 {
+        if state.squares[with].is_some() {
+            let piece = state.squares[with].unwrap();
+            if piece.color == state.to_move {
+                for on in 0..64 {
+                    let action = Capture { on, with };
+                    if action.is_legal(&state) {
+                        results.push(action);
+                    }
+                }
+            }
+
+        }
+    }
+    results
+}
+
 pub fn legal_castles(state: &GameState) -> Vec<Castle> {
     let mut results = vec![];
     for direction in [Kingside, Queenside].iter() {
