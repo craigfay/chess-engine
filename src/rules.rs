@@ -533,9 +533,9 @@ pub fn legal_moves(state: &GameState) -> Vec<Move> {
             let piece = state.squares[from].unwrap();
             if piece.color == state.to_move {
                 for to in 0..64 {
-                    let m = Move { from, to };
-                    if move_is_legal(&m, state) {
-                        results.push(m);
+                    let action = Move { from, to };
+                    if action.is_legal(&state) {
+                        results.push(action);
                     }
                 }
             }
