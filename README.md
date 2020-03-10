@@ -15,6 +15,7 @@
 * Should actions be responsible for changing the turn?
 * Use non-deterministic tests with random move selection to test for states that should never exist.
 * prevent attacking with the wrong color
-* Make move_is_psuedo_legal() more generic, and just take a piecename, origin, and destination.
 * Use rays to check legality
 * Use a controller/display modules to play a game in the command line
+* Test that legal_actions() includes Captures
+* Test that players in checkmate should have no legal actions
