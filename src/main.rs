@@ -1408,6 +1408,17 @@ fn black_king_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+fn pawn_move_algebraic_notation_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Pawn, 20),
+        Placement::new(Black, King, 60),
+    ]);
+    let action = Move { from: 20, to: 28 };
+    assert!(action.is_legal(&state));
+    assert_eq!("e4", action.algebraic_notation(&state));
+}
+
 fn print_test() {
     let state = GameState::new();
     let expected = format!(
@@ -1537,7 +1548,7 @@ fn main() {
     black_queen_can_capture_test();
     white_king_can_capture_test();
     black_king_can_capture_test();
-
+    pawn_move_algebraic_notation_test();
     print_test();
 
     let duration = timer.elapsed();
