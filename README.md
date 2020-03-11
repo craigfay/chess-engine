@@ -4,16 +4,14 @@
 
 # Todo List
 * Abstract horizontal/diagonal movement
-* Consolidate static variables
-* Comment/Rename `algebraic_move()`
 * Provide bit vector representation of game state
 * Create a `potential_states()` as an alternative to `legal_moves()`
-* Move piece property to the beginning of Move constructors
 * Handle/Test generic legality checks for each action (is correct color, piece exists, etc..)
 * Refactor with tuple matching
 * Test that to_move has flipped after each applied action
-* Should actions be responsible for changing the turn?
+* Should actions be responsible for changing the turn? (Probably)
 * Use non-deterministic tests with random move selection to test for states that should never exist.
 * Use rays to check legality
 * Use a controller/display modules to play a game in the command line
 * Test captures with incorrect attacker/defender colors
+* Implement and Test `as_algebraic_notation()` for each action type.
