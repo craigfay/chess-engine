@@ -1119,6 +1119,17 @@ fn legal_actions_includes_all_legal_captures_by_black_test() {
     assert_eq!(2, legal_captures.len());
 }
 
+fn no_legal_actions_in_checkmate_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(Black, Rook, 0),
+        Placement::new(Black, Rook, 8),
+    ]);
+
+    let actions = legal_actions(&state);
+    assert_eq!(0, actions.iter().len());
+}
+
 fn white_promotion_to_bishop_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1499,6 +1510,7 @@ fn main() {
     legal_actions_includes_all_legal_en_passants_by_black_test();
     legal_actions_includes_all_legal_captures_by_white_test();
     legal_actions_includes_all_legal_captures_by_black_test();
+    no_legal_actions_in_checkmate_test();
     white_promotion_to_bishop_test();
     white_promotion_to_knight_test();
     white_promotion_to_rook_test();
@@ -1523,6 +1535,7 @@ fn main() {
     black_queen_can_capture_test();
     white_king_can_capture_test();
     black_king_can_capture_test();
+
     print_test();
 
     let duration = timer.elapsed();
