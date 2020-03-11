@@ -16,5 +16,4 @@
 * Use non-deterministic tests with random move selection to test for states that should never exist.
 * Use rays to check legality
 * Use a controller/display modules to play a game in the command line
-* Test that players in checkmate should have no legal actions
 * Test captures with incorrect attacker/defender colors
