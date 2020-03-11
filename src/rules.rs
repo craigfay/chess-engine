@@ -24,14 +24,36 @@ use crate::entities::{
     Color::{White, Black},
 };
 
+fn piece_char(maybe_piece: Option<Piece>) -> String {
+    match maybe_piece {
+        None => String::from(""),
+        Some(piece) => {
+            match piece.name {
+                Pawn => String::from(""),
+                Bishop => String::from("B"),
+                Knight => String::from("N"),
+                Rook => String::from("R"),
+                Queen => String::from("Q"),
+                King => String::from("K"),
+            }
+        }
+    }
+}
+
 use std::cmp::{min, max};
 
 impl Action for Move {
     fn name(&self) -> &str {
         "Move"
     }
-    fn algebraic_notation(&self) -> String {
-        return String::from("");
+    fn algebraic_notation(&self, state: &GameState) -> String {
+        if !self.is_legal(&state) {
+            return String::from("");
+        }
+        let piece = piece_char(state.squares[self.from]);
+        let rank = (self.to as u8 % 8 + 97) as char;
+        let file = (self.to / 8) + 1;
+        String::from(format!("{}{}{}", piece, rank, file))
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // Don't allow moves onto another piece
@@ -102,7 +124,7 @@ impl Action for Capture {
     fn name(&self) -> &str {
         "Capture"
     }
-    fn algebraic_notation(&self) -> String {
+    fn algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -169,7 +191,7 @@ impl Action for EnPassant {
     fn name(&self) -> &str {
         "EnPassant"
     }
-    fn algebraic_notation(&self) -> String {
+    fn algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -251,7 +273,7 @@ impl Action for Castle {
     fn name(&self) -> &str {
         "Castle"
     }
-    fn algebraic_notation(&self) -> String {
+    fn algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -364,7 +386,7 @@ impl Action for Promotion {
     fn name(&self) -> &str {
         "Promotion"
     }
-    fn algebraic_notation(&self) -> String {
+    fn algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
