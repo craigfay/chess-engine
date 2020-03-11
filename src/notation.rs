@@ -11,14 +11,14 @@ use crate::entities::{
 };
 
 // Get algebraic notation from index
-pub fn index(square: usize) -> String {
+pub fn square_index_to_algebraic(square: usize) -> String {
     let rank = (square as u8 % 8 + 97) as char;
     let file = (square / 8) + 1;
     String::from(format!("{}{}", rank, file))
 }
 
 // Get index notation from algebraic
-pub fn algebraic(s: &str) -> Option<usize> {
+pub fn square_algebraic_to_index(s: &str) -> Option<usize> {
     static RANKS: [char; 8] = ['1','2','3','4','5','6','7','8'];
     static FILES: [char; 8] = ['a','b','c','d','e','f','g','h'];
 

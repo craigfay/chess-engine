@@ -35,7 +35,10 @@ use entities::{
     EnPassant,
 };
 
-use notation::{algebraic, index};
+use notation::{
+    square_index_to_algebraic,
+    square_algebraic_to_index,
+};
 
 use display::print;
 
@@ -410,7 +413,7 @@ fn algebraic_notation_to_index_test() {
         for (f, file) in files.iter().enumerate() {
             let square = format!("{}{}", file, rank);
             let index = r * 8 + f;
-            assert_eq!(algebraic(&square), Some(index));
+            assert_eq!(square_algebraic_to_index(&square), Some(index));
         }
     }
 }
@@ -1221,7 +1224,6 @@ fn white_cant_move_into_check_test() {
     let action = Move { from: 42, to: 50 };
     assert!(!action.is_legal(&state));
 }
-
 
 fn white_cant_promote_into_check_test() {
     let state = GameState::with_placements(vec![
