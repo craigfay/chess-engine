@@ -30,6 +30,9 @@ impl Action for Move {
     fn name(&self) -> &str {
         "Move"
     }
+    fn algebraic_notation(&self) -> String {
+        return String::from("");
+    }
     fn is_legal(&self, state: &GameState) -> bool {
         // Don't allow moves onto another piece
         if state.squares[self.to].is_some() {
@@ -99,6 +102,9 @@ impl Action for Capture {
     fn name(&self) -> &str {
         "Capture"
     }
+    fn algebraic_notation(&self) -> String {
+        return String::from("");
+    }
     fn is_legal(&self, state: &GameState) -> bool {
         // If there is no piece present at the chosen origin 
         if state.squares[self.with].is_none() {
@@ -162,6 +168,9 @@ impl Action for Capture {
 impl Action for EnPassant {
     fn name(&self) -> &str {
         "EnPassant"
+    }
+    fn algebraic_notation(&self) -> String {
+        return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // Make sure en-passant is available
@@ -241,6 +250,9 @@ impl Action for EnPassant {
 impl Action for Castle {
     fn name(&self) -> &str {
         "Castle"
+    }
+    fn algebraic_notation(&self) -> String {
+        return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // Don't allow actions that put/leave the player in check
@@ -351,6 +363,9 @@ impl Action for Castle {
 impl Action for Promotion {
     fn name(&self) -> &str {
         "Promotion"
+    }
+    fn algebraic_notation(&self) -> String {
+        return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
         if !pawn_can_promote_to(&self.pawn_becomes) {
