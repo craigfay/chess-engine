@@ -121,7 +121,7 @@ pub trait Action {
     fn is_legal(&self, state: &GameState) -> bool;
     fn apply(&self, state: &GameState) -> GameState;
     fn name(&self) -> &str;
-    fn algebraic_notation(&self, state: &GameState) -> String;
+    fn as_algebraic_notation(&self, state: &GameState) -> String;
 }
 
 #[derive(Copy)]

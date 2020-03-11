@@ -46,7 +46,7 @@ impl Action for Move {
     fn name(&self) -> &str {
         "Move"
     }
-    fn algebraic_notation(&self, state: &GameState) -> String {
+    fn as_algebraic_notation(&self, state: &GameState) -> String {
         if !self.is_legal(&state) {
             return String::from("");
         }
@@ -124,7 +124,7 @@ impl Action for Capture {
     fn name(&self) -> &str {
         "Capture"
     }
-    fn algebraic_notation(&self, state: &GameState) -> String {
+    fn as_algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -191,7 +191,7 @@ impl Action for EnPassant {
     fn name(&self) -> &str {
         "EnPassant"
     }
-    fn algebraic_notation(&self, state: &GameState) -> String {
+    fn as_algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -273,7 +273,7 @@ impl Action for Castle {
     fn name(&self) -> &str {
         "Castle"
     }
-    fn algebraic_notation(&self, state: &GameState) -> String {
+    fn as_algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -386,7 +386,7 @@ impl Action for Promotion {
     fn name(&self) -> &str {
         "Promotion"
     }
-    fn algebraic_notation(&self, state: &GameState) -> String {
+    fn as_algebraic_notation(&self, state: &GameState) -> String {
         return String::from("");
     }
     fn is_legal(&self, state: &GameState) -> bool {

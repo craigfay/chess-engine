@@ -1416,7 +1416,7 @@ fn pawn_move_algebraic_notation_test() {
     ]);
     let action = Move { from: 20, to: 28 };
     assert!(action.is_legal(&state));
-    assert_eq!("e4", action.algebraic_notation(&state));
+    assert_eq!("e4", action.as_algebraic_notation(&state));
 }
 
 fn print_test() {
