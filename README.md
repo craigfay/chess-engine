@@ -15,3 +15,4 @@
 * Use a controller/display modules to play a game in the command line
 * Test captures with incorrect attacker/defender colors
 * Implement and Test `as_algebraic_notation()` for each action type.
+* Add search helper function to find the square that a piece is on.
