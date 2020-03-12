@@ -51,9 +51,19 @@ impl Action for Move {
             return String::from("");
         }
         let piece = piece_char(state.squares[self.from]);
-        let rank = (self.to as u8 % 8 + 97) as char;
-        let file = (self.to / 8) + 1;
-        String::from(format!("{}{}{}", piece, rank, file))
+
+        let origin_rank = (self.from  as u8 % 8 + 97) as char;
+        let origin_file = (self.from / 8) + 1;
+
+        let destination_rank = (self.to as u8 % 8 + 97) as char;
+        let destination_file = (self.to / 8) + 1;
+
+        String::from(format!(
+            "{}{}{}",
+            piece,
+            destination_rank,
+            destination_file
+        ))
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // Don't allow moves onto another piece
@@ -860,5 +870,23 @@ pub fn position_delta(from: usize, to: usize) -> (i32, i32) {
     let x = (to as i32 % 8) - (from as i32 % 8);
     let y = (to as i32 / 8) - (from as i32 / 8);
     return (x, y);
+}
+
+fn count_pieces_that_can_move_to_square(piece_name: PieceName, square: usize, state: &GameState) -> i32 {
+    let mut count = 0;
+
+    for origin in 0..64 {
+        if state.squares[origin].is_some() {
+            let piece = state.squares[origin].unwrap();
+            if piece.color == state.to_move && piece.name == piece_name {
+                let action = Move { from: origin, to: square };
+                if action.is_legal(&state) {
+                    count += 1;
+                }
+            }
+
+        }
+    }
+    count
 }
 
