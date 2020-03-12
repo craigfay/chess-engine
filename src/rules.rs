@@ -52,8 +52,23 @@ impl Action for Move {
         }
         let piece = piece_char(state.squares[self.from]);
 
-        let origin_rank = (self.from  as u8 % 8 + 97) as char;
-        let origin_file = (self.from / 8) + 1;
+        let ambiguous_piece_origins = pieces_that_can_move_to_square(
+            state.squares[self.from].unwrap().name,
+            self.to,
+            &state,
+        );
+
+        let mut origin_rank = &mut String::from("");
+        let mut origin_file = &mut String::from("");
+
+        for origin in ambiguous_piece_origins {
+            if origin as u8 % 8 == self.from as u8 % 8 {
+                origin_rank.push((origin as u8 % 8 + 97) as char);
+            }
+            if origin / 8 == self.from / 8 {
+                origin_file.push((origin as u8 / 8 + 1) as char);
+            }
+        }
 
         let destination_rank = (self.to as u8 % 8 + 97) as char;
         let destination_file = (self.to / 8) + 1;
@@ -872,8 +887,8 @@ pub fn position_delta(from: usize, to: usize) -> (i32, i32) {
     return (x, y);
 }
 
-fn count_pieces_that_can_move_to_square(piece_name: PieceName, square: usize, state: &GameState) -> i32 {
-    let mut count = 0;
+fn pieces_that_can_move_to_square(piece_name: PieceName, square: usize, state: &GameState) -> Vec<usize> {
+    let mut results: Vec<usize> = vec![];
 
     for origin in 0..64 {
         if state.squares[origin].is_some() {
@@ -881,12 +896,12 @@ fn count_pieces_that_can_move_to_square(piece_name: PieceName, square: usize, st
             if piece.color == state.to_move && piece.name == piece_name {
                 let action = Move { from: origin, to: square };
                 if action.is_legal(&state) {
-                    count += 1;
+                    results.push(origin);
                 }
             }
 
         }
     }
-    count
+    results
 }
 
