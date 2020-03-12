@@ -1463,6 +1463,16 @@ fn queen_move_algebraic_notation_test() {
     assert_eq!("Qh5", action.as_algebraic_notation(&state));
 }
 
+fn king_move_algebraic_notation_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(Black, King, 60),
+    ]);
+    let action = Move { from: 7, to: 6 };
+    assert!(action.is_legal(&state));
+    assert_eq!("Kg1", action.as_algebraic_notation(&state));
+}
+
 
 fn print_test() {
     let state = GameState::new();
@@ -1598,6 +1608,7 @@ fn main() {
     knight_move_algebraic_notation_test();
     rook_move_algebraic_notation_test();
     queen_move_algebraic_notation_test();
+    king_move_algebraic_notation_test();
     print_test();
 
     let duration = timer.elapsed();
