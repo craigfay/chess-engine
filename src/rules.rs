@@ -52,30 +52,26 @@ impl Action for Move {
         }
         let piece = piece_char(state.squares[self.from]);
 
-        let ambiguous_piece_origins = pieces_that_can_move_to_square(
-            state.squares[self.from].unwrap().name,
-            self.to,
-            &state,
-        );
-
+        // TODO set capacity to 1
         let mut origin_rank = &mut String::from("");
         let mut origin_file = &mut String::from("");
-
-        for origin in ambiguous_piece_origins {
-            if origin as u8 % 8 == self.from as u8 % 8 {
-                origin_rank.push((origin as u8 % 8 + 97) as char);
-            }
-            if origin / 8 == self.from / 8 {
-                origin_file.push((origin as u8 / 8 + 1) as char);
-            }
-        }
-
         let destination_rank = (self.to as u8 % 8 + 97) as char;
         let destination_file = (self.to / 8) + 1;
 
+        let ambiguity = disambiguate_move(self.from, self.to, &state);
+
+        if ambiguity.rank_is_ambiguous {
+            origin_rank.push((self.from as u8 % 8 + 97) as char);
+        }
+        if ambiguity.file_is_ambiguous {
+            origin_file.push((self.from as u8 / 8 + 1) as char);
+        }
+
         String::from(format!(
-            "{}{}{}",
+            "{}{}{}{}{}",
             piece,
+            origin_rank,
+            origin_file,
             destination_rank,
             destination_file
         ))
@@ -887,21 +883,39 @@ pub fn position_delta(from: usize, to: usize) -> (i32, i32) {
     return (x, y);
 }
 
-fn pieces_that_can_move_to_square(piece_name: PieceName, square: usize, state: &GameState) -> Vec<usize> {
-    let mut results: Vec<usize> = vec![];
+struct Disambiguation {
+    rank_is_ambiguous: bool,
+    file_is_ambiguous: bool,
+}
 
-    for origin in 0..64 {
-        if state.squares[origin].is_some() {
-            let piece = state.squares[origin].unwrap();
-            if piece.color == state.to_move && piece.name == piece_name {
-                let action = Move { from: origin, to: square };
+fn disambiguate_move(origin: usize, destination: usize, state: &GameState) -> Disambiguation {
+    let mut rank_is_ambiguous = false;
+    let mut file_is_ambiguous = false;
+
+    let piece_name = state.squares[origin].unwrap().name;
+
+    for square in 0..64 {
+        if square == origin {
+            continue;
+        }
+        if state.squares[square].is_some() {
+            let piece = state.squares[square].unwrap();
+            if piece.name == piece_name && piece.color == state.to_move {
+                let action = Move { from: square, to: destination };
                 if action.is_legal(&state) {
-                    results.push(origin);
+                    if origin as u8 % 8 == square as u8 % 8 {
+                        println!("rank: {}", rank_is_ambiguous);
+                        rank_is_ambiguous = true;
+                    }
+                    if origin / 8 == square / 8 {
+                        println!("file: {}", file_is_ambiguous);
+                        file_is_ambiguous = true;
+                    }
                 }
             }
 
         }
     }
-    results
+    Disambiguation { rank_is_ambiguous, file_is_ambiguous }
 }
 
