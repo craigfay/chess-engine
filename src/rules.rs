@@ -61,7 +61,7 @@ impl Action for Move {
         let ambiguity = disambiguate_move(self.from, self.to, &state);
 
         if ambiguity.rank_is_ambiguous {
-            origin_rank.push((self.from as u8 / 8 + 1) as char)
+            origin_rank.push_str(&format!("{}", self.from as u8 / 8 + 1));
         }
         if ambiguity.file_is_ambiguous {
             origin_file.push((self.from as u8 % 8 + 97) as char);
