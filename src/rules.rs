@@ -61,10 +61,10 @@ impl Action for Move {
         let ambiguity = disambiguate_move(self.from, self.to, &state);
 
         if ambiguity.rank_is_ambiguous {
-            origin_rank.push((self.from as u8 % 8 + 97) as char);
+            origin_rank.push((self.from as u8 / 8 + 1) as char)
         }
         if ambiguity.file_is_ambiguous {
-            origin_file.push((self.from as u8 / 8 + 1) as char);
+            origin_file.push((self.from as u8 % 8 + 97) as char);
         }
 
         String::from(format!(
@@ -904,11 +904,9 @@ fn disambiguate_move(origin: usize, destination: usize, state: &GameState) -> Di
                 let action = Move { from: square, to: destination };
                 if action.is_legal(&state) {
                     if origin as u8 % 8 == square as u8 % 8 {
-                        println!("rank: {}", rank_is_ambiguous);
                         rank_is_ambiguous = true;
                     }
                     if origin / 8 == square / 8 {
-                        println!("file: {}", file_is_ambiguous);
                         file_is_ambiguous = true;
                     }
                 }
