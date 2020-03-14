@@ -220,6 +220,38 @@ impl ToString for Piece {
     }
 }
 
-
-
+impl ToString for GameState {
+    // Create a human readable gamestate string
+    fn to_string(&self) -> String {
+        let mut output = String::from("");
+    
+        for rank in (0..8).rev() {
+            for file in 0..8 {
+                let square = 8 * rank + file;
+                match self.squares[square] {
+                    None => output.push_str("."),
+                    Some(piece) => {
+                        match (piece.color, piece.name) {
+                            (Color::White, PieceName::Pawn) => output.push('P'),
+                            (Color::White, PieceName::Bishop) => output.push('B'),
+                            (Color::White, PieceName::Knight) => output.push('N'),
+                            (Color::White, PieceName::Rook) => output.push('R'),
+                            (Color::White, PieceName::Queen) => output.push('Q'),
+                            (Color::White, PieceName::King) => output.push('K'),
+                            (Color::Black, PieceName::Pawn) => output.push('p'),
+                            (Color::Black, PieceName::Bishop) => output.push('b'),
+                            (Color::Black, PieceName::Knight) => output.push('n'),
+                            (Color::Black, PieceName::Rook) => output.push('r'),
+                            (Color::Black, PieceName::Queen) => output.push('q'),
+                            (Color::Black, PieceName::King) => output.push('k'),
+                        }
+                    }
+                }
+                output.push_str(" ");
+            }
+            output.push_str("\n");
+        }
+        output 
+    }
+}
 

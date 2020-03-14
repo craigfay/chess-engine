@@ -2,7 +2,6 @@ use std::time::{Instant};
 
 mod rules;
 mod entities;
-mod display;
 mod controller;
 mod notation;
 
