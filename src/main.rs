@@ -1580,7 +1580,6 @@ fn king_capture_algebraic_notation_test() {
     assert_eq!("Kxe3", action.as_algebraic_notation(&state));
 }
 
-
 fn capture_algebraic_notation_with_ambiguous_file_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1595,6 +1594,19 @@ fn capture_algebraic_notation_with_ambiguous_file_test() {
     assert_eq!("Raxd5", action.as_algebraic_notation(&state));
 }
 
+fn capture_algebraic_notation_with_ambiguous_rank_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Bishop, 35),
+        Placement::new(Black, Queen, 43),
+        Placement::new(Black, Queen, 27),
+        Placement::new(Black, King, 60),
+    ]);
+    state.to_move = Black;
+    let action = Capture { on: 35, with: 27 };
+    assert!(action.is_legal(&state));
+    assert_eq!("Q4xd5", action.as_algebraic_notation(&state));
+}
 
 fn gamestate_to_string_test() {
     let state = GameState::new();
@@ -1741,6 +1753,7 @@ fn main() {
     queen_capture_algebraic_notation_test();
     king_capture_algebraic_notation_test();
     capture_algebraic_notation_with_ambiguous_file_test();
+    capture_algebraic_notation_with_ambiguous_rank_test();
     gamestate_to_string_test();
 
     let duration = timer.elapsed();
