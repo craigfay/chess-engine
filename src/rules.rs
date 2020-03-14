@@ -24,7 +24,7 @@ use crate::entities::{
     Color::{White, Black},
 };
 
-fn piece_to_char(maybe_piece: Option<Piece>) -> String {
+fn piece_to_string(maybe_piece: Option<Piece>) -> String {
     match maybe_piece {
         None => String::from(""),
         Some(piece) => {
@@ -50,7 +50,7 @@ impl Action for Move {
         if !self.is_legal(&state) {
             return String::from("");
         }
-        let piece_char = piece_to_char(state.squares[self.from]);
+        let piece_str = piece_to_string(state.squares[self.from]);
 
         let mut origin_rank = &mut String::with_capacity(1);
         let mut origin_file = &mut String::with_capacity(1);
@@ -68,7 +68,7 @@ impl Action for Move {
 
         String::from(format!(
             "{}{}{}{}{}",
-            piece_char,
+            piece_str,
             origin_file,
             origin_rank,
             destination_file,
@@ -148,7 +148,7 @@ impl Action for Capture {
         if !self.is_legal(&state) {
             return String::from("");
         }
-        let piece_char = piece_to_char(state.squares[self.with]);
+        let piece_str = piece_to_string(state.squares[self.with]);
 
         let mut origin_rank = &mut String::with_capacity(1);
         let mut origin_file = &mut String::with_capacity(1);
@@ -160,13 +160,13 @@ impl Action for Capture {
         if ambiguity.rank_is_ambiguous {
             origin_rank.push((self.with as u8 / 8 + 1 + 48 ) as char);
         }
-        if piece_char == "" || ambiguity.file_is_ambiguous {
+        if piece_str == "" || ambiguity.file_is_ambiguous {
             origin_file.push((self.with as u8 % 8 + 97) as char);
         }
 
         String::from(format!(
             "{}{}{}x{}{}",
-            piece_char,
+            piece_str,
             origin_file,
             origin_rank,
             destination_file,
