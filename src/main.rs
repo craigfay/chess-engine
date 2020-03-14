@@ -1631,6 +1631,23 @@ fn capture_algebraic_notation_with_ambiguous_rank_test() {
     assert_eq!("Q4xd5", action.as_algebraic_notation(&state));
 }
 
+fn en_passant_algebraic_notation_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 33),
+        Placement::new(Black, Pawn, 50),
+    ]);
+    state.to_move = Black;
+
+    // Two square advance by black
+    let action = Move { from: 50, to: 34 };
+    let state = action.apply(&state);
+
+    // En Passant by white
+    let action = EnPassant { with: 33 };
+    assert!(action.is_legal(&state));
+    assert_eq!("bxc6", action.as_algebraic_notation(&state));
+}
+
 fn gamestate_to_string_test() {
     let state = GameState::new();
     let expected = format!(
@@ -1779,6 +1796,7 @@ fn main() {
     king_capture_algebraic_notation_test();
     capture_algebraic_notation_with_ambiguous_file_test();
     capture_algebraic_notation_with_ambiguous_rank_test();
+    en_passant_algebraic_notation_test();
     gamestate_to_string_test();
 
     let duration = timer.elapsed();

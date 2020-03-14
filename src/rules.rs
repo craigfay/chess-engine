@@ -233,7 +233,23 @@ impl Action for EnPassant {
         "EnPassant"
     }
     fn as_algebraic_notation(&self, state: &GameState) -> String {
-        return String::from("");
+        if !self.is_legal(&state) {
+            return String::from("");
+        }
+
+        let mut origin_file = &mut String::with_capacity(1);
+        origin_file.push((self.with as u8 % 8 + 97) as char);
+
+        let destination_file = (state.en_passant_square.unwrap() as u8 % 8 + 97) as char;
+        let destination_rank = (state.en_passant_square.unwrap() as u8 / 8) + 1;
+
+        String::from(format!(
+            "{}x{}{}",
+            origin_file,
+            destination_file,
+            destination_rank,
+        ))
+
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // Make sure en-passant is available
