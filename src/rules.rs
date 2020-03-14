@@ -24,23 +24,21 @@ use crate::entities::{
     Color::{White, Black},
 };
 
-fn piece_to_string(maybe_piece: Option<Piece>) -> String {
-    match maybe_piece {
-        None => String::from(""),
-        Some(piece) => {
-            match piece.name {
-                Pawn => String::from(""),
-                Bishop => String::from("B"),
-                Knight => String::from("N"),
-                Rook => String::from("R"),
-                Queen => String::from("Q"),
-                King => String::from("K"),
-            }
+
+use std::cmp::{min, max};
+
+impl Piece {
+    fn to_string(&self) -> String {
+        match self.name {
+            Pawn => String::from(""),
+            Bishop => String::from("B"),
+            Knight => String::from("N"),
+            Rook => String::from("R"),
+            Queen => String::from("Q"),
+            King => String::from("K"),
         }
     }
 }
-
-use std::cmp::{min, max};
 
 impl Action for Move {
     fn name(&self) -> &str {
@@ -50,7 +48,7 @@ impl Action for Move {
         if !self.is_legal(&state) {
             return String::from("");
         }
-        let piece_str = piece_to_string(state.squares[self.from]);
+        let piece_str = state.squares[self.from].unwrap().to_string();
 
         let mut origin_rank = &mut String::with_capacity(1);
         let mut origin_file = &mut String::with_capacity(1);
@@ -148,7 +146,7 @@ impl Action for Capture {
         if !self.is_legal(&state) {
             return String::from("");
         }
-        let piece_str = piece_to_string(state.squares[self.with]);
+        let piece_str = state.squares[self.with].unwrap().to_string();
 
         let mut origin_rank = &mut String::with_capacity(1);
         let mut origin_file = &mut String::with_capacity(1);
