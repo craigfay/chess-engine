@@ -1648,6 +1648,16 @@ fn en_passant_algebraic_notation_test() {
     assert_eq!("bxc6", action.as_algebraic_notation(&state));
 }
 
+fn kingside_castle_algebraic_notation_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 4),
+        Placement::new(White, Rook, 7),
+    ]);
+    state.white_can_castle_kingside = true;
+    let action = Castle { direction: Kingside };
+    assert_eq!("O-O", action.as_algebraic_notation(&state));
+}
+
 fn gamestate_to_string_test() {
     let state = GameState::new();
     let expected = format!(
@@ -1797,6 +1807,7 @@ fn main() {
     capture_algebraic_notation_with_ambiguous_file_test();
     capture_algebraic_notation_with_ambiguous_rank_test();
     en_passant_algebraic_notation_test();
+    kingside_castle_algebraic_notation_test();
     gamestate_to_string_test();
 
     let duration = timer.elapsed();

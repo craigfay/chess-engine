@@ -331,7 +331,13 @@ impl Action for Castle {
         "Castle"
     }
     fn as_algebraic_notation(&self, state: &GameState) -> String {
-        return String::from("");
+        if !self.is_legal(&state) {
+            return String::from("");
+        }
+        match self.direction {
+            Kingside => String::from("O-O"),
+            Queenside => String::from("O-O-O"),
+        }
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // Don't allow actions that put/leave the player in check
