@@ -223,13 +223,13 @@ impl ToString for Piece {
 impl ToString for GameState {
     // Create a human readable gamestate string
     fn to_string(&self) -> String {
-        let mut output = String::from("");
+        let mut output = String::with_capacity(136);
     
         for rank in (0..8).rev() {
             for file in 0..8 {
                 let square = 8 * rank + file;
                 match self.squares[square] {
-                    None => output.push_str("."),
+                    None => output.push('.'),
                     Some(piece) => {
                         match (piece.color, piece.name) {
                             (Color::White, PieceName::Pawn) => output.push('P'),
