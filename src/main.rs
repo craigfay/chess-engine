@@ -1544,6 +1544,18 @@ fn knight_capture_algebraic_notation_test() {
     assert_eq!("Nxc6", action.as_algebraic_notation(&state));
 }
 
+fn rook_capture_algebraic_notation_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Rook, 32),
+        Placement::new(Black, Rook, 56),
+        Placement::new(Black, King, 60),
+    ]);
+    let action = Capture { on: 56, with: 32 };
+    assert!(action.is_legal(&state));
+    assert_eq!("Rxa8", action.as_algebraic_notation(&state));
+}
+
 
 fn capture_algebraic_notation_with_ambiguous_file_test() {
     let mut state = GameState::with_placements(vec![
@@ -1701,6 +1713,7 @@ fn main() {
     pawn_capture_algebraic_notation_test();
     bishop_capture_algebraic_notation_test();
     knight_capture_algebraic_notation_test();
+    rook_capture_algebraic_notation_test();
     capture_algebraic_notation_with_ambiguous_file_test();
     gamestate_to_string_test();
 
