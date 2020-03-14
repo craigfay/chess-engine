@@ -16,8 +16,4 @@
 * Test captures with incorrect attacker/defender colors
 * Implement and Test `as_algebraic_notation()` for each action type.
 * Add search helper function to find the square that a piece is on.
-* Add `find_ambiguous_move_origin(origin, destination, state)`
-* Use `disambiguate_move(origin,destination,state) -> Disambiguation`
-* `Disambiguation` should have `rank_is_ambiguous`, `file_is_ambiguous`
 * Test that pawns can't capture vertically
-* Rename `print()` as `to_string()`
