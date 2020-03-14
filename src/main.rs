@@ -40,9 +40,6 @@ use notation::{
     square_algebraic_to_index,
 };
 
-use display::print;
-
-
 fn new_gamestate_test() {
     // Gamestate can be constructed to represent a normal start
     let state = GameState::new();
@@ -1564,7 +1561,7 @@ fn capture_algebraic_notation_with_ambiguous_file_test() {
 }
 
 
-fn print_test() {
+fn gamestate_to_string_test() {
     let state = GameState::new();
     let expected = format!(
         "{}{}{}{}{}{}{}{}",
@@ -1579,7 +1576,7 @@ fn print_test() {
         "R N B Q K B N R \n"
     );
 
-    let output = print(&state);
+    let output = state.to_string();
     assert_eq!(output, expected);
 }
 
@@ -1706,7 +1703,7 @@ fn main() {
     bishop_capture_algebraic_notation_test();
     knight_capture_algebraic_notation_test();
     capture_algebraic_notation_with_ambiguous_file_test();
-    print_test();
+    gamestate_to_string_test();
 
     let duration = timer.elapsed();
     println!("Tests finished in {:?}", duration);
