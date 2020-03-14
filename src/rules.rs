@@ -24,21 +24,7 @@ use crate::entities::{
     Color::{White, Black},
 };
 
-
 use std::cmp::{min, max};
-
-impl Piece {
-    fn to_string(&self) -> String {
-        match self.name {
-            Pawn => String::from(""),
-            Bishop => String::from("B"),
-            Knight => String::from("N"),
-            Rook => String::from("R"),
-            Queen => String::from("Q"),
-            King => String::from("K"),
-        }
-    }
-}
 
 impl Action for Move {
     fn name(&self) -> &str {

@@ -11,6 +11,7 @@ use crate::entities::{
     }
 };
 
+
 impl GameState {
     // Create a human readable gamestate string
     pub fn to_string(&self) -> String {

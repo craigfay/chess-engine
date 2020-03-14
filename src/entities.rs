@@ -207,6 +207,19 @@ impl Piece {
     }
 }
 
+impl ToString for Piece {
+    fn to_string(&self) -> String {
+        match self.name {
+            PieceName::Pawn => String::from(""),
+            PieceName::Bishop => String::from("B"),
+            PieceName::Knight => String::from("N"),
+            PieceName::Rook => String::from("R"),
+            PieceName::Queen => String::from("Q"),
+            PieceName::King => String::from("K"),
+        }
+    }
+}
+
 
 
 
