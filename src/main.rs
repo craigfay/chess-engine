@@ -1510,6 +1510,20 @@ fn move_algebraic_notation_with_ambiguous_rank_and_file_test() {
     assert_eq!("Bd3e4", action.as_algebraic_notation(&state));
 }
 
+fn capture_algebraic_notation_with_ambiguous_file_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Bishop, 35),
+        Placement::new(Black, Rook, 32),
+        Placement::new(Black, Rook, 38),
+        Placement::new(Black, King, 60),
+    ]);
+    state.to_move = Black;
+    let action = Capture { on: 35, with: 32 };
+    assert!(action.is_legal(&state));
+    assert_eq!("Raxd5", action.as_algebraic_notation(&state));
+}
+
 
 fn print_test() {
     let state = GameState::new();
@@ -1649,6 +1663,7 @@ fn main() {
     move_algebraic_notation_with_ambiguous_file_test();
     move_algebraic_notation_with_ambiguous_rank_test();
     move_algebraic_notation_with_ambiguous_rank_and_file_test();
+    capture_algebraic_notation_with_ambiguous_file_test();
     print_test();
 
     let duration = timer.elapsed();

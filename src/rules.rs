@@ -145,7 +145,33 @@ impl Action for Capture {
         "Capture"
     }
     fn as_algebraic_notation(&self, state: &GameState) -> String {
-        return String::from("");
+        if !self.is_legal(&state) {
+            return String::from("");
+        }
+        let piece = piece_char(state.squares[self.with]);
+
+        let mut origin_rank = &mut String::with_capacity(1);
+        let mut origin_file = &mut String::with_capacity(1);
+        let destination_file = (self.on as u8 % 8 + 97) as char;
+        let destination_rank = (self.on / 8) + 1;
+
+        let ambiguity = disambiguate_capture(self.with, self.on, &state);
+
+        if ambiguity.rank_is_ambiguous {
+            origin_rank.push((self.with as u8 / 8 + 1 + 48 ) as char);
+        }
+        if ambiguity.file_is_ambiguous {
+            origin_file.push((self.with as u8 % 8 + 97) as char);
+        }
+
+        String::from(format!(
+            "{}{}{}x{}{}",
+            piece,
+            origin_file,
+            origin_rank,
+            destination_file,
+            destination_rank,
+        ))
     }
     fn is_legal(&self, state: &GameState) -> bool {
         // If there is no piece present at the chosen origin 
@@ -916,3 +942,31 @@ fn disambiguate_move(origin: usize, destination: usize, state: &GameState) -> Di
     Disambiguation { rank_is_ambiguous, file_is_ambiguous }
 }
 
+fn disambiguate_capture(origin: usize, destination: usize, state: &GameState) -> Disambiguation {
+    let mut rank_is_ambiguous = false;
+    let mut file_is_ambiguous = false;
+
+    let piece_name = state.squares[origin].unwrap().name;
+
+    for square in 0..64 {
+        if square == origin {
+            continue;
+        }
+        if state.squares[square].is_some() {
+            let piece = state.squares[square].unwrap();
+            if piece.name == piece_name && piece.color == state.to_move {
+                let action = Capture { on: destination, with: square } ;
+                if action.is_legal(&state) {
+                    if origin as u8 % 8 == square as u8 % 8 {
+                        rank_is_ambiguous = true;
+                    }
+                    if origin / 8 == square / 8 {
+                        file_is_ambiguous = true;
+                    }
+                }
+            }
+
+        }
+    }
+    Disambiguation { rank_is_ambiguous, file_is_ambiguous }
+}
