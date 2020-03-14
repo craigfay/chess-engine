@@ -21,3 +21,4 @@
 * `Disambiguation` should have `rank_is_ambiguous`, `file_is_ambiguous`
 * Test that pawns can't capture vertically
 * Rename `print()` as `to_string()`
+* Maybe add `to_char()` as a method of Piece`
