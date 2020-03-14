@@ -55,8 +55,8 @@ impl Action for Move {
         // TODO set capacity to 1
         let mut origin_rank = &mut String::from("");
         let mut origin_file = &mut String::from("");
-        let destination_rank = (self.to as u8 % 8 + 97) as char;
-        let destination_file = (self.to / 8) + 1;
+        let destination_file = (self.to as u8 % 8 + 97) as char;
+        let destination_rank = (self.to / 8) + 1;
 
         let ambiguity = disambiguate_move(self.from, self.to, &state);
 
@@ -70,10 +70,10 @@ impl Action for Move {
         String::from(format!(
             "{}{}{}{}{}",
             piece,
-            origin_rank,
             origin_file,
+            origin_rank,
+            destination_file,
             destination_rank,
-            destination_file
         ))
     }
     fn is_legal(&self, state: &GameState) -> bool {

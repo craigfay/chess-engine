@@ -1497,6 +1497,19 @@ fn move_algebraic_notation_with_ambiguous_rank_test() {
     assert_eq!("B3e4", action.as_algebraic_notation(&state));
 }
 
+fn move_algebraic_notation_with_ambiguous_rank_and_file_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Bishop, 19),
+        Placement::new(White, Bishop, 21),
+        Placement::new(White, Bishop, 35),
+        Placement::new(Black, King, 60),
+    ]);
+    let action = Move { from: 19, to: 28 };
+    assert!(action.is_legal(&state));
+    assert_eq!("Bd3e4", action.as_algebraic_notation(&state));
+}
+
 
 fn print_test() {
     let state = GameState::new();
@@ -1635,6 +1648,7 @@ fn main() {
     king_move_algebraic_notation_test();
     move_algebraic_notation_with_ambiguous_file_test();
     move_algebraic_notation_with_ambiguous_rank_test();
+    move_algebraic_notation_with_ambiguous_rank_and_file_test();
     print_test();
 
     let duration = timer.elapsed();
