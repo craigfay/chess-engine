@@ -160,7 +160,7 @@ impl Action for Capture {
         if ambiguity.rank_is_ambiguous {
             origin_rank.push((self.with as u8 / 8 + 1 + 48 ) as char);
         }
-        if ambiguity.file_is_ambiguous {
+        if piece == "" || ambiguity.file_is_ambiguous {
             origin_file.push((self.with as u8 % 8 + 97) as char);
         }
 
