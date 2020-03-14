@@ -19,3 +19,5 @@
 * Add `find_ambiguous_move_origin(origin, destination, state)`
 * Use `disambiguate_move(origin,destination,state) -> Disambiguation`
 * `Disambiguation` should have `rank_is_ambiguous`, `file_is_ambiguous`
+* Test that pawns can't capture vertically
+* Rename `print()` as `to_string()`
