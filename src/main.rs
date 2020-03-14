@@ -1268,6 +1268,17 @@ fn white_pawn_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+fn white_pawn_cant_capture_vertically_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, King, 7),
+        Placement::new(White, Pawn, 28),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Pawn, 36),
+    ]);
+    let action = Capture { on: 36, with: 28 };
+    assert!(!action.is_legal(&state));
+}
+
 fn black_pawn_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1726,6 +1737,7 @@ fn main() {
     black_cant_move_into_check_test();
     black_cant_promote_into_check_test();
     white_pawn_can_capture_test();
+    white_pawn_cant_capture_vertically_test();
     black_pawn_can_capture_test();
     white_bishop_can_capture_test();
     black_bishop_can_capture_test();

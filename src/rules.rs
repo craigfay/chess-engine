@@ -187,6 +187,13 @@ impl Action for Capture {
             return false
         }
 
+        // Don't allow pawns to attack vertically. Vertical movement in
+        // the correct direction is pseudo-legal for pawns, so it's an
+        // edge case that the following block prevents.
+        if attacker.name == Pawn && movement_is_vertical(self.with, self.on) {
+            return false
+        }
+
         // Verify that the pieces are allowed to move in accordance
         // with the specified to/from squares
         if !move_is_pseudo_legal(self.with, self.on, &state) {
@@ -215,6 +222,10 @@ impl Action for Capture {
         new_state.squares[self.with] = None;
         new_state
     }
+}
+
+fn movement_is_vertical(origin: usize, destination: usize) -> bool {
+    (origin as i32 - destination as i32).abs() % 8 == 0
 }
 
 impl Action for EnPassant {
