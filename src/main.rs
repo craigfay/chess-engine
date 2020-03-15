@@ -10,6 +10,15 @@ use rules::{
     color_is_checked,
     legal_actions,
     position_delta,
+
+    // Actions
+    Action,
+    Move,
+    Capture,
+    Promotion,
+    Castle,
+    CastleDirection::{Kingside, Queenside},
+    EnPassant,
 };
 
 use gamestate::{
@@ -28,13 +37,6 @@ use entities::{
         King,
     },
     Color::{White, Black},
-    Action,
-    Move,
-    Capture,
-    Promotion,
-    Castle,
-    CastleDirection::{Kingside, Queenside},
-    EnPassant,
 };
 
 use notation::{

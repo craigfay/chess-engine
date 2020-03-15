@@ -14,18 +14,68 @@ use crate::entities::{
         King,
     },
     Piece,
-    Action,
-    Move,
-    Capture,
-    Castle,
-    CastleDirection::{Kingside, Queenside},
-    Promotion,
-    EnPassant,
     Color,
     Color::{White, Black},
 };
 
+pub trait Action {
+    fn is_legal(&self, state: &GameState) -> bool;
+    fn apply(&self, state: &GameState) -> GameState;
+    fn name(&self) -> &str;
+    fn as_algebraic_notation(&self, state: &GameState) -> String;
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
+pub enum CastleDirection {
+    Kingside,
+    Queenside,
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
+pub struct Castle {
+    pub direction: CastleDirection,
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct Promotion {
+    pub pawn_becomes: PieceName,
+    pub moving_from: usize,
+    pub to: usize,
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct Move {
+    pub from: usize,
+    pub to: usize,
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct Capture {
+    pub on: usize,
+    pub with: usize,
+}
+
+
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub struct EnPassant {
+    pub with: usize,
+}
+
+
 use std::cmp::{min, max};
+
+
 
 impl Action for Move {
     fn name(&self) -> &str {
@@ -336,8 +386,8 @@ impl Action for Castle {
             return String::from("");
         }
         match self.direction {
-            Kingside => String::from("O-O"),
-            Queenside => String::from("O-O-O"),
+            CastleDirection::Kingside => String::from("O-O"),
+            CastleDirection::Queenside => String::from("O-O-O"),
         }
     }
     fn is_legal(&self, state: &GameState) -> bool {
@@ -346,7 +396,7 @@ impl Action for Castle {
             return false
         }
         match (state.to_move, &self.direction) {
-            (White, Kingside) => {
+            (White, CastleDirection::Kingside) => {
                  if !state.white_can_castle_kingside { return false }
                  if !piece_is(White, King, 4, &state) { return false }
                  if !piece_is(White, Rook, 7, &state) { return false }
@@ -358,7 +408,7 @@ impl Action for Castle {
                  if color_threatens_square(Black, 7, &state) { return false }
                  return true
             }
-            (White, Queenside) => {
+            (White, CastleDirection::Queenside) => {
                 if !state.white_can_castle_queenside { return false }
                 if !piece_is(White, King, 4, &state) { return false }
                 if !piece_is(White, Rook, 0, &state) { return false }
@@ -372,7 +422,7 @@ impl Action for Castle {
                 if color_threatens_square(Black, 4, &state) { return false }
                 return true
             }
-            (Black, Kingside) => {
+            (Black, CastleDirection::Kingside) => {
                 if !state.black_can_castle_kingside { return false }
                 if !piece_is(Black, King, 60, &state) { return false }
                 if !piece_is(Black, Rook, 63, &state) { return false }
@@ -384,7 +434,7 @@ impl Action for Castle {
                 if color_threatens_square(White, 63, &state) { return false }
                 return true
             },
-            (Black, Queenside) => {
+            (Black, CastleDirection::Queenside) => {
                 if !state.black_can_castle_queenside { return false }
                 if !piece_is(Black, King, 60, &state) { return false }
                 if !piece_is(Black, Rook, 56, &state) { return false }
@@ -413,28 +463,28 @@ impl Action for Castle {
         }
 
         match (state.to_move, &self.direction) {
-            (White, Kingside) => {
+            (White, CastleDirection::Kingside) => {
                 new_state.white_can_castle_kingside = false;
                 new_state.squares[6] = new_state.squares[4];
                 new_state.squares[5] = new_state.squares[7];
                 new_state.squares[4] = None;
                 new_state.squares[7] = None;
             },
-            (White, Queenside) => {
+            (White, CastleDirection::Queenside) => {
                 new_state.white_can_castle_queenside = false;
                 new_state.squares[2] = new_state.squares[4];
                 new_state.squares[3] = new_state.squares[0];
                 new_state.squares[4] = None;
                 new_state.squares[0] = None;
             },
-            (Black, Kingside) => {
+            (Black, CastleDirection::Kingside) => {
                 new_state.black_can_castle_kingside = false;
                 new_state.squares[62] = new_state.squares[60];
                 new_state.squares[61] = new_state.squares[63];
                 new_state.squares[60] = None;
                 new_state.squares[63] = None;
             },
-            (Black, Queenside) => {
+            (Black, CastleDirection::Queenside) => {
                 new_state.black_can_castle_queenside = false;
                 new_state.squares[58] = new_state.squares[60];
                 new_state.squares[59] = new_state.squares[56];
@@ -733,11 +783,13 @@ pub fn legal_captures(state: &GameState) -> Vec<Capture> {
 
 pub fn legal_castles(state: &GameState) -> Vec<Castle> {
     let mut results = vec![];
-    for direction in [Kingside, Queenside].iter() {
-        let action = Castle { direction: *direction };
-        if action.is_legal(&state) {
-            results.push(action);
-        }
+    let action = Castle { direction: CastleDirection::Kingside };
+    if action.is_legal(&state) {
+        results.push(action);
+    }
+    let action = Castle { direction: CastleDirection::Queenside };
+    if action.is_legal(&state) {
+        results.push(action);
     }
     results
 }

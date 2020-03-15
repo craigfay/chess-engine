@@ -4,7 +4,6 @@
 use crate::gamestate::GameState;
 
 use crate::entities::{
-    Move,
     PieceName::{
         Pawn
     },
