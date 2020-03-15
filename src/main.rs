@@ -1,7 +1,7 @@
 use std::time::{Instant};
 
 mod actions;
-mod entities;
+mod pieces;
 mod notation;
 mod gamestate;
 
@@ -26,7 +26,7 @@ use gamestate::{
     Placement,
 };
 
-use entities::{
+use pieces::{
     Piece,
     PieceName::{
         Pawn,

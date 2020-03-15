@@ -3,7 +3,7 @@
 
 use crate::gamestate::GameState;
 
-use crate::entities::{
+use crate::pieces::{
     PieceName::{
         Pawn
     },

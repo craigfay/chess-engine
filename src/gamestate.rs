@@ -1,4 +1,4 @@
-use crate::entities::{
+use crate::pieces::{
     Piece,
     PieceName,
     Color,
