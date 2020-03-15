@@ -275,7 +275,7 @@ pub fn legal_promotions(state: &GameState) -> Vec<Promotion> {
 // Determine whether the pieces can move in accordance
 // with a given move, regardless of threats or non-placement
 // game state
-fn move_is_pseudo_legal(origin: usize, destination: usize, state: &GameState) -> bool {
+pub fn move_is_pseudo_legal(origin: usize, destination: usize, state: &GameState) -> bool {
     if !state.squares[origin].is_some() {
         return false
     }
@@ -434,5 +434,4 @@ fn king_move_is_legal(origin: usize, destination: usize, state: &GameState) -> b
         _ => false,
     }
 }
-
 

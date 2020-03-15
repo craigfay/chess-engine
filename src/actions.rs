@@ -1,5 +1,5 @@
-// The single responsibility of this module is to determine what type of actions
-// are legal to perform on an arbitrary GameState.
+// The single responsibility of this module is to define types of
+// actions that can be applied to a GameState
 
 use crate::gamestate::GameState;
 
@@ -25,9 +25,10 @@ use crate::utilities::{
     legal_next_states,
     position_delta,
     movement_is_vertical,
+    move_is_pseudo_legal,
+    piece_is,
 };
 
-use std::cmp::{min, max};
 
 pub trait Action {
     fn is_legal(&self, state: &GameState) -> bool;
@@ -607,169 +608,6 @@ pub fn pawn_can_promote_to(piece: &PieceName) -> bool {
     }
 }
 
-// Determine whether the pieces can move in accordance
-// with a given move, regardless of threats or non-placement
-// game state
-fn move_is_pseudo_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    if !state.squares[origin].is_some() {
-        return false
-    }
-
-    let piece = state.squares[origin].unwrap();
-    match piece.name {
-        Pawn => pawn_move_is_legal(origin, destination, state),
-        Rook => rook_move_is_legal(origin, destination, state),
-        Bishop => bishop_move_is_legal(origin, destination, state),
-        Knight => knight_move_is_legal(origin, destination, state),
-        Queen => queen_move_is_legal(origin, destination, state),
-        King => king_move_is_legal(origin, destination, state),
-    }   
-}
-
-fn pawn_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    let piece = state.squares[origin].unwrap();
-
-    let (delta_x, delta_y)  = position_delta(origin, destination);
-
-    let to_is_enemy_piece = match state.squares[destination] {
-        Some(other_piece) => other_piece.color != piece.color,
-        None => Some(destination) == state.en_passant_square,
-    };
-
-    match piece.color {
-        // White Pieces can only move upwards
-        White => {
-            match (delta_x, delta_y) {
-                // Normal Moves
-                (0, 1) => true,
-                // Two-Square Moves
-                (0, 2) => origin > 7 && origin < 16,
-                // Captures
-                (1, 1) => to_is_enemy_piece,
-                (-1, 1) => to_is_enemy_piece,
-                _ => false,
-            }
-        },
-        // Black pieces can only move downwards
-        Black => {
-            match (delta_x, delta_y) {
-                // Normal Moves
-                (0, -1) => true,
-                // Two-Square Moves
-                (0, -2) => origin > 47 && origin < 56,
-                // Captures
-                (1, -1) => to_is_enemy_piece,
-                (-1, -1) => to_is_enemy_piece,
-                _ => false,
-            }
-        }
-
-    }
-}
-
-fn horizontal_path_is_obstructed(from: usize, delta_x: i32, state: &GameState) -> bool {
-    for x in 1..delta_x.abs() {
-        let index = if delta_x > 0 { from + x as usize } else { from - x as usize };
-        if state.squares[index].is_some() {
-            return true
-        }
-    }
-    false
-}
-
-fn vertical_path_is_obstructed(from: usize, delta_y: i32, state: &GameState) -> bool {
-    for y in 1..delta_y.abs() {
-        let index = if delta_y > 0 {
-            from + y as usize * 8
-        } else {
-            from - y as usize * 8
-        };
-        if state.squares[index].is_some() {
-            return true
-        }
-    }
-    false
-}
-
-fn diagonal_path_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
-    let low = min(from, to);
-    let hi = max(from, to);
-
-    // The difference between two diagonal squares will divide by 7 or 9
-    for n in [7,9].iter() {
-        if (hi - low) % n == 0 {
-            for i in (low+1..hi).step_by(*n) {
-                if state.squares[i].is_some() {
-                    return true
-                } 
-            }
-        }
-    }
-    return false;
-}
-
-fn rook_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(origin, destination);
-    // Return false if the path is obstructed
-    if horizontal_path_is_obstructed(origin, delta_x, state) {
-        return false;
-    }
-
-    match (delta_x, delta_y) {
-        (0, _) => true,
-        (_, 0) => true,
-        _ => false,
-    }
-}
-
-fn bishop_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(origin, destination);
-    if delta_x.abs() != delta_y.abs() {
-        return false;
-    }
-    return false == diagonal_path_is_obstructed(origin, destination, state);
-}
-
-
-fn knight_move_is_legal(origin: usize, destination: usize, _state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(origin, destination);
-
-    return match (delta_x.abs(), delta_y.abs()) {
-        (1, 2) => true,
-        (2, 1) => true,
-        (_, _) => false,
-    }
-
-}
-
-fn queen_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(origin, destination);
-
-    return match (delta_x.abs(), delta_y.abs()) {
-        (0, _) => !horizontal_path_is_obstructed(origin, delta_x, state),
-        (_, 0) => !horizontal_path_is_obstructed(origin, delta_x, state),
-        (x, y) => x == y && !diagonal_path_is_obstructed(origin, destination, state),
-    }
-
-}
-
-pub fn piece_is(color: Color, name: PieceName, square: usize, state: &GameState) -> bool {
-    match state.squares[square] {
-        Some(piece) => piece.color == color && piece.name == name,
-        None => false
-    }
-}
-
-fn king_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(origin, destination);
-    return match (delta_x.abs(), delta_y.abs()) {
-        (0, 1) => !horizontal_path_is_obstructed(origin, delta_x, &state),
-        (1, 0) => !vertical_path_is_obstructed(origin, delta_y, &state),
-        (1, 1) => !diagonal_path_is_obstructed(origin, destination, &state),
-        _ => false,
-    }
-}
-
 struct Disambiguation {
     rank_is_ambiguous: bool,
     file_is_ambiguous: bool,
@@ -832,3 +670,4 @@ fn disambiguate_capture(origin: usize, destination: usize, state: &GameState) ->
     }
     Disambiguation { rank_is_ambiguous, file_is_ambiguous }
 }
+

@@ -1,19 +1,12 @@
-use std::time::{Instant};
 
-mod actions;
-mod pieces;
-mod notation;
-mod gamestate;
-mod utilities;
-
-use utilities::{
+use crate::utilities::{
     color_threatens_square,
     color_is_checked,
     position_delta,
     legal_actions,
 };
 
-use actions::{
+use crate::actions::{
     Action,
     Move,
     Capture,
@@ -23,12 +16,12 @@ use actions::{
     EnPassant,
 };
 
-use gamestate::{
+use crate::gamestate::{
     GameState,
     Placement,
 };
 
-use pieces::{
+use crate::pieces::{
     Piece,
     PieceName::{
         Pawn,
@@ -41,7 +34,7 @@ use pieces::{
     Color::{White, Black},
 };
 
-use notation::{
+use crate::notation::{
     square_index_to_algebraic,
     square_algebraic_to_index,
 };
@@ -1922,154 +1915,5 @@ fn gamestate_to_string_test() {
 
     let output = state.to_string();
     assert_eq!(output, expected);
-}
-
-fn main() {
-    // Time tests
-    let timer = Instant::now();
-
-    new_gamestate_test();
-    legal_actions_test();
-    legal_actions_no_kings_test();
-    position_delta_test();
-    pawn_movement_sideways_test();
-    pawn_movement_too_far_test();
-    pawn_movement_normal_test();
-    pawn_cant_move_diagonally_test();
-    rook_movement_horizontal_test();
-    rook_movement_vertical_test();
-    rook_movement_horizontal_obstruction_test();
-    bishop_movement_diagonal_up_left_test();
-    bishop_movement_diagonal_up_right_test();
-    bishop_movement_diagonal_down_left_test();
-    bishop_movement_diagonal_down_right_test();
-    bishop_movement_diagonal_right_edge_test();
-    bishop_movement_diagonal_left_edge_test();
-    knight_movement_two_up_one_right_test();
-    knight_movement_one_up_two_right_test();
-    knight_movement_two_up_one_left_test();
-    knight_movement_one_up_two_left_test();
-    knight_movement_two_down_one_right_test();
-    knight_movement_one_down_two_right_test();
-    knight_movement_two_down_one_left_test();
-    knight_movement_one_down_two_left_test();
-    queen_movement_horizontal_test();
-    queen_movement_vertical_test();
-    queen_movement_diagonal_test();
-    king_movement_horizontal_test();
-    king_movement_vertical_test();
-    king_movement_diagonal_test();
-    cant_move_onto_another_piece_test();
-    color_is_checked_test();
-    color_threatens_square_test();
-    state_after_move_test();
-    white_kingside_castle_legality_test();
-    black_kingside_castle_legality_test();
-    white_queenside_castle_legality_test();
-    black_queenside_castle_legality_test();
-    white_kingside_castle_aftermath_test();
-    white_queenside_castle_aftermath_test();
-    black_kingside_castle_aftermath_test();
-    black_queenside_castle_aftermath_test();
-    white_kingside_castle_obstruction_test();
-    white_queenside_castle_obstruction_test();
-    black_kingside_castle_obstruction_test();
-    black_queenside_castle_obstruction_test();
-    white_kingside_castle_out_of_check_test();
-    white_kingside_castle_into_check_test();
-    white_kingside_castle_through_check_test();
-    white_queenside_castle_out_of_check_test();
-    white_queenside_castle_into_check_test();
-    white_queenside_castle_through_check_test();
-    black_kingside_castle_out_of_check_test();
-    black_kingside_castle_into_check_test();
-    black_kingside_castle_through_check_test();
-    black_queenside_castle_out_of_check_test();
-    black_queenside_castle_into_check_test();
-    black_queenside_castle_through_check_test();
-    pawn_threats_test();
-    white_performs_en_passant_test();
-    black_performs_en_passant_test();
-    white_knight_promotion_legality_test();
-    white_bishop_promotion_legality_test();
-    white_rook_promotion_legality_test();
-    white_queen_promotion_legality_test();
-    black_bishop_promotion_legality_test();
-    black_knight_promotion_legality_test();
-    black_rook_promotion_legality_test();
-    black_queen_promotion_legality_test();
-    promotion_capture_legality_test();
-    en_passant_expires_after_move_test();
-    en_passant_expires_after_castle_test();
-    en_passant_expires_after_promotion_test();
-    en_passant_expires_after_en_passant_test();
-    en_passant_expires_after_capture_test();
-    to_move_switches_after_move_test();
-    to_move_switches_after_promotion_test();
-    to_move_switches_after_castle_test();
-    legal_actions_includes_moves_test();
-    legal_actions_includes_promotions_test();
-    legal_actions_includes_all_legal_castles_by_white_test();
-    legal_actions_includes_all_legal_castles_by_black_test();
-    legal_actions_includes_all_legal_en_passants_by_white_test();
-    legal_actions_includes_all_legal_en_passants_by_black_test();
-    legal_actions_includes_all_legal_captures_by_white_test();
-    legal_actions_includes_all_legal_captures_by_black_test();
-    no_legal_actions_in_checkmate_test();
-    white_promotion_to_bishop_test();
-    white_promotion_to_knight_test();
-    white_promotion_to_rook_test();
-    white_promotion_to_queen_test();
-    black_promotion_to_bishop_test();
-    black_promotion_to_knight_test();
-    black_promotion_to_rook_test();
-    black_promotion_to_queen_test();
-    white_cant_move_into_check_test();
-    white_cant_promote_into_check_test();
-    black_cant_move_into_check_test();
-    black_cant_promote_into_check_test();
-    white_pawn_can_capture_test();
-    white_pawn_cant_capture_vertically_test();
-    black_pawn_can_capture_test();
-    black_pawn_cant_capture_vertically_test();
-    white_bishop_can_capture_test();
-    black_bishop_can_capture_test();
-    white_knight_can_capture_test();
-    black_knight_can_capture_test();
-    white_rook_can_capture_test();
-    black_rook_can_capture_test();
-    white_queen_can_capture_test();
-    black_queen_can_capture_test();
-    white_king_can_capture_test();
-    black_king_can_capture_test();
-    pawn_move_algebraic_notation_test();
-    bishop_move_algebraic_notation_test();
-    knight_move_algebraic_notation_test();
-    rook_move_algebraic_notation_test();
-    queen_move_algebraic_notation_test();
-    king_move_algebraic_notation_test();
-    move_algebraic_notation_with_ambiguous_file_test();
-    move_algebraic_notation_with_ambiguous_rank_test();
-    move_algebraic_notation_with_ambiguous_rank_and_file_test();
-    pawn_capture_algebraic_notation_test();
-    bishop_capture_algebraic_notation_test();
-    knight_capture_algebraic_notation_test();
-    rook_capture_algebraic_notation_test();
-    queen_capture_algebraic_notation_test();
-    king_capture_algebraic_notation_test();
-    capture_algebraic_notation_with_ambiguous_file_test();
-    capture_algebraic_notation_with_ambiguous_rank_test();
-    en_passant_algebraic_notation_test();
-    kingside_castle_algebraic_notation_test();
-    queenside_castle_algebraic_notation_test();
-    promotion_to_bishop_algebraic_notation_test();
-    promotion_to_knight_algebraic_notation_test();
-    promotion_to_rook_algebraic_notation_test();
-    promotion_to_queen_algebraic_notation_test();
-    promotion_with_capture_algebraic_notation_test();
-    gamestate_to_string_test();
-
-    let duration = timer.elapsed();
-    println!("Tests finished in {:?}", duration);
 }
 

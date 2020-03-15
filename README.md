@@ -19,4 +19,3 @@
 * Test that pawns can't capture vertically
 * Handle Promotions that are also Captures
 * Create Algebraic equivalents to the actions that use strings instead of usize.
-* Investigate rust testing conventions
