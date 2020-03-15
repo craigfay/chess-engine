@@ -1676,6 +1676,14 @@ fn promotion_to_bishop_algebraic_notation_test() {
     assert_eq!("h8B", action.as_algebraic_notation(&state));
 }
 
+fn promotion_to_knight_algebraic_notation_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Pawn, 54),
+    ]);
+    let action = Promotion { pawn_becomes: Knight, moving_from: 54, to: 62 };
+    assert_eq!("g8N", action.as_algebraic_notation(&state));
+}
+
 fn gamestate_to_string_test() {
     let state = GameState::new();
     let expected = format!(
@@ -1828,6 +1836,7 @@ fn main() {
     kingside_castle_algebraic_notation_test();
     queenside_castle_algebraic_notation_test();
     promotion_to_bishop_algebraic_notation_test();
+    promotion_to_knight_algebraic_notation_test();
     gamestate_to_string_test();
 
     let duration = timer.elapsed();
