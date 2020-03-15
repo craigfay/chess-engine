@@ -19,3 +19,4 @@
 * Test that pawns can't capture vertically
 * Handle Promotions that are also Captures
 * Add a `disambiguate_promotion()`
+* Create Algebraic equivalents to the actions that use strings instead of usize.
