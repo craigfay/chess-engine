@@ -2,8 +2,8 @@ use std::time::{Instant};
 
 mod rules;
 mod entities;
-mod controller;
 mod notation;
+mod gamestate;
 
 use rules::{
     color_threatens_square,
@@ -12,8 +12,9 @@ use rules::{
     position_delta,
 };
 
+use gamestate::GameState;
+
 use entities::{
-    GameState,
     Placement,
     Piece,
     PieceName::{

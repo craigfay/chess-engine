@@ -1,9 +1,10 @@
 // The single responsibility of this module is to translate between real-world
 // chess notation conventions, and the application's representation of equivalent concepts.
 
+use crate::gamestate::GameState;
+
 use crate::entities::{
     Move,
-    GameState,
     PieceName::{
         Pawn
     },
