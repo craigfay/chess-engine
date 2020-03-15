@@ -453,7 +453,7 @@ impl Action for Promotion {
         if !self.is_legal(&state) {
             return String::from("");
         }
-        // A string representing the piece that the pawn will promote to:w
+
         let new_piece = Piece {
             color: state.to_move,
             name: self.pawn_becomes,
