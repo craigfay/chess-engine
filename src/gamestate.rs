@@ -1,5 +1,4 @@
 use crate::entities::{
-    Placement,
     Piece,
     PieceName,
     Color,
@@ -142,5 +141,19 @@ impl ToString for GameState {
         output 
     }
 }
+
+#[derive(Debug)]
+pub struct Placement {
+    pub color: Color,
+    pub piece: PieceName,
+    pub square: usize,
+}
+
+impl Placement {
+    pub  fn new(color: Color, piece: PieceName, square: usize) -> Placement {
+        Placement { color, piece, square }
+    }
+}
+
 
 

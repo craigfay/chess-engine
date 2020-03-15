@@ -12,10 +12,12 @@ use rules::{
     position_delta,
 };
 
-use gamestate::GameState;
+use gamestate::{
+    GameState,
+    Placement,
+};
 
 use entities::{
-    Placement,
     Piece,
     PieceName::{
         Pawn,
