@@ -827,6 +827,15 @@ fn white_queen_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+fn black_bishop_promotion_legality_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 12),
+    ]);
+    state.to_move = Black;
+    let action = Promotion { pawn_becomes: Bishop, moving_from: 12, to: 4 };
+    assert!(action.is_legal(&state));
+}
+
 fn black_knight_promotion_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 11),
@@ -1808,6 +1817,7 @@ fn main() {
     white_bishop_promotion_legality_test();
     white_rook_promotion_legality_test();
     white_queen_promotion_legality_test();
+    black_bishop_promotion_legality_test();
     black_knight_promotion_legality_test();
     en_passant_expires_after_move_test();
     en_passant_expires_after_castle_test();
