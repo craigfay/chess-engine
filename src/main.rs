@@ -39,6 +39,7 @@ use notation::{
     square_algebraic_to_index,
 };
 
+#[test]
 fn new_gamestate_test() {
     // Gamestate can be constructed to represent a normal start
     let state = GameState::new();
@@ -97,6 +98,7 @@ fn new_gamestate_test() {
     assert!(state.white_can_castle_queenside);
 }
 
+#[test]
 fn legal_actions_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -105,6 +107,7 @@ fn legal_actions_test() {
     assert_eq!(5, legal_actions(&state).len());
 }
 
+#[test]
 fn legal_actions_no_kings_test() {
     // There can be legal moves even if state lacks Kings
     //
@@ -115,7 +118,7 @@ fn legal_actions_no_kings_test() {
     assert_eq!(4, legal_actions(&state).len());
 }
 
-
+#[test]
 fn position_delta_test() {
     assert_eq!(position_delta(0, 1), (1, 0));
     assert_eq!(position_delta(0, 4), (4, 0));
@@ -128,8 +131,9 @@ fn position_delta_test() {
     assert_eq!(position_delta(63, 0), (-7, -7));
 }
 
-// Pawns should not be able to move sideways
+#[test]
 fn pawn_movement_sideways_test() {
+    // Pawns should not be able to move sideways
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 16),
     ]);
@@ -137,17 +141,20 @@ fn pawn_movement_sideways_test() {
     assert_eq!(false, action.is_legal(&state));
 }
 
-// Pawns should not be able to move more than two squares vertically
+#[test]
 fn pawn_movement_too_far_test() {
+    // Pawns should not be able to move more than two squares vertically
     let state = GameState::with_placements(vec![
+
         Placement::new(White, Pawn, 18),
     ]);
     let action = Move { from: 18, to: 42 };
     assert!(!action.is_legal(&state));
 }
 
-// White pawns should be able to move 1 square up
+#[test]
 fn pawn_movement_normal_test() {
+    // White pawns should be able to move 1 square up
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 22),
     ]);
@@ -155,8 +162,9 @@ fn pawn_movement_normal_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Pawns should not be able to move diagonally
+#[test]
 fn pawn_cant_move_diagonally_test() {
+    // Pawns should not be able to move diagonally
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 4),
     ]);
@@ -167,8 +175,9 @@ fn pawn_cant_move_diagonally_test() {
     assert_eq!(false, action.is_legal(&state));
 }
 
-// Rooks should be able to travel horizontally
+#[test]
 fn rook_movement_horizontal_test() {
+    // Rooks should be able to travel horizontally
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
@@ -176,8 +185,9 @@ fn rook_movement_horizontal_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Rooks should be able to travel vertically
+#[test]
 fn rook_movement_vertical_test() {
+    // Rooks should be able to travel vertically
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 35),
     ]);
@@ -185,8 +195,9 @@ fn rook_movement_vertical_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Rooks should not be able to travel horizontally through other pieces
+#[test]
 fn rook_movement_horizontal_obstruction_test() {
+    // Rooks should not be able to travel horizontally through other pieces
     let state = GameState::with_placements(vec![
         Placement::new(White, Rook, 32),
         Placement::new(Black, Pawn, 33),
@@ -195,8 +206,9 @@ fn rook_movement_horizontal_obstruction_test() {
     assert_eq!(false, action.is_legal(&state));
 }
 
-// Bishops should be able to travel diagonally up-left
+#[test]
 fn bishop_movement_diagonal_up_left_test() {
+    // Bishops should be able to travel diagonally up-left
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 22),
     ]);
@@ -204,8 +216,9 @@ fn bishop_movement_diagonal_up_left_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Bishops should be able to travel diagonally up-right
+#[test]
 fn bishop_movement_diagonal_up_right_test() {
+    // Bishops should be able to travel diagonally up-right
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 0),
     ]);
@@ -213,8 +226,9 @@ fn bishop_movement_diagonal_up_right_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Bishops should be able to travel diagonally down-left
+#[test]
 fn bishop_movement_diagonal_down_left_test() {
+    // Bishops should be able to travel diagonally down-left
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 27),
     ]);
@@ -222,9 +236,9 @@ fn bishop_movement_diagonal_down_left_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-
-// Bishops should be able to travel diagonally down-right
+#[test]
 fn bishop_movement_diagonal_down_right_test() {
+    // Bishops should be able to travel diagonally down-right
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 56),
     ]);
@@ -232,9 +246,9 @@ fn bishop_movement_diagonal_down_right_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-
-// Bishops shouldn't be able to wrap around the right edge of the state
+#[test]
 fn bishop_movement_diagonal_right_edge_test() {
+    // Bishops shouldn't be able to wrap around the right edge of the state
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 23),
     ]);
@@ -242,9 +256,9 @@ fn bishop_movement_diagonal_right_edge_test() {
     assert_eq!(false, action.is_legal(&state));
 }
 
-
-// Bishops shouldn't be able to wrap around the left edge of the state
+#[test]
 fn bishop_movement_diagonal_left_edge_test() {
+    // Bishops shouldn't be able to wrap around the left edge of the state
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 24),
     ]);
@@ -252,6 +266,7 @@ fn bishop_movement_diagonal_left_edge_test() {
     assert_eq!(false, action.is_legal(&state));
 }
 
+#[test]
 fn knight_movement_two_up_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -260,7 +275,7 @@ fn knight_movement_two_up_one_right_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-
+#[test]
 fn knight_movement_one_up_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -269,6 +284,7 @@ fn knight_movement_one_up_two_right_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
+#[test]
 fn knight_movement_two_up_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -277,7 +293,7 @@ fn knight_movement_two_up_one_left_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-
+#[test]
 fn knight_movement_one_up_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -286,6 +302,7 @@ fn knight_movement_one_up_two_left_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
+#[test]
 fn knight_movement_two_down_one_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -294,6 +311,7 @@ fn knight_movement_two_down_one_right_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
+#[test]
 fn knight_movement_one_down_two_right_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -302,6 +320,7 @@ fn knight_movement_one_down_two_right_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
+#[test]
 fn knight_movement_two_down_one_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -310,6 +329,7 @@ fn knight_movement_two_down_one_left_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
+#[test]
 fn knight_movement_one_down_two_left_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Knight, 28),
@@ -318,8 +338,9 @@ fn knight_movement_one_down_two_left_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Queens should be able to move horizontally
+#[test]
 fn queen_movement_horizontal_test() {
+    // Queens should be able to move horizontally
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
@@ -327,8 +348,9 @@ fn queen_movement_horizontal_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Queens should be able to move horizontally
+#[test]
 fn queen_movement_vertical_test() {
+    // Queens should be able to move horizontally
     let state = GameState::with_placements(vec![
         Placement::new(Black, Queen, 24),
     ]);
@@ -336,8 +358,9 @@ fn queen_movement_vertical_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Queens should be able to move diagonally
+#[test]
 fn queen_movement_diagonal_test() {
+    // Queens should be able to move diagonally
     let state = GameState::with_placements(vec![
         Placement::new(White, Queen, 24),
     ]);
@@ -345,8 +368,9 @@ fn queen_movement_diagonal_test() {
     assert_eq!(true, action.is_legal(&state));
 }
 
-// Kings should be able to move one square horizontally
+#[test]
 fn king_movement_horizontal_test() {
+    // Kings should be able to move one square horizontally
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
@@ -354,8 +378,9 @@ fn king_movement_horizontal_test() {
     assert!(action.is_legal(&state));
 }
 
-// Kings should be able to move one square vertically
+#[test]
 fn king_movement_vertical_test() {
+    // Kings should be able to move one square vertically
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 28),
     ]);
@@ -363,9 +388,9 @@ fn king_movement_vertical_test() {
     assert!(action.is_legal(&state));
 }
 
-
-// Kings should be able to move one square diagonally
+#[test]
 fn king_movement_diagonal_test() {
+    // Kings should be able to move one square diagonally
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 24),
     ]);
@@ -373,6 +398,7 @@ fn king_movement_diagonal_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn cant_move_onto_another_piece_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, King, 63),
@@ -401,6 +427,7 @@ fn cant_move_onto_another_piece_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn algebraic_notation_to_index_test() {
     let ranks = ["1","2","3","4","5","6","7","8"];
     let files = ["a","b","c","d","e","f","g","h"];
@@ -414,6 +441,7 @@ fn algebraic_notation_to_index_test() {
     }
 }
 
+#[test]
 fn color_is_checked_test() {
     let state = GameState::new();
     assert!(!color_is_checked(White, &state));
@@ -426,6 +454,7 @@ fn color_is_checked_test() {
     assert!(color_is_checked(Black, &state));
 }
 
+#[test]
 fn color_threatens_square_test() {
     let state = GameState::new();
     assert!(color_threatens_square(White, 20, &state));
@@ -436,6 +465,7 @@ fn color_threatens_square_test() {
     assert!(!color_threatens_square(Black, 36, &state));
 }
 
+#[test]
 fn state_after_move_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 0),
@@ -447,6 +477,7 @@ fn state_after_move_test() {
     assert!(!new_state.squares[0].is_some());
 }
 
+#[test]
 fn white_kingside_castle_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -457,6 +488,7 @@ fn white_kingside_castle_legality_test() {
     assert!(action.is_legal(&state));
 }
   
+#[test]
 fn black_kingside_castle_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -468,6 +500,7 @@ fn black_kingside_castle_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_queenside_castle_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -478,6 +511,7 @@ fn white_queenside_castle_legality_test() {
     assert!(action.is_legal(&state));
 }
   
+#[test]
 fn black_queenside_castle_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -489,6 +523,7 @@ fn black_queenside_castle_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_kingside_castle_aftermath_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -505,6 +540,7 @@ fn white_kingside_castle_aftermath_test() {
     assert!(!aftermath.squares[7].is_some());
 }
 
+#[test]
 fn white_queenside_castle_aftermath_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -521,6 +557,7 @@ fn white_queenside_castle_aftermath_test() {
     assert!(!aftermath.squares[0].is_some());
 }
 
+#[test]
 fn black_kingside_castle_aftermath_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -538,6 +575,7 @@ fn black_kingside_castle_aftermath_test() {
     assert!(!aftermath.squares[63].is_some());
 }
 
+#[test]
 fn black_queenside_castle_aftermath_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -555,6 +593,7 @@ fn black_queenside_castle_aftermath_test() {
     assert!(!aftermath.squares[56].is_some());
 }
 
+#[test]
 fn white_kingside_castle_obstruction_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -566,6 +605,7 @@ fn white_kingside_castle_obstruction_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_queenside_castle_obstruction_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -577,6 +617,7 @@ fn white_queenside_castle_obstruction_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_kingside_castle_obstruction_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -589,6 +630,7 @@ fn black_kingside_castle_obstruction_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_queenside_castle_obstruction_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -601,6 +643,7 @@ fn black_queenside_castle_obstruction_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_kingside_castle_out_of_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -612,6 +655,7 @@ fn white_kingside_castle_out_of_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_kingside_castle_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -623,6 +667,7 @@ fn white_kingside_castle_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_kingside_castle_through_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -634,6 +679,7 @@ fn white_kingside_castle_through_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_queenside_castle_out_of_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -645,6 +691,7 @@ fn white_queenside_castle_out_of_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_queenside_castle_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -656,6 +703,7 @@ fn white_queenside_castle_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_queenside_castle_through_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -667,6 +715,7 @@ fn white_queenside_castle_through_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_kingside_castle_out_of_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -679,6 +728,7 @@ fn black_kingside_castle_out_of_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_kingside_castle_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -691,6 +741,7 @@ fn black_kingside_castle_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_kingside_castle_through_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -703,6 +754,7 @@ fn black_kingside_castle_through_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_queenside_castle_out_of_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -715,6 +767,7 @@ fn black_queenside_castle_out_of_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_queenside_castle_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -727,6 +780,7 @@ fn black_queenside_castle_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_queenside_castle_through_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
@@ -739,6 +793,7 @@ fn black_queenside_castle_through_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn pawn_threats_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 44),
@@ -754,6 +809,7 @@ fn pawn_threats_test() {
     assert!(!color_threatens_square(Black, 36, &state));
 }
 
+#[test]
 fn white_performs_en_passant_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
@@ -775,6 +831,7 @@ fn white_performs_en_passant_test() {
 
 }
 
+#[test]
 fn black_performs_en_passant_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 12),
@@ -795,6 +852,7 @@ fn black_performs_en_passant_test() {
     assert!(!state.squares[28].is_some());
 }
 
+#[test]
 fn white_knight_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 55),
@@ -803,6 +861,7 @@ fn white_knight_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_bishop_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 48),
@@ -811,6 +870,7 @@ fn white_bishop_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_rook_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 49),
@@ -819,6 +879,7 @@ fn white_rook_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_queen_promotion_legality_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 50),
@@ -827,6 +888,7 @@ fn white_queen_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_bishop_promotion_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 12),
@@ -836,6 +898,7 @@ fn black_bishop_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_knight_promotion_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 11),
@@ -845,6 +908,7 @@ fn black_knight_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_rook_promotion_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 15),
@@ -854,6 +918,7 @@ fn black_rook_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_queen_promotion_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 14),
@@ -863,6 +928,7 @@ fn black_queen_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn promotion_capture_legality_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 14),
@@ -873,6 +939,7 @@ fn promotion_capture_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn en_passant_expires_after_move_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 12),
@@ -892,6 +959,7 @@ fn en_passant_expires_after_move_test() {
     assert!(state.en_passant_square == None);
 }
 
+#[test]
 fn en_passant_expires_after_castle_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 12),
@@ -913,6 +981,7 @@ fn en_passant_expires_after_castle_test() {
     assert!(state.en_passant_square == None);
 }
 
+#[test]
 fn en_passant_expires_after_promotion_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 12),
@@ -934,6 +1003,7 @@ fn en_passant_expires_after_promotion_test() {
     assert!(state.en_passant_square == None);
 }
 
+#[test]
 fn en_passant_expires_after_en_passant_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 61),
@@ -954,7 +1024,7 @@ fn en_passant_expires_after_en_passant_test() {
     assert!(state.en_passant_square == None);
 }
 
-
+#[test]
 fn en_passant_expires_after_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Bishop, 61),
@@ -975,8 +1045,7 @@ fn en_passant_expires_after_capture_test() {
     assert!(state.en_passant_square == None);
 }
 
-
-
+#[test]
 fn to_move_switches_after_move_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 8),
@@ -993,6 +1062,7 @@ fn to_move_switches_after_move_test() {
     assert!(state.to_move == White);
 }
 
+#[test]
 fn to_move_switches_after_promotion_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 55),
@@ -1009,6 +1079,7 @@ fn to_move_switches_after_promotion_test() {
     assert!(state.to_move == White);
 }
 
+#[test]
 fn to_move_switches_after_castle_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1027,6 +1098,7 @@ fn to_move_switches_after_castle_test() {
     assert!(state.to_move == White);
 }
 
+#[test]
 fn legal_actions_includes_moves_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1040,6 +1112,7 @@ fn legal_actions_includes_moves_test() {
     }));
 }
 
+#[test]
 fn legal_actions_includes_promotions_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1053,6 +1126,7 @@ fn legal_actions_includes_promotions_test() {
     }));
 }
 
+#[test]
 fn legal_actions_includes_all_legal_castles_by_white_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1071,6 +1145,7 @@ fn legal_actions_includes_all_legal_castles_by_white_test() {
     assert_eq!(2, legal_castles.len());
 }
 
+#[test]
 fn legal_actions_includes_all_legal_castles_by_black_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1090,6 +1165,7 @@ fn legal_actions_includes_all_legal_castles_by_black_test() {
     assert_eq!(2, legal_castles.len());
 }
 
+#[test]
 fn legal_actions_includes_all_legal_en_passants_by_white_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
@@ -1116,6 +1192,7 @@ fn legal_actions_includes_all_legal_en_passants_by_white_test() {
     assert_eq!(2, legal_en_passants.len());
 }
 
+#[test]
 fn legal_actions_includes_all_legal_en_passants_by_black_test() {
     let state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 27),
@@ -1141,6 +1218,7 @@ fn legal_actions_includes_all_legal_en_passants_by_black_test() {
     assert_eq!(2, legal_en_passants.len());
 }
 
+#[test]
 fn legal_actions_includes_all_legal_captures_by_white_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
@@ -1156,6 +1234,7 @@ fn legal_actions_includes_all_legal_captures_by_white_test() {
     assert_eq!(2, legal_captures.len());
 }
 
+#[test]
 fn legal_actions_includes_all_legal_captures_by_black_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
@@ -1172,6 +1251,7 @@ fn legal_actions_includes_all_legal_captures_by_black_test() {
     assert_eq!(2, legal_captures.len());
 }
 
+#[test]
 fn no_legal_actions_in_checkmate_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1183,6 +1263,7 @@ fn no_legal_actions_in_checkmate_test() {
     assert_eq!(0, actions.iter().len());
 }
 
+#[test]
 fn white_promotion_to_bishop_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1193,6 +1274,7 @@ fn white_promotion_to_bishop_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_promotion_to_knight_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1203,6 +1285,7 @@ fn white_promotion_to_knight_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_promotion_to_rook_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1213,6 +1296,7 @@ fn white_promotion_to_rook_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_promotion_to_queen_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1223,6 +1307,7 @@ fn white_promotion_to_queen_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_promotion_to_bishop_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1234,6 +1319,7 @@ fn black_promotion_to_bishop_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_promotion_to_knight_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1245,7 +1331,9 @@ fn black_promotion_to_knight_test() {
     assert!(action.is_legal(&state));
 }
 
-fn black_promotion_to_rook_test() { let mut state = GameState::with_placements(vec![ Placement::new(White, King, 4),
+#[test]
+fn black_promotion_to_rook_test() {
+    let mut state = GameState::with_placements(vec![ Placement::new(White, King, 4),
         Placement::new(Black, Pawn, 14),
         Placement::new(Black, King, 60),
     ]);
@@ -1254,6 +1342,7 @@ fn black_promotion_to_rook_test() { let mut state = GameState::with_placements(v
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_promotion_to_queen_test() { let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
         Placement::new(Black, Pawn, 13),
@@ -1264,6 +1353,7 @@ fn black_promotion_to_queen_test() { let mut state = GameState::with_placements(
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_cant_move_into_check_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1275,6 +1365,7 @@ fn white_cant_move_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_cant_promote_into_check_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1286,7 +1377,7 @@ fn white_cant_promote_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
-
+#[test]
 fn black_cant_move_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1298,6 +1389,7 @@ fn black_cant_move_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_cant_promote_into_check_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1310,6 +1402,7 @@ fn black_cant_promote_into_check_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_pawn_can_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1322,6 +1415,7 @@ fn white_pawn_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_pawn_cant_capture_vertically_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1333,6 +1427,7 @@ fn white_pawn_cant_capture_vertically_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn black_pawn_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1346,6 +1441,7 @@ fn black_pawn_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_pawn_cant_capture_vertically_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1358,6 +1454,7 @@ fn black_pawn_cant_capture_vertically_test() {
     assert!(!action.is_legal(&state));
 }
 
+#[test]
 fn white_bishop_can_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1370,6 +1467,7 @@ fn white_bishop_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_bishop_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1383,6 +1481,7 @@ fn black_bishop_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_knight_can_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1395,6 +1494,7 @@ fn white_knight_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_knight_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1408,6 +1508,7 @@ fn black_knight_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_rook_can_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1420,6 +1521,7 @@ fn white_rook_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_rook_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1433,6 +1535,7 @@ fn black_rook_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_queen_can_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1445,6 +1548,7 @@ fn white_queen_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_queen_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1458,6 +1562,7 @@ fn black_queen_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn white_king_can_capture_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 36),
@@ -1469,6 +1574,7 @@ fn white_king_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn black_king_can_capture_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1481,6 +1587,7 @@ fn black_king_can_capture_test() {
     assert!(action.is_legal(&state));
 }
 
+#[test]
 fn pawn_move_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1492,6 +1599,7 @@ fn pawn_move_algebraic_notation_test() {
     assert_eq!("e4", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn bishop_move_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1503,6 +1611,7 @@ fn bishop_move_algebraic_notation_test() {
     assert_eq!("Bg5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn knight_move_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1514,6 +1623,7 @@ fn knight_move_algebraic_notation_test() {
     assert_eq!("Nf5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn rook_move_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1525,6 +1635,7 @@ fn rook_move_algebraic_notation_test() {
     assert_eq!("Rc3", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn queen_move_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1536,6 +1647,7 @@ fn queen_move_algebraic_notation_test() {
     assert_eq!("Qh5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn king_move_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1546,6 +1658,7 @@ fn king_move_algebraic_notation_test() {
     assert_eq!("Kg1", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn move_algebraic_notation_with_ambiguous_file_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1558,6 +1671,7 @@ fn move_algebraic_notation_with_ambiguous_file_test() {
     assert_eq!("Bde4", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn move_algebraic_notation_with_ambiguous_rank_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1570,6 +1684,7 @@ fn move_algebraic_notation_with_ambiguous_rank_test() {
     assert_eq!("B3e4", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn move_algebraic_notation_with_ambiguous_rank_and_file_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1583,6 +1698,7 @@ fn move_algebraic_notation_with_ambiguous_rank_and_file_test() {
     assert_eq!("Bd3e4", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn pawn_capture_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1596,6 +1712,7 @@ fn pawn_capture_algebraic_notation_test() {
     assert_eq!("exd5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn bishop_capture_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1609,6 +1726,7 @@ fn bishop_capture_algebraic_notation_test() {
     assert_eq!("Bxd5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn knight_capture_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1621,6 +1739,7 @@ fn knight_capture_algebraic_notation_test() {
     assert_eq!("Nxc6", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn rook_capture_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1633,6 +1752,7 @@ fn rook_capture_algebraic_notation_test() {
     assert_eq!("Rxa8", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn queen_capture_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1645,6 +1765,7 @@ fn queen_capture_algebraic_notation_test() {
     assert_eq!("Qxa8", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn king_capture_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1657,6 +1778,7 @@ fn king_capture_algebraic_notation_test() {
     assert_eq!("Kxe3", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn capture_algebraic_notation_with_ambiguous_file_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1671,6 +1793,7 @@ fn capture_algebraic_notation_with_ambiguous_file_test() {
     assert_eq!("Raxd5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn capture_algebraic_notation_with_ambiguous_rank_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 7),
@@ -1685,6 +1808,7 @@ fn capture_algebraic_notation_with_ambiguous_rank_test() {
     assert_eq!("Q4xd5", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn en_passant_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 33),
@@ -1702,6 +1826,7 @@ fn en_passant_algebraic_notation_test() {
     assert_eq!("bxc6", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn kingside_castle_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1712,6 +1837,7 @@ fn kingside_castle_algebraic_notation_test() {
     assert_eq!("O-O", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn queenside_castle_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(White, King, 4),
@@ -1722,6 +1848,7 @@ fn queenside_castle_algebraic_notation_test() {
     assert_eq!("O-O-O", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn promotion_to_bishop_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 55),
@@ -1730,6 +1857,7 @@ fn promotion_to_bishop_algebraic_notation_test() {
     assert_eq!("h8B", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn promotion_to_knight_algebraic_notation_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 54),
@@ -1738,6 +1866,7 @@ fn promotion_to_knight_algebraic_notation_test() {
     assert_eq!("g8N", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn promotion_to_rook_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 9),
@@ -1747,6 +1876,7 @@ fn promotion_to_rook_algebraic_notation_test() {
     assert_eq!("b1R", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn promotion_to_queen_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 11),
@@ -1756,6 +1886,7 @@ fn promotion_to_queen_algebraic_notation_test() {
     assert_eq!("d1Q", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn promotion_with_capture_algebraic_notation_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, Pawn, 11),
@@ -1766,6 +1897,7 @@ fn promotion_with_capture_algebraic_notation_test() {
     assert_eq!("dxc1Q", action.as_algebraic_notation(&state));
 }
 
+#[test]
 fn gamestate_to_string_test() {
     let state = GameState::new();
     let expected = format!(
