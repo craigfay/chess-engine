@@ -9,6 +9,7 @@ mod tests;
 pub use utilities::{
     legal_actions,
     legal_next_states,
+    relative_material_values,
 };
 
 pub use actions::*;
