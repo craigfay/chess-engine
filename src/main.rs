@@ -863,6 +863,16 @@ fn black_queen_promotion_legality_test() {
     assert!(action.is_legal(&state));
 }
 
+fn promotion_capture_legality_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 14),
+        Placement::new(White, Rook, 7),
+    ]);
+    state.to_move = Black;
+    let action = Promotion { pawn_becomes: Queen, moving_from: 14, to: 7 };
+    assert!(action.is_legal(&state));
+}
+
 fn en_passant_expires_after_move_test() {
     let state = GameState::with_placements(vec![
         Placement::new(White, Pawn, 12),
@@ -1746,6 +1756,16 @@ fn promotion_to_queen_algebraic_notation_test() {
     assert_eq!("d1Q", action.as_algebraic_notation(&state));
 }
 
+fn promotion_with_capture_algebraic_notation_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Pawn, 11),
+        Placement::new(White, Rook, 2),
+    ]);
+    state.to_move = Black;
+    let action = Promotion { pawn_becomes: Queen, moving_from: 11, to: 2 };
+    assert_eq!("dxc1Q", action.as_algebraic_notation(&state));
+}
+
 fn gamestate_to_string_test() {
     let state = GameState::new();
     let expected = format!(
@@ -1839,6 +1859,7 @@ fn main() {
     black_knight_promotion_legality_test();
     black_rook_promotion_legality_test();
     black_queen_promotion_legality_test();
+    promotion_capture_legality_test();
     en_passant_expires_after_move_test();
     en_passant_expires_after_castle_test();
     en_passant_expires_after_promotion_test();
@@ -1906,6 +1927,7 @@ fn main() {
     promotion_to_knight_algebraic_notation_test();
     promotion_to_rook_algebraic_notation_test();
     promotion_to_queen_algebraic_notation_test();
+    promotion_with_capture_algebraic_notation_test();
     gamestate_to_string_test();
 
     let duration = timer.elapsed();

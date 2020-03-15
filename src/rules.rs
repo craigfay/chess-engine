@@ -461,25 +461,23 @@ impl Action for Promotion {
 
         let new_piece_str = new_piece.to_string();
 
-        let mut origin_rank = &mut String::with_capacity(1);
         let mut origin_file = &mut String::with_capacity(1);
+        let mut capture_indicator = &mut String::with_capacity(1);
+
+        // Only use origin_file / capture_indicator if the promotion
+        // captures an enemy piece
+        if !movement_is_vertical(self.moving_from, self.to) {
+            origin_file.push((self.moving_from as u8 % 8 + 97) as char);
+            capture_indicator.push('x');
+        }
 
         let destination_file = (self.to as u8 % 8 + 97) as char;
         let destination_rank = (self.to / 8) + 1;
 
-        let ambiguity = disambiguate_move(self.moving_from, self.to, &state);
-
-        if ambiguity.rank_is_ambiguous {
-            origin_rank.push((self.moving_from as u8 / 8 + 1 + 48 ) as char);
-        }
-        if ambiguity.file_is_ambiguous {
-            origin_file.push((self.moving_from as u8 % 8 + 97) as char);
-        }
-
         String::from(format!(
             "{}{}{}{}{}",
             origin_file,
-            origin_rank,
+            capture_indicator,
             destination_file,
             destination_rank,
             new_piece_str,
