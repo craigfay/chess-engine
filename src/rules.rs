@@ -450,7 +450,40 @@ impl Action for Promotion {
         "Promotion"
     }
     fn as_algebraic_notation(&self, state: &GameState) -> String {
-        return String::from("");
+        if !self.is_legal(&state) {
+            return String::from("");
+        }
+        // A string representing the piece that the pawn will promote to:w
+        let new_piece = Piece {
+            color: state.to_move,
+            name: self.pawn_becomes,
+        };
+
+        let new_piece_str = new_piece.to_string();
+
+        let mut origin_rank = &mut String::with_capacity(1);
+        let mut origin_file = &mut String::with_capacity(1);
+
+        let destination_file = (self.to as u8 % 8 + 97) as char;
+        let destination_rank = (self.to / 8) + 1;
+
+        let ambiguity = disambiguate_move(self.moving_from, self.to, &state);
+
+        if ambiguity.rank_is_ambiguous {
+            origin_rank.push((self.moving_from as u8 / 8 + 1 + 48 ) as char);
+        }
+        if ambiguity.file_is_ambiguous {
+            origin_file.push((self.moving_from as u8 % 8 + 97) as char);
+        }
+
+        String::from(format!(
+            "{}{}{}{}{}",
+            origin_file,
+            origin_rank,
+            destination_file,
+            destination_rank,
+            new_piece_str,
+        ))
     }
     fn is_legal(&self, state: &GameState) -> bool {
         if !pawn_can_promote_to(&self.pawn_becomes) {

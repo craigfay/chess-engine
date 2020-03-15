@@ -17,3 +17,5 @@
 * Implement and Test `as_algebraic_notation()` for each action type.
 * Add search helper function to find the square that a piece is on.
 * Test that pawns can't capture vertically
+* Handle Promotions that are also Captures
+* Add a `disambiguate_promotion()`
