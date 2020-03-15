@@ -4,14 +4,16 @@ mod actions;
 mod pieces;
 mod notation;
 mod gamestate;
+mod utilities;
 
-use actions::{
+use utilities::{
     color_threatens_square,
     color_is_checked,
-    legal_actions,
     position_delta,
+    legal_actions,
+};
 
-    // Actions
+use actions::{
     Action,
     Move,
     Capture,

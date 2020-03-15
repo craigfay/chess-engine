@@ -155,5 +155,3 @@ impl Placement {
     }
 }
 
-
-

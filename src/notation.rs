@@ -36,3 +36,4 @@ pub fn square_algebraic_to_index(s: &str) -> Option<usize> {
         _ => None
     }
 }
+
