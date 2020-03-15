@@ -4,6 +4,7 @@ use crate::utilities::{
     color_is_checked,
     position_delta,
     legal_actions,
+    is_checkmate,
 };
 
 use crate::actions::{
@@ -1895,6 +1896,16 @@ fn promotion_with_capture_algebraic_notation_test() {
     state.to_move = Black;
     let action = Promotion { pawn_becomes: Queen, moving_from: 11, to: 2 };
     assert_eq!("dxc1Q", action.as_algebraic_notation(&state));
+}
+
+#[test]
+fn is_checkmate_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(Black, Rook, 0),
+        Placement::new(Black, Rook, 8),
+        Placement::new(White, King, 4),
+    ]);
+    assert!(is_checkmate(&state));
 }
 
 #[test]
