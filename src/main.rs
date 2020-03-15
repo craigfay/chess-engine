@@ -1,11 +1,11 @@
 use std::time::{Instant};
 
-mod rules;
+mod actions;
 mod entities;
 mod notation;
 mod gamestate;
 
-use rules::{
+use actions::{
     color_threatens_square,
     color_is_checked,
     legal_actions,
