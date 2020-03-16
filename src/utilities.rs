@@ -33,6 +33,12 @@ pub fn is_checkmate(state: &GameState) -> bool {
     is_checked && actions.len() == 0
 }
 
+pub fn is_stalemate(state: &GameState) -> bool {
+    let is_checked = color_is_checked(state.to_move, &state);
+    let actions = legal_actions(&state);
+    !is_checked && actions.len() == 0
+}
+
 pub fn color_threatens_square(color: Color, target_square: usize, state: &GameState) -> bool {
     for (square, maybe_piece) in state.squares.iter().enumerate() {
         match maybe_piece {

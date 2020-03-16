@@ -20,3 +20,5 @@
 * Handle Promotions that are also Captures
 * Create Algebraic equivalents to the actions that use strings instead of usize.
 * Use `PromotionMaterial` enum instead of matching function.
+* Use rust doc comments and publish crate.
+

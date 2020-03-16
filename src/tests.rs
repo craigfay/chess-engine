@@ -5,6 +5,7 @@ use crate::utilities::{
     position_delta,
     legal_actions,
     is_checkmate,
+    is_stalemate,
 };
 
 use crate::actions::{
@@ -1906,6 +1907,16 @@ fn is_checkmate_test() {
         Placement::new(White, King, 4),
     ]);
     assert!(is_checkmate(&state));
+}
+
+#[test]
+fn is_stalemate_test() {
+    let state = GameState::with_placements(vec![
+        Placement::new(Black, Rook, 57),
+        Placement::new(Black, Rook, 15),
+        Placement::new(White, King, 0),
+    ]);
+    assert!(is_stalemate(&state));
 }
 
 #[test]
