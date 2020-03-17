@@ -12,9 +12,9 @@ pub use utilities::{
     relative_material_values,
 };
 
-pub use actions;
+pub use actions::*;
 
-pub use gamestate;
+pub use gamestate::*;
 
-pub use pieces;
+pub use pieces::*;
 
