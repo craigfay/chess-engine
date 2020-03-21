@@ -10,6 +10,8 @@ pub use utilities::{
     legal_actions,
     legal_next_states,
     relative_material_values,
+    is_checkmate,
+    is_stalemate,
 };
 
 pub use actions::*;
