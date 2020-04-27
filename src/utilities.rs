@@ -387,8 +387,10 @@ fn diagonal_path_is_obstructed(from: usize, to: usize, state: &GameState) -> boo
 
 fn rook_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
     let (delta_x, delta_y)  = position_delta(origin, destination);
-    // Return false if the path is obstructed
     if horizontal_path_is_obstructed(origin, delta_x, state) {
+        return false;
+    }
+    if vertical_path_is_obstructed(origin, delta_y, state) {
         return false;
     }
 

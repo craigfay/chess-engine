@@ -209,6 +209,17 @@ fn rook_movement_horizontal_obstruction_test() {
 }
 
 #[test]
+fn rook_movement_vertical_obstruction_test() {
+    // Rooks should not be able to travel vertically through other pieces
+    let state = GameState::with_placements(vec![
+        Placement::new(White, Rook, 32),
+        Placement::new(Black, Pawn, 40),
+    ]);
+    let action = Move { from: 32, to: 48 };
+    assert_eq!(false, action.is_legal(&state));
+}
+
+#[test]
 fn bishop_movement_diagonal_up_left_test() {
     // Bishops should be able to travel diagonally up-left
     let state = GameState::with_placements(vec![
@@ -1916,6 +1927,7 @@ fn is_stalemate_test() {
         Placement::new(Black, Rook, 15),
         Placement::new(White, King, 0),
     ]);
+    println!("{}", state.to_string());
     assert!(is_stalemate(&state));
 }
 
