@@ -425,7 +425,7 @@ fn queen_move_is_legal(origin: usize, destination: usize, state: &GameState) -> 
     let (delta_x, delta_y)  = position_delta(origin, destination);
 
     return match (delta_x.abs(), delta_y.abs()) {
-        (0, _) => !horizontal_path_is_obstructed(origin, delta_x, state),
+        (0, _) => !vertical_path_is_obstructed(origin, delta_y, state),
         (_, 0) => !horizontal_path_is_obstructed(origin, delta_x, state),
         (x, y) => x == y && !diagonal_path_is_obstructed(origin, destination, state),
     }
