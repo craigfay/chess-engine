@@ -374,6 +374,18 @@ fn queen_movement_vertical_obstruction_test() {
 }
 
 #[test]
+fn queen_movement_horizontal_obstruction_test() {
+    // Queens should not be able to travel horizontally through other pieces
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Queen, 40),
+        Placement::new(Black, Pawn, 41),
+    ]);
+    state.to_move = Black;
+    let action = Move { from: 40, to: 42 };
+    assert_eq!(false, action.is_legal(&state));
+}
+
+#[test]
 fn queen_movement_vertical_test() {
     // Queens should be able to move horizontally
     let state = GameState::with_placements(vec![
