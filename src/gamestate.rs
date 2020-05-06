@@ -142,6 +142,7 @@ impl ToString for GameState {
     }
 }
 
+
 #[derive(Debug)]
 pub struct Placement {
     pub color: Color,

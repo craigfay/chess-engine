@@ -4,9 +4,7 @@
 use crate::gamestate::GameState;
 
 use crate::pieces::{
-    PieceName::{
-        Pawn
-    },
+    PieceName,
     Color::{White,Black},
 };
 
@@ -36,4 +34,83 @@ pub fn square_algebraic_to_index(s: &str) -> Option<usize> {
         _ => None
     }
 }
+
+// Create a human readable gamestate string
+fn fen_notation(state: &GameState) -> String {
+    let mut output = String::new();
+
+    // Piece Placement
+    for rank in (0..8).rev() {
+        let mut empty_spaces: u8 = 0;
+        for file in 0..8 {
+            let square = 8 * rank + file;
+
+            // End of rank
+            if (square + 1) % 8 == 0  && square != 63 {
+                output.push('/');
+                empty_spaces = 0;
+            }
+
+            match state.squares[square] {
+                None => empty_spaces += 1,
+                Some(piece) => {
+                    if empty_spaces > 0 {
+                        output.push(empty_spaces as char);
+                    }
+                    match (piece.color, piece.name) {
+                        (White, PieceName::Pawn) => output.push('P'),
+                        (White, PieceName::Bishop) => output.push('B'),
+                        (White, PieceName::Knight) => output.push('N'),
+                        (White, PieceName::Rook) => output.push('R'),
+                        (White, PieceName::Queen) => output.push('Q'),
+                        (White, PieceName::King) => output.push('K'),
+                        (Black, PieceName::Pawn) => output.push('p'),
+                        (Black, PieceName::Bishop) => output.push('b'),
+                        (Black, PieceName::Knight) => output.push('n'),
+                        (Black, PieceName::Rook) => output.push('r'),
+                        (Black, PieceName::Queen) => output.push('q'),
+                        (Black, PieceName::King) => output.push('k'),
+                    }
+                }
+            }
+        }
+    }
+
+
+    // Active Color
+    output.push_str(" ");
+    match state.to_move {
+        White => output.push('w'),
+        Black => output.push('b'),
+    }
+
+    // Castling Rights
+    output.push_str(" ");
+    if state.white_can_castle_kingside { output.push('K'); }
+    if state.white_can_castle_queenside { output.push('Q'); }
+    if state.black_can_castle_kingside { output.push('k'); }
+    if state.black_can_castle_queenside { output.push('q'); }
+
+    // En Passant
+    output.push_str(" ");
+    match state.en_passant_square {
+        None => output.push('-'),
+        Some(square) => output.push_str(&square_index_to_algebraic(square)),
+    }
+
+    // Halfmove clock
+    // Note: This library isn't concerned with implementing 
+    // clock state currently, so this value is meaningless.
+    output.push_str(" ");
+    output.push('0');
+
+    // Fullmove clock
+    // Note: This library isn't concerned with implementing 
+    // clock state currently, so this value is meaningless.
+    output.push_str(" ");
+    output.push('0');
+
+    output
+}
+
 

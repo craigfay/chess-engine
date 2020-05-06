@@ -211,11 +211,8 @@ fn rook_movement_horizontal_obstruction_test() {
 #[test]
 fn rook_movement_vertical_obstruction_test() {
     // Rooks should not be able to travel vertically through other pieces
-    let state = GameState::with_placements(vec![
-        Placement::new(White, Rook, 32),
-        Placement::new(Black, Pawn, 40),
-    ]);
-    let action = Move { from: 32, to: 48 };
+    let state = GameState::new();
+    let action = Move { from: 0, to: 8 };
     assert_eq!(false, action.is_legal(&state));
 }
 
