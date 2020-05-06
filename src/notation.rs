@@ -36,7 +36,7 @@ pub fn square_algebraic_to_index(s: &str) -> Option<usize> {
 }
 
 // Create a human readable gamestate string
-fn fen_notation(state: &GameState) -> String {
+pub fn fen_notation(state: &GameState) -> String {
     let mut output = String::new();
 
     // Piece Placement
