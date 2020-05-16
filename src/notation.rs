@@ -46,7 +46,7 @@ pub fn fen_notation(state: &GameState) -> String {
             let square = 8 * rank + file;
 
             // End of rank
-            if (square + 1) % 8 == 0  && square != 63 {
+            if (square + 1) % 8 == 0 {
                 output.push('/');
                 empty_spaces = 0;
             }
