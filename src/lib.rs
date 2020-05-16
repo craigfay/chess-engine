@@ -20,5 +20,7 @@ pub use gamestate::*;
 
 pub use pieces::*;
 
-pub use notation::*;
+pub use notation::{
+    fen_notation,
+};
 
