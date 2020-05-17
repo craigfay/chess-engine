@@ -39,6 +39,7 @@ use crate::pieces::{
 use crate::notation::{
     square_index_to_algebraic,
     square_algebraic_to_index,
+    fen_notation,
 };
 
 #[test]
@@ -1969,6 +1970,17 @@ fn gamestate_to_string_test() {
     );
 
     let output = state.to_string();
+    assert_eq!(output, expected);
+}
+
+#[test]
+fn fen_notation_default_state_test() {
+    let state = GameState::new();
+    let expected = format!(
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0"
+    );
+
+    let output = fen_notation(&state);
     assert_eq!(output, expected);
 }
 

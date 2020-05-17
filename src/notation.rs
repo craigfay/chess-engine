@@ -40,22 +40,28 @@ pub fn fen_notation(state: &GameState) -> String {
     let mut output = String::new();
 
     // Piece Placement
+    let mut empty_spaces: u32 = 0;
     for rank in (0..8).rev() {
-        let mut empty_spaces: u8 = 0;
         for file in 0..8 {
             let square = 8 * rank + file;
 
             // End of rank
-            if (square + 1) % 8 == 0 {
-                output.push('/');
+            if square % 8 == 0 && square != 56 {
+                if empty_spaces > 0 {
+                    output.push_str(&format!("{}", empty_spaces));
+                }
                 empty_spaces = 0;
+                output.push('/');
             }
 
             match state.squares[square] {
-                None => empty_spaces += 1,
+                None => {
+                    empty_spaces += 1;
+                },
                 Some(piece) => {
                     if empty_spaces > 0 {
-                        output.push(empty_spaces as char);
+                        output.push_str(&format!("{}", empty_spaces));
+                        empty_spaces = 0;
                     }
                     match (piece.color, piece.name) {
                         (White, PieceName::Pawn) => output.push('P'),
