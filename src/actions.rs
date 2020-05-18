@@ -173,7 +173,24 @@ impl Action for Move {
                 }
             }
         }
-    
+
+        // Maybe remove castling rights
+        match piece.name {
+            Rook => match state.to_move {
+                White => match self.from {
+                    0 => new_state.white_can_castle_queenside = false,
+                    7 => new_state.white_can_castle_kingside = false,
+                    _ => (),
+                },
+                Black => match self.from {
+                    56 => new_state.black_can_castle_queenside = false,
+                    63 => new_state.black_can_castle_kingside = false,
+                    _ => (),
+                }
+            },
+            _ => ()
+        }
+
         new_state.squares[self.to] = new_state.squares[self.from];
         new_state.squares[self.from] = None;
         new_state
