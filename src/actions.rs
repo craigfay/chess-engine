@@ -151,12 +151,7 @@ impl Action for Move {
         // En-Passant opportunities must expire after each turn
         new_state.en_passant_square = None;
 
-        // Switch turns
-        match new_state.to_move {
-            White => new_state.to_move = Black,
-            Black => new_state.to_move = White,
-        }
-    
+
         let piece = state.squares[self.from].unwrap();
 
         // Handle two square pawn advances
@@ -174,41 +169,17 @@ impl Action for Move {
             }
         }
 
-        // Maybe remove castling rights
-        match piece.name {
-            Rook => match state.to_move {
-                White => match self.from {
-                    0 => new_state.white_can_castle_queenside = false,
-                    7 => new_state.white_can_castle_kingside = false,
-                    _ => (),
-                },
-                Black => match self.from {
-                    56 => new_state.black_can_castle_queenside = false,
-                    63 => new_state.black_can_castle_kingside = false,
-                    _ => (),
-                }
-            },
-            King => match state.to_move {
-                White => match self.from {
-                    4 => {
-                        new_state.white_can_castle_queenside = false;
-                        new_state.white_can_castle_kingside = false;
-                    },
-                    _ => (),
-                },
-                Black => match self.from {
-                    60 => {
-                        new_state.black_can_castle_queenside = false;
-                        new_state.black_can_castle_kingside = false;
-                    },
-                    _ => (),
-                }
-            },
-            _ => ()
-        }
+        maybe_remove_castling_rights(&mut new_state, self.from);
 
         new_state.squares[self.to] = new_state.squares[self.from];
         new_state.squares[self.from] = None;
+
+        // Switch turns
+        match new_state.to_move {
+            White => new_state.to_move = Black,
+            Black => new_state.to_move = White,
+        }
+
         new_state
     }
 }
@@ -307,6 +278,7 @@ impl Action for Capture {
             White => new_state.to_move = Black,
             Black => new_state.to_move = White,
         }
+
         new_state.squares[self.on] = new_state.squares[self.with];
         new_state.squares[self.with] = None;
         new_state
@@ -397,16 +369,19 @@ impl Action for EnPassant {
         // Expire the en-passant opportunity
         new_state.en_passant_square = None;
 
+        maybe_remove_castling_rights(&mut new_state, self.with);
+
+        // Move the attacking pawn into its new location
+        let destination = state.en_passant_square.unwrap();
+        new_state.squares[destination] = new_state.squares[self.with];
+        new_state.squares[self.with] = None;
+
         // Switch turns
         match new_state.to_move {
             White => new_state.to_move = Black,
             Black => new_state.to_move = White,
         }
 
-        // Move the attacking pawn into its new location
-        let destination = state.en_passant_square.unwrap();
-        new_state.squares[destination] = new_state.squares[self.with];
-        new_state.squares[self.with] = None;
         new_state
     }
 }
@@ -704,3 +679,37 @@ fn disambiguate_capture(origin: usize, destination: usize, state: &GameState) ->
     Disambiguation { rank_is_ambiguous, file_is_ambiguous }
 }
 
+fn maybe_remove_castling_rights(state: &mut GameState, origin: usize) {
+    let piece = state.squares[origin].unwrap();
+    match piece.name {
+        Rook => match state.to_move {
+            White => match origin {
+                0 => state.white_can_castle_queenside = false,
+                7 => state.white_can_castle_kingside = false,
+                _ => (),
+            },
+            Black => match origin{
+                56 => state.black_can_castle_queenside = false,
+                63 => state.black_can_castle_kingside = false,
+                _ => (),
+            }
+        },
+        King => match state.to_move {
+            White => match origin {
+                4 => {
+                    state.white_can_castle_queenside = false;
+                    state.white_can_castle_kingside = false;
+                },
+                _ => (),
+            },
+            Black => match origin {
+                60 => {
+                    state.black_can_castle_queenside = false;
+                    state.black_can_castle_kingside = false;
+                },
+                _ => (),
+            }
+        },
+        _ => ()
+    }
+}
