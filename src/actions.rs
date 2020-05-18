@@ -188,6 +188,22 @@ impl Action for Move {
                     _ => (),
                 }
             },
+            King => match state.to_move {
+                White => match self.from {
+                    4 => {
+                        new_state.white_can_castle_queenside = false;
+                        new_state.white_can_castle_kingside = false;
+                    },
+                    _ => (),
+                },
+                Black => match self.from {
+                    60 => {
+                        new_state.black_can_castle_queenside = false;
+                        new_state.black_can_castle_kingside = false;
+                    },
+                    _ => (),
+                }
+            },
             _ => ()
         }
 

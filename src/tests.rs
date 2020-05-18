@@ -829,7 +829,7 @@ fn black_queenside_castle_through_check_test() {
 }
 
 #[test]
-fn moving_queenside_rook_removes_queenside_castle_rights_test() {
+fn moving_black_queenside_rook_removes_black_queenside_castle_rights_test() {
     let mut state = GameState::with_placements(vec![
         Placement::new(Black, King, 60),
         Placement::new(Black, Rook, 56),
@@ -842,6 +842,22 @@ fn moving_queenside_rook_removes_queenside_castle_rights_test() {
     let state = action.apply(&state);
 
     assert!(!state.black_can_castle_queenside);
+}
+
+#[test]
+fn moving_black_kingside_rook_removes_black_kingside_castle_rights_test() {
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 63),
+        Placement::new(White, Rook, 51),
+    ]);
+    state.black_can_castle_queenside = true;
+    state.to_move = Black;
+
+    let action = Move { from: 63, to: 62 };
+    let state = action.apply(&state);
+
+    assert!(!state.black_can_castle_kingside);
 }
 
 #[test]
