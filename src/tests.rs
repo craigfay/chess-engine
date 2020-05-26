@@ -6,6 +6,7 @@ use crate::utilities::{
     legal_actions,
     is_checkmate,
     is_stalemate,
+    diagonal_path_is_obstructed,
 };
 
 use crate::actions::{
@@ -132,6 +133,27 @@ fn position_delta_test() {
     assert_eq!(position_delta(0, 56), (0, 7));
     assert_eq!(position_delta(0, 12), (4, 1));
     assert_eq!(position_delta(63, 0), (-7, -7));
+}
+
+#[test]
+fn diagonal_obstruction_test() {
+    // At one point, the king's indian defense was illegal
+    // due to a bug that said the bishop's diagonal movement
+    // was obstructed. Obstruction functions could use more
+    // tests, but this is a good start.
+    let mut state = GameState::with_placements(vec![
+        Placement::new(Black, Bishop, 61),
+        Placement::new(Black, King, 60),
+        Placement::new(Black, Rook, 63),
+        Placement::new(Black, Pawn, 52),
+        Placement::new(Black, Pawn, 53),
+        Placement::new(Black, Pawn, 55),
+        Placement::new(White, King, 4),
+    ]);
+    state.to_move = Black;
+
+    let action = Move { from: 61, to: 54 };
+    assert!(false == diagonal_path_is_obstructed(61, 54, &state));
 }
 
 #[test]
@@ -2047,7 +2069,6 @@ fn is_stalemate_test() {
         Placement::new(Black, Rook, 15),
         Placement::new(White, King, 0),
     ]);
-    println!("{}", state.to_string());
     assert!(is_stalemate(&state));
 }
 

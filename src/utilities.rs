@@ -368,21 +368,29 @@ fn vertical_path_is_obstructed(from: usize, delta_y: i32, state: &GameState) -> 
     false
 }
 
-fn diagonal_path_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
+pub fn diagonal_path_is_obstructed(from: usize, to: usize, state: &GameState) -> bool {
     let low = min(from, to);
     let hi = max(from, to);
 
-    // The difference between two diagonal squares will divide by 7 or 9
-    for n in [7,9].iter() {
-        if (hi - low) % n == 0 {
-            for i in (low+1..hi).step_by(*n) {
-                if state.squares[i].is_some() {
-                    return true
-                } 
-            }
+    // Squares on a diagonal are always either
+    // 7 or 9 indexes apart
+    if (hi - low) % 7 == 0 {
+        for i in (low + 7 ..hi).step_by(7) {
+            if state.squares[i].is_some() {
+                return true
+            } 
         }
     }
-    return false;
+
+    if (hi - low) % 9 == 0 {
+        for i in (low + 9 ..hi).step_by(9) {
+            if state.squares[i].is_some() {
+                return true
+            } 
+        }
+    }
+
+    false
 }
 
 fn rook_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
@@ -402,7 +410,7 @@ fn rook_move_is_legal(origin: usize, destination: usize, state: &GameState) -> b
 }
 
 fn bishop_move_is_legal(origin: usize, destination: usize, state: &GameState) -> bool {
-    let (delta_x, delta_y)  = position_delta(origin, destination);
+    let (delta_x, delta_y) = position_delta(origin, destination);
     if delta_x.abs() != delta_y.abs() {
         return false;
     }
