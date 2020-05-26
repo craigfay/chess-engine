@@ -374,19 +374,13 @@ pub fn diagonal_path_is_obstructed(from: usize, to: usize, state: &GameState) ->
 
     // Squares on a diagonal are always either
     // 7 or 9 indexes apart
-    if (hi - low) % 7 == 0 {
-        for i in (low + 7 ..hi).step_by(7) {
-            if state.squares[i].is_some() {
-                return true
-            } 
-        }
-    }
-
-    if (hi - low) % 9 == 0 {
-        for i in (low + 9 ..hi).step_by(9) {
-            if state.squares[i].is_some() {
-                return true
-            } 
+    for n in [7,9].iter() {
+        if (hi - low) % n == 0 {
+            for i in (low + n ..hi).step_by(*n) {
+                if state.squares[i].is_some() {
+                    return true
+                } 
+            }
         }
     }
 
